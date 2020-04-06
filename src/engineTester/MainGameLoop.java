@@ -3,11 +3,11 @@ package engineTester;
 import models.RawModel;
 import models.TexturedModel;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.*;
+import terrains.Terrain;
 import textures.ModelTexture;
 import entities.Camera;
 import entities.Entity;
@@ -102,20 +102,20 @@ public class MainGameLoop {
 //				23,21,22
 //
 //		};
-//		
 //		RawModel model = loader.loadToVAO(vertices,textureCoords,indices);
 //		TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("image")));
-		
+
 		RawModel model = OBJLoader.loadObjModel("chair0", loader);
 		TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("wood")));
 		ModelTexture texture = staticModel.getTexture();
 		texture.setShineDamper(1000);
 		texture.setReflectivity(1);
-		
-		
-		Light light = new Light(new Vector3f(0, 0, -5), new Vector3f(1, 1, 1));
-//		Entity entity = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
-		
+
+
+		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
+        Entity entity = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
+        Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+
 		Camera camera = new Camera();
 
 		List<Entity> entities = new ArrayList<>();
@@ -130,32 +130,17 @@ public class MainGameLoop {
 
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()){
-//			if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-//				light.position.z-=0.05f;
-//			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-//				light.position.x+=0.05f;
-//			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-//				light.position.x-=0.05f;
-//			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-//				light.position.z+=0.05f;
-//			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-//				light.position.y+=0.05f;
-//			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-//				light.position.y-=0.05f;
-//			}
+			light.move();
 			camera.move();
+//
+//			for (Entity entity : entities) {
+//				random.nextFloat();
+//				entity.increaseRotation(0.1f, 0.1f, 0.1f);
+//				renderer.processEntity(entity);
+//			}
 
-			for (Entity entity : entities) {
-				random.nextFloat();
-				entity.increaseRotation(0.1f, 0.1f, 0.1f);
-				renderer.processEntity(entity);
-			}
-//			renderer.processEntity(entity);
+//			renderer.processTerrain(terrain);
+			renderer.processEntity(entity);
 
 			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
