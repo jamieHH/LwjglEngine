@@ -7,15 +7,15 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import renderEngine.DisplayManager;
-import renderEngine.Loader;
-import renderEngine.OBJLoader;
-import renderEngine.Renderer;
-import shaders.StaticShader;
+import renderEngine.*;
 import textures.ModelTexture;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameLoop {
 
@@ -23,8 +23,6 @@ public class MainGameLoop {
 
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer = new Renderer(shader);
 		
 //		float[] vertices = {			
 //				-0.5f,0.5f,0,	
@@ -56,7 +54,7 @@ public class MainGameLoop {
 //				-0.5f,-0.5f,0,
 //				0.5f,-0.5f,0,
 //				0.5f,-0.5f,1
-//				
+//
 //		};
 //		
 //		float[] textureCoords = {
@@ -116,46 +114,55 @@ public class MainGameLoop {
 		
 		
 		Light light = new Light(new Vector3f(0, 0, -5), new Vector3f(1, 1, 1));
-		Entity entity = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
+//		Entity entity = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
 		
 		Camera camera = new Camera();
-		
+
+		List<Entity> entities = new ArrayList<>();
+		Random random = new Random();
+		for (int i = 0; i < 20000; i++) {
+			float x = random.nextFloat() * 100 - 50;
+			float y = random.nextFloat() * 100 - 50;
+			float z = random.nextFloat() * 100 - 50;
+			entities.add(new Entity(staticModel, new Vector3f(x, y, z), random.nextFloat() * 180f,
+					random.nextFloat() * 180f, 0f, 1f));
+		}
+
+		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()){
-			if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-				light.position.z-=0.05f;
+//			if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+//				light.position.z-=0.05f;
+//			}
+//			if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+//				light.position.x+=0.05f;
+//			}
+//			if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+//				light.position.x-=0.05f;
+//			}
+//			if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+//				light.position.z+=0.05f;
+//			}
+//			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+//				light.position.y+=0.05f;
+//			}
+//			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+//				light.position.y-=0.05f;
+//			}
+			camera.move();
+
+			for (Entity entity : entities) {
+				random.nextFloat();
+				entity.increaseRotation(0.1f, 0.1f, 0.1f);
+				renderer.processEntity(entity);
 			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-				light.position.x+=0.05f;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-				light.position.x-=0.05f;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-				light.position.z+=0.05f;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				light.position.y+=0.05f;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				light.position.y-=0.05f;
-			}
-			
-			entity.increaseRotation(0, 0.0f, 0);
-//			camera.move();
-			
-			renderer.prepare();
-			shader.start();
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
-			renderer.render(entity,shader);
-			shader.stop();
+//			renderer.processEntity(entity);
+
+			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
 		}
 
-		shader.cleanUp();
+		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
-
 	}
-
 }
