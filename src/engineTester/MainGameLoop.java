@@ -110,28 +110,39 @@ public class MainGameLoop {
 		
 		RawModel model = OBJLoader.loadObjModel("chair0", loader);
 		TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("wood")));
-		Light light = new Light(new Vector3f(0, 0, -10), new Vector3f(1, 1, 1));
+		ModelTexture texture = staticModel.getTexture();
+		texture.setShineDamper(1000);
+		texture.setReflectivity(1);
 		
+		
+		Light light = new Light(new Vector3f(0, 0, -5), new Vector3f(1, 1, 1));
 		Entity entity = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
 		
 		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested()){
 			if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-				light.increasePosition(0, 0, -0.05f);
+				light.position.z-=0.05f;
 			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-				light.increasePosition(0.05f, 0, 0);
+				light.position.x+=0.05f;
 			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-				light.increasePosition(-0.05f, 0, 0.05f);
+				light.position.x-=0.05f;
 			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-				light.increasePosition(0, 0, 0.05f);
+				light.position.z+=0.05f;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+				light.position.y+=0.05f;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+				light.position.y-=0.05f;
 			}
 			
-			entity.increaseRotation(0, 0.1f, 0);
-			camera.move();
+			entity.increaseRotation(0, 0.0f, 0);
+//			camera.move();
+			
 			renderer.prepare();
 			shader.start();
 			shader.loadLight(light);
