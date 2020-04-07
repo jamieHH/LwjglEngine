@@ -44,7 +44,7 @@ public class OBJLoader {
 					Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]), 
 							Float.parseFloat(currentLine[2]));
 					textures.add(texture);
-				} else if (line.startsWith("vn")) {
+				} else if (line.startsWith("vn ")) {
 					Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), 
 							Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
 					normals.add(normal);

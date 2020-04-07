@@ -139,7 +139,7 @@ public class MainGameLoop {
 //				renderer.processEntity(entity);
 //			}
 
-//			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain);
 			renderer.processEntity(entity);
 
 			renderer.render(light, camera);
