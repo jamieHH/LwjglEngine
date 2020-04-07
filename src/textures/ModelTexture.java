@@ -3,8 +3,8 @@ package textures;
 public class ModelTexture {
 	
 	private int textureID;
-	private float shineDamper;
-	private float reflectivity;
+	private float shineDamper = 1;
+	private float reflectivity = 0;
 	
 	public ModelTexture(int texture){
 		this.textureID = texture;
