@@ -1,7 +1,10 @@
 package engineTester;
 
+import models.RawModel;
 import models.TexturedModel;
 
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -23,11 +26,26 @@ public class MainGameLoop {
 		Loader loader = new Loader();
 
 
-		TexturedModel chairModel = new TexturedModel(
-				OBJLoader.loadObjModel("chair0", loader) ,
-				new ModelTexture(loader.loadTexture("wood"))
-		);
-		Entity chair0 = new Entity(chairModel, new Vector3f(0,0,-10),0,0,0,1);
+        ModelData chairData = OBJFileLoader.loadOBJ("chair0");
+        RawModel chairModel = loader.loadToVAO(
+                chairData.getVertices(),
+                chairData.getTextureCoords(),
+                chairData.getNormals(),
+                chairData.getIndices()
+        );
+        TexturedModel texturedChairModel = new TexturedModel(
+                chairModel,
+                new ModelTexture(loader.loadTexture("wood"))
+        );
+        Entity chair0 = new Entity(texturedChairModel, new Vector3f(0,0,-10),0,0,0,1);
+
+
+//		TexturedModel chairModel = new TexturedModel(
+//				OBJLoader.loadObjModel("chair0", loader) ,
+//				new ModelTexture(loader.loadTexture("wood"))
+//		);
+//		Entity chair0 = new Entity(chairModel, new Vector3f(0,0,-10),0,0,0,1);
+
 
         TexturedModel grassModel = new TexturedModel(
         		OBJLoader.loadObjModel("grass0", loader),
@@ -43,7 +61,7 @@ public class MainGameLoop {
 		Camera camera = new Camera();
 
 		List<Entity> entities = new ArrayList<>();
-//		entities.add(chair0);
+		entities.add(chair0);
 		entities.add(grass0);
 
 
