@@ -1,5 +1,6 @@
 package engineTester;
 
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -59,17 +60,20 @@ public class MainGameLoop {
 		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")));
 		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
 		Camera camera = new Camera();
+		Player player = new Player(texturedChairModel, new Vector3f(0, 0, -10), 0, 0, 0, 1);
 
 		List<Entity> entities = new ArrayList<>();
-		entities.add(chair0);
+//		entities.add(chair0);
 		entities.add(grass0);
 
 
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()){
 //			light.move();
-			camera.move();
+//			camera.move();
+			player.move();
 
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			for (Entity entity : entities) {
 //				entity.increaseRotation(0.1f, 0.1f, 0.1f);
