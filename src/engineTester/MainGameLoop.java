@@ -1,6 +1,6 @@
 package engineTester;
 
-import entities.Player;
+import entities.*;
 import models.RawModel;
 import models.TexturedModel;
 
@@ -12,9 +12,6 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import terrains.Terrain;
 import textures.ModelTexture;
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +56,8 @@ public class MainGameLoop {
 
 		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")));
 		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
-		Camera camera = new Camera();
 		Player player = new Player(texturedChairModel, new Vector3f(0, 0, -10), 0, 0, 0, 1);
+		OrbitalCamera camera = new OrbitalCamera(player);
 
 		List<Entity> entities = new ArrayList<>();
 //		entities.add(chair0);
@@ -68,9 +65,9 @@ public class MainGameLoop {
 
 
 		MasterRenderer renderer = new MasterRenderer();
-		while(!Display.isCloseRequested()){
+		while(!Display.isCloseRequested()) {
 //			light.move();
-//			camera.move();
+			camera.move();
 			player.move();
 
 			renderer.processEntity(player);
