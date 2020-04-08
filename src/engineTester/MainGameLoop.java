@@ -1,6 +1,5 @@
 package engineTester;
 
-import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.opengl.Display;
@@ -15,7 +14,6 @@ import entities.Light;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainGameLoop {
 
@@ -25,16 +23,28 @@ public class MainGameLoop {
 		Loader loader = new Loader();
 
 
-		RawModel model = OBJLoader.loadObjModel("chair0", loader);
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("wood")));
-		Entity chair0 = new Entity(staticModel, new Vector3f(0,0,-10),0,0,0,1);
+		TexturedModel chairModel = new TexturedModel(
+				OBJLoader.loadObjModel("chair0", loader) ,
+				new ModelTexture(loader.loadTexture("wood"))
+		);
+		Entity chair0 = new Entity(chairModel, new Vector3f(0,0,-10),0,0,0,1);
 
-		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+        TexturedModel grassModel = new TexturedModel(
+        		OBJLoader.loadObjModel("grass0", loader),
+				new ModelTexture(loader.loadTexture("grass"))
+		);
+        grassModel.getTexture().setHasTransparency(true);
+        grassModel.getTexture().setUseFakeLighting(true);
+        Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
+
+
+		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")));
 		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
 		Camera camera = new Camera();
 
 		List<Entity> entities = new ArrayList<>();
-		entities.add(chair0);
+//		entities.add(chair0);
+		entities.add(grass0);
 
 
 		MasterRenderer renderer = new MasterRenderer();
@@ -44,7 +54,7 @@ public class MainGameLoop {
 
 			renderer.processTerrain(terrain);
 			for (Entity entity : entities) {
-				entity.increaseRotation(0.1f, 0.1f, 0.1f);
+//				entity.increaseRotation(0.1f, 0.1f, 0.1f);
 				renderer.processEntity(entity);
 			}
 
