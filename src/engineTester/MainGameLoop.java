@@ -67,8 +67,8 @@ public class MainGameLoop {
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
 //			light.move();
-			camera.move();
 			player.move();
+			camera.move();
 
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
