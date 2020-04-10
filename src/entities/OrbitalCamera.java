@@ -41,7 +41,7 @@ public class OrbitalCamera extends Camera {
 		return  (float) (distFromTarget * Math.sin(Math.toRadians(pitch)));
 	}
 
-	public void calcZoom() {
+	private void calcZoom() {
 		float zoomLevel = Mouse.getDWheel() * 0.1f;
 		if (distFromTarget - zoomLevel > 0) {
 			distFromTarget -= zoomLevel;
@@ -66,7 +66,7 @@ public class OrbitalCamera extends Camera {
 	}
 
 	private void calcAngleAroundTarget() {
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(1)) {
 			float angleDiff = Mouse.getDX() * 0.3f;
 			angleAroundTarget -= angleDiff;
 		}

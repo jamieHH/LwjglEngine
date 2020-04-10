@@ -8,11 +8,11 @@ public class ModelTexture {
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
 
-	public ModelTexture(int texture){
+	public ModelTexture(int texture) {
 		this.textureID = texture;
 	}
 	
-	public int getID(){
+	public int getID() {
 		return textureID;
 	}
 

@@ -25,10 +25,10 @@ public class OBJLoader {
 		}
 		BufferedReader reader = new BufferedReader(fr);
 		String line;
-		List<Vector3f> vertices = new ArrayList<Vector3f>();
-		List<Vector2f> textures = new ArrayList<Vector2f>();
-		List<Vector3f> normals = new ArrayList<Vector3f>();
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Vector3f> vertices = new ArrayList<>();
+		List<Vector2f> textures = new ArrayList<>();
+		List<Vector3f> normals = new ArrayList<>();
+		List<Integer> indices = new ArrayList<>();
 		float[] verticesArray = null;
 		float[] normalsArray = null;
 		float[] texturesArray = null;
@@ -82,7 +82,7 @@ public class OBJLoader {
 		indicesArray = new int[indices.size()];
 		
 		int vertexPointer = 0;
-		for(Vector3f vertex : vertices) {
+		for (Vector3f vertex : vertices) {
 			verticesArray[vertexPointer++] = vertex.x;
 			verticesArray[vertexPointer++] = vertex.y;
 			verticesArray[vertexPointer++] = vertex.z;
