@@ -54,7 +54,7 @@ public class MainGameLoop {
         Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
 
 
-		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")));
+		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")), "terrainHeightmap");
 		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
 		Player player = new Player(texturedChairModel, new Vector3f(0, 0, -10), 0, 0, 0, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
