@@ -1,12 +1,15 @@
 package engineTester;
 
 import entities.*;
+import renderEngine.GuiRenderer;
+import gui.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.*;
@@ -65,7 +68,10 @@ public class MainGameLoop {
             float y = terrain.getHeightOfTerrain(x, z);
             entities.add(new Entity(texturedChairModel, new Vector3f(x, y, z),0,0,0,1));
         }
-//		entities.add(grass0);
+
+		List<GuiTexture> guis = new ArrayList<>();
+		guis.add(new GuiTexture(loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
@@ -80,9 +86,11 @@ public class MainGameLoop {
 			}
 
 			renderer.render(light, camera);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 
+		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
