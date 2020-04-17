@@ -10,7 +10,6 @@ uniform sampler2D modelTexture;
 uniform vec3 lightColor;
 
 void main(void) {
-
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
 	
@@ -19,5 +18,4 @@ void main(void) {
 	vec3 diffuse = brightness * lightColor;
 
 	out_Color = vec4(diffuse, 1.0) * texture(modelTexture, pass_textureCoordinates);
-
 }

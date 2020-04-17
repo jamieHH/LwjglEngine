@@ -8,7 +8,5 @@ out vec4 out_Color;
 uniform sampler2D modelTexture;
 
 void main(void) {
-
 	out_Color = texture(modelTexture, pass_textureCoordinates);
-
 }
