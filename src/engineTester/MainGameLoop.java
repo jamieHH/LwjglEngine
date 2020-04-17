@@ -12,6 +12,8 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +55,19 @@ public class MainGameLoop {
         grassModel.getTexture().setUseFakeLighting(true);
         Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
 
+		//--------------
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("flowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("wood"));
 
-		Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grassTerrain")), "terrainHeightmap");
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendmap = new TerrainTexture(loader.loadTexture("blendMap"));
+
+
+		Terrain terrain = new Terrain(-1, -1, loader, texturePack, blendmap, "terrainHeightmap");
+		//--------------
+
 		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
 		Player player = new Player(texturedChairModel, new Vector3f(0, 0, -10), 0, 0, 0, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
