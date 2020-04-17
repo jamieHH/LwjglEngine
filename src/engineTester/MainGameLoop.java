@@ -17,6 +17,7 @@ import textures.TerrainTexturePack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainGameLoop {
 
@@ -25,7 +26,6 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 
-
         ModelData chairData = OBJFileLoader.loadOBJ("chair0");
         RawModel chairModel = loader.loadToVAO(
                 chairData.getVertices(),
@@ -33,49 +33,39 @@ public class MainGameLoop {
                 chairData.getNormals(),
                 chairData.getIndices()
         );
-        TexturedModel texturedChairModel = new TexturedModel(
-                chairModel,
-                new ModelTexture(loader.loadTexture("wood"))
-        );
-        Entity chair0 = new Entity(texturedChairModel, new Vector3f(0,0,-10),0,0,0,1);
+        TexturedModel texturedChairModel = new TexturedModel(chairModel, new ModelTexture(loader.loadTexture("wood")));
 
-
-//		TexturedModel chairModel = new TexturedModel(
-//				OBJLoader.loadObjModel("chair0", loader) ,
-//				new ModelTexture(loader.loadTexture("wood"))
+//        TexturedModel grassModel = new TexturedModel(
+//        		OBJLoader.loadObjModel("grass0", loader),
+//				new ModelTexture(loader.loadTexture("grass"))
 //		);
-//		Entity chair0 = new Entity(chairModel, new Vector3f(0,0,-10),0,0,0,1);
-
-
-        TexturedModel grassModel = new TexturedModel(
-        		OBJLoader.loadObjModel("grass0", loader),
-				new ModelTexture(loader.loadTexture("grass"))
-		);
-        grassModel.getTexture().setHasTransparency(true);
-        grassModel.getTexture().setUseFakeLighting(true);
-        Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
+//        grassModel.getTexture().setHasTransparency(true);
+//        grassModel.getTexture().setUseFakeLighting(true);
+//        Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
 
 		//--------------
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("flowers"));
-		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("wood"));
-
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendmap = new TerrainTexture(loader.loadTexture("blendMap"));
-
-
-		Terrain terrain = new Terrain(-1, -1, loader, texturePack, blendmap, "terrainHeightmap");
+		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendmap, "terrainHeightmap");
 		//--------------
 
-		Light light = new Light(new Vector3f(-5, 0, -5), new Vector3f(1, 1, 1));
-		Player player = new Player(texturedChairModel, new Vector3f(0, 0, -10), 0, 0, 0, 1);
+		Light light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
+		Player player = new Player(texturedChairModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
 
 		List<Entity> entities = new ArrayList<>();
-//		entities.add(chair0);
-		entities.add(grass0);
-
+        Random random = new Random();
+        for (int i = 0; i < 2000; i++) {
+            float x = random.nextFloat() * 800;
+            float z = random.nextFloat() * 800;
+            float y = terrain.getHeightOfTerrain(x, z);
+            entities.add(new Entity(texturedChairModel, new Vector3f(x, y, z),0,0,0,1));
+        }
+//		entities.add(grass0);
 
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
@@ -86,7 +76,6 @@ public class MainGameLoop {
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			for (Entity entity : entities) {
-//				entity.increaseRotation(0.1f, 0.1f, 0.1f);
 				renderer.processEntity(entity);
 			}
 
