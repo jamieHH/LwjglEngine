@@ -56,7 +56,10 @@ public class MainGameLoop {
 		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendmap, "terrainHeightmap");
 		//--------------
 
-		List<Entity> entities = new ArrayList<>();
+        List<GuiTexture> guis = new ArrayList<>();
+        guis.add(new GuiTexture(loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
+
+        List<Entity> entities = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 2000; i++) {
             float x = random.nextFloat() * 800;
@@ -66,21 +69,22 @@ public class MainGameLoop {
         }
 
         List<Light> lights = new ArrayList<>();
-        lights.add(new Light(new Vector3f(800, 100, 0), new Vector3f(10, 0, 0)));
-        lights.add(new Light(new Vector3f(0, 100, 800), new Vector3f(0, 0, 10)));
-        lights.add(new Light(new Vector3f(400, 1000, 400), new Vector3f(1, 1, 1)));
+        lights.add(new Light(new Vector3f(400, 1000, 400), new Vector3f(0.3f, 0.4f, 0.4f)));
+        Light torch = new Light(new Vector3f(20, 20, 20),
+                new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
+        lights.add(torch);
 
-		List<GuiTexture> guis = new ArrayList<>();
-		guis.add(new GuiTexture(loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
-
-		Player player = new Player(texturedChairModel, new Vector3f(400, 100, 400), 0, 0, 0, 1);
+		Player player = new Player(texturedChairModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
-//			light.move();
 			player.move(terrain);
+			Vector3f torchPos = new Vector3f(player.getPosition().x,
+                    player.getPosition().y + 4,
+                    player.getPosition().z);
+			torch.setPosition(torchPos);
 			camera.move();
 
 			renderer.processEntity(player);

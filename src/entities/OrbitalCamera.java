@@ -29,7 +29,7 @@ public class OrbitalCamera extends Camera {
 		float offsX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
 		float offsZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
 		position.x = target.getPosition().x - offsX;
-		position.y = target.getPosition().y + verticDistance;
+		position.y = target.getPosition().y + verticDistance + 4;
 		position.z = target.getPosition().z - offsZ;
 	}
 
