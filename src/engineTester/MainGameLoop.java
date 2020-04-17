@@ -69,6 +69,10 @@ public class MainGameLoop {
             entities.add(new Entity(texturedChairModel, new Vector3f(x, y, z),0,0,0,1));
         }
 
+        List<Light> lights = new ArrayList<>();
+        lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+        lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
+
 		List<GuiTexture> guis = new ArrayList<>();
 		guis.add(new GuiTexture(loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
@@ -85,7 +89,7 @@ public class MainGameLoop {
 				renderer.processEntity(entity);
 			}
 
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}

@@ -53,18 +53,18 @@ public class MasterRenderer {
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    public void render(Light sun, Camera camera) {
+    public void render(List<Light> lights, Camera camera) {
         prepare();
         entityShader.start();
         entityShader.loadSkyColor(SKY_R, SKY_G, SKY_B);
-        entityShader.loadLight(sun);
+        entityShader.loadLights(lights);
         entityShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         entityShader.stop();
 
         terrainShader.start();
         terrainShader.loadSkyColor(SKY_R, SKY_G, SKY_B);
-        terrainShader.loadLight(sun);
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
