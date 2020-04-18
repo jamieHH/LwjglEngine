@@ -27,12 +27,12 @@ public class Terrain {
 
     private float[][] heights;
 
-    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap) {
+    public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap) {
         this.texturePack = texturePack;
         this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
-        this.model = generateTerrain(loader, heightmap);
+        this.model = generateTerrain(heightmap);
     }
 
     public float getHeightOfTerrain(float worldX, float worldZ) {
@@ -59,7 +59,7 @@ public class Terrain {
 
     }
 
-    private RawModel generateTerrain(Loader loader, String heightmap) {
+    private RawModel generateTerrain(String heightmap) {
 
         BufferedImage image = null;
         try {
@@ -106,7 +106,7 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return loader.loadToVAO(vertices, textureCoords, normals, indices);
+        return Loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
 
     private Vector3f calculateNormal(int x, int z, BufferedImage image) {
