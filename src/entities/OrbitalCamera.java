@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class OrbitalCamera extends Camera {
 
 	private Entity target;
-	private float distFromTarget = 50;
+	private float distFromTarget = 20;
 	private float angleAroundTarget = 0;
 
 	public OrbitalCamera(Entity target) {

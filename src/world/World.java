@@ -2,7 +2,6 @@ package world;
 
 import entities.Entity;
 import entities.Light;
-import entities.Player;
 import org.lwjgl.util.vector.Vector3f;
 import terrains.Terrain;
 
@@ -15,10 +14,9 @@ public class World {
     private float skyG = 0.4f;
     private float skyB = 0.4f;
 
-    private List<Terrain> terrains = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
-    private Player player;
+    private Terrain terrain;
 
     public World() {
 
@@ -36,20 +34,12 @@ public class World {
         return skyB;
     }
 
-    public List<Terrain> getTerrains() {
-        return terrains;
-    }
-
     public List<Entity> getEntities() {
         return entities;
     }
 
     public List<Light> getLights() {
         return lights;
-    }
-
-    public void addTerrain(Terrain terrain) {
-        terrains.add(terrain);
     }
 
     public void addEntity(Entity entity, float posX, float posY, float posZ) {
@@ -71,9 +61,11 @@ public class World {
         lights.add(light);
     }
 
-    public void setPlayer(Player player, float posX, float posY, float posZ) {
-        player.setPosition(new Vector3f(posX, posY, posZ));
-        player.setWorld(this);
-        this.player = player;
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(Terrain terrain) {
+        this.terrain = terrain;
     }
 }

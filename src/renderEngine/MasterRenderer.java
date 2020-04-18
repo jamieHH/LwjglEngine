@@ -53,18 +53,18 @@ public class MasterRenderer {
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    public void render(List<Light> lights, Camera camera) {
+    public void render(Camera camera) {
         prepare();
         entityShader.start();
         entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
-        entityShader.loadLights(lights);
+        entityShader.loadLights(world.getLights());
         entityShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         entityShader.stop();
 
         terrainShader.start();
         terrainShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
-        terrainShader.loadLights(lights);
+        terrainShader.loadLights(world.getLights());
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
@@ -108,6 +108,13 @@ public class MasterRenderer {
 
     public void processTerrain(Terrain terrain) {
         terrains.add(terrain);
+    }
+
+    public void processWorld() {
+        processTerrain(world.getTerrain());
+        for (Entity entity : world.getEntities()) {
+            processEntity(entity);
+        }
     }
 
     public void cleanUp() {
