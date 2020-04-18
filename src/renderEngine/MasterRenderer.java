@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import terrains.Terrain;
+import world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +23,7 @@ public class MasterRenderer {
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000;
 
-    private static final float SKY_R = 0.3f;
-    private static final float SKY_G = 0.4f;
-    private static final float SKY_B = 0.4f;
+    private World world;
 
     private Matrix4f projectionMatrix;
 
@@ -36,7 +35,8 @@ public class MasterRenderer {
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
 
-    public MasterRenderer() {
+    public MasterRenderer(World world) {
+        this.world = world;
         enableCulling();
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
@@ -56,14 +56,14 @@ public class MasterRenderer {
     public void render(List<Light> lights, Camera camera) {
         prepare();
         entityShader.start();
-        entityShader.loadSkyColor(SKY_R, SKY_G, SKY_B);
+        entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
         entityShader.loadLights(lights);
         entityShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         entityShader.stop();
 
         terrainShader.start();
-        terrainShader.loadSkyColor(SKY_R, SKY_G, SKY_B);
+        terrainShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
@@ -76,7 +76,7 @@ public class MasterRenderer {
     private void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(SKY_R, SKY_G, SKY_B, 1);
+        GL11.glClearColor(world.getSkyR(), world.getSkyG(), world.getSkyB(), 1);
     }
 
     private void createProjectionMatrix() {
