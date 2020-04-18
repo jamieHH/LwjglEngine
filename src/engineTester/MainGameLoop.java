@@ -38,15 +38,40 @@ public class MainGameLoop {
         );
         TexturedModel texturedChairModel = new TexturedModel(chairModel, new ModelTexture(loader.loadTexture("wood")));
 
-//        TexturedModel grassModel = new TexturedModel(
-//        		OBJLoader.loadObjModel("grass0", loader),
-//				new ModelTexture(loader.loadTexture("grass"))
-//		);
-//        grassModel.getTexture().setHasTransparency(true);
-//        grassModel.getTexture().setUseFakeLighting(true);
-//        Entity grass0 = new Entity(grassModel, new Vector3f(0,0,-10),0,0,0,1);
+		ModelData rockData = OBJFileLoader.loadOBJ("rock0");
+		RawModel rockModel = loader.loadToVAO(
+				rockData.getVertices(),
+				rockData.getTextureCoords(),
+				rockData.getNormals(),
+				rockData.getIndices()
+		);
+		TexturedModel texturedRockModel = new TexturedModel(rockModel, new ModelTexture(loader.loadTexture("rock")));
 
-		//--------------
+		ModelData grassData = OBJFileLoader.loadOBJ("grass0");
+		RawModel grassModel = loader.loadToVAO(
+				grassData.getVertices(),
+				grassData.getTextureCoords(),
+				grassData.getNormals(),
+				grassData.getIndices()
+		);
+		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
+		grassTexture.setHasTransparency(true);
+		grassTexture.setUseFakeLighting(true);
+		TexturedModel texturedGrassModel = new TexturedModel(grassModel, grassTexture);
+
+		ModelData lampData = OBJFileLoader.loadOBJ("lampPost0");
+		RawModel lampModel = loader.loadToVAO(
+				lampData.getVertices(),
+				lampData.getTextureCoords(),
+				lampData.getNormals(),
+				lampData.getIndices()
+		);
+		ModelTexture steelTexture = new ModelTexture(loader.loadTexture("steel"));
+		steelTexture.setReflectivity(0.2f);
+		steelTexture.setShineDamper(1.0f);
+		TexturedModel texturedLampModel = new TexturedModel(lampModel, steelTexture);
+
+		//-------------- Terrain
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("flowers"));
@@ -61,11 +86,29 @@ public class MainGameLoop {
 
         List<Entity> entities = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 2000; i++) {
+		for (int i = 0; i < 100000; i++) {
+			float x = random.nextFloat() * 800;
+			float z = random.nextFloat() * 800;
+			float y = terrain.getHeightOfTerrain(x, z);
+			entities.add(new Entity(texturedGrassModel, new Vector3f(x, y, z),0,random.nextFloat() * 360,0,random.nextFloat() + 1));
+		}
+		for (int i = 0; i < 2000; i++) {
+			float x = random.nextFloat() * 800;
+			float z = random.nextFloat() * 800;
+			float y = terrain.getHeightOfTerrain(x, z);
+			entities.add(new Entity(texturedRockModel, new Vector3f(x, y, z), random.nextFloat() * 360, random.nextFloat() * 360, random.nextFloat() * 360,random.nextFloat() + 0.5f));
+		}
+        for (int i = 0; i < 1000; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
             float y = terrain.getHeightOfTerrain(x, z);
-            entities.add(new Entity(texturedChairModel, new Vector3f(x, y, z),0,0,0,1));
+            entities.add(new Entity(texturedChairModel, new Vector3f(x, y, z),0,random.nextFloat() * 360, 0, 1));
+        }
+        for (int i = 0; i < 100; i++) {
+            float x = random.nextFloat() * 800;
+            float z = random.nextFloat() * 800;
+            float y = terrain.getHeightOfTerrain(x, z);
+            entities.add(new Entity(texturedLampModel, new Vector3f(x, y, z), 0, 0, 0, 1));
         }
 
         List<Light> lights = new ArrayList<>();
