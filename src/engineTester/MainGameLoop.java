@@ -34,7 +34,7 @@ public class MainGameLoop {
         RawModel chairModel = makeRawModel(chairData, loader);
         TexturedModel texturedChairModel = new TexturedModel(chairModel, new ModelTexture(loader.loadTexture("wood")));
 
-		ModelData rockModelData = OBJFileLoader.loadOBJ("rock0");
+		ModelData rockModelData = OBJFileLoader.loadOBJ("rock0HD");
 		RawModel rockModel = makeRawModel(rockModelData, loader);
 		ModelTexture rockTexture = new ModelTexture(loader.loadTexture("rock"));
 		rockTexture.setReflectivity(0.5f);
@@ -92,18 +92,18 @@ public class MainGameLoop {
 
         List<Light> lights = new ArrayList<>();
         lights.add(new Light(new Vector3f(400, 1000, 400), new Vector3f(0.3f, 0.4f, 0.4f)));
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 			float x = random.nextFloat() * 200;
 			float z = random.nextFloat() * 200;
 			float y = terrain.getHeightOfTerrain(x, z);
 			lights.add(new Light(new Vector3f(x, y + 8, z),
-					new Vector3f(2, 2, 1), new Vector3f(1, 0.01f, 0.002f)));
+					new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)));
 			entities.add(new Entity(texturedLampModel, new Vector3f(x, y, z), 0, 0, 0, 1));
 		}
 
-//        Light torch = new Light(new Vector3f(20, 20, 20),
-//                new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
-//        lights.add(torch);
+        Light torch = new Light(new Vector3f(20, 20, 20),
+                new Vector3f(2, 2, 1), new Vector3f(1, 0.01f, 0.002f));
+        lights.add(torch);
 
 		Player player = new Player(texturedChairModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
@@ -112,10 +112,10 @@ public class MainGameLoop {
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
 			player.move(terrain);
-//			Vector3f torchPos = new Vector3f(player.getPosition().x,
-//                    player.getPosition().y + 4,
-//                    player.getPosition().z);
-//			torch.setPosition(torchPos);
+			Vector3f torchPos = new Vector3f(player.getPosition().x,
+                    player.getPosition().y + 4,
+                    player.getPosition().z);
+			torch.setPosition(torchPos);
 			camera.move();
 
 			renderer.processEntity(player);
