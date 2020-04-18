@@ -100,26 +100,60 @@ public class MainGameLoop {
 
 		GuiRenderer guiRenderer = new GuiRenderer();
 		MasterRenderer worldRenderer = new MasterRenderer(world);
-		while(!Display.isCloseRequested()) {
 
-		    // camera and torch
-			player.move();
-			torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
-			camera.move();
-			//
 
+
+		//--RUN
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        int updates = 0;
+        while(!Display.isCloseRequested()) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            while(delta >= 1) {
+                //--Tick (camera and torch)
+                player.tick();
+                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
+                camera.tick();
+                //--EndTick
+                updates++;
+                delta--;
+            }
+            //--Render
             worldRenderer.processWorld();
-			worldRenderer.render(camera);
+            worldRenderer.render(camera);
+            guiRenderer.render(guis);
+            DisplayManager.updateDisplay();
+            //--EndRender
+            frames++;
 
-			guiRenderer.render(guis);
-			DisplayManager.updateDisplay();
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("FPS: " + frames + " | " + "UPS: " + updates);
+                frames = 0;
+                updates = 0;
+            }
 		}
+        //--ENDRUN
 
 		guiRenderer.cleanUp();
 		worldRenderer.cleanUp();
 		Loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
+
+	private void render() {
+
+    }
+
+    private void tick() {
+
+    }
 
 	private static float randRotation() {
 	    return new Random().nextFloat() * 360;

@@ -14,24 +14,24 @@ public class Camera {
 
 	}
 	
-	public void move() {
-		if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
+	public void tick() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			position.z -= 0.02f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			position.x += 0.02f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			position.x -= 0.02f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			position.z += 0.02f;
 		}
 
-		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 			yaw -= 0.5f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 			yaw += 0.5f;
 		}
 	}

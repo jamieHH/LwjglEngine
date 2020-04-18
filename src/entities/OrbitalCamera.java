@@ -14,7 +14,7 @@ public class OrbitalCamera extends Camera {
 		pitch = 20;
 	}
 	
-	public void move() {
+	public void tick() {
 		calcZoom();
 		calcPitch();
 		calcAngleAroundTarget();
@@ -70,21 +70,5 @@ public class OrbitalCamera extends Camera {
 			float angleDiff = Mouse.getDX() * 0.3f;
 			angleAroundTarget -= angleDiff;
 		}
-	}
-
-	public Vector3f getPosition() {
-		return position;
-	}
-
-	public float getPitch() {
-		return pitch;
-	}
-
-	public float getYaw() {
-		return yaw;
-	}
-
-	public float getRoll() {
-		return roll;
 	}
 }

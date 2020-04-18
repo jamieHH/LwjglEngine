@@ -2,15 +2,14 @@ package entities;
 
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
-import renderEngine.DisplayManager;
 
 public class Player extends Entity {
 
-    private static final int RUN_SPEED = 20;
-    private static final int TURN_SPEED = 160;
+    private static final float RUN_SPEED = 0.5f;
+    private static final float TURN_SPEED = 4.5f;
 
-    private static final int GRAVITY = -50;
-    private static final int JUMP_POWER = 30;
+    private static final float GRAVITY = -0.025f;
+    private static final float JUMP_POWER = 1f;
     private float terrainHeight = 0;
 
     private float currentSpeed = 0;
@@ -25,16 +24,15 @@ public class Player extends Entity {
         return super.getPosition().y > terrainHeight;
     }
 
-    public void move() {
+    public void tick() {
         checkInputs();
-        super.moveRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
+        super.moveRotation(0, currentTurnSpeed, 0);
+        float dx = (float) (currentSpeed * Math.sin(Math.toRadians(super.getRotY())));
+        float dz = (float) (currentSpeed * Math.cos(Math.toRadians(super.getRotY())));
         super.movePosition(dx, 0, dz);
 
-        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
-        super.movePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        upwardsSpeed += GRAVITY;
+        super.movePosition(0, upwardsSpeed, 0);
         terrainHeight = getWorld().getTerrain().getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
         if (super.getPosition().y < terrainHeight) {
             super.getPosition().y = terrainHeight;
