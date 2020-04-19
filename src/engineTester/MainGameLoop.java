@@ -2,6 +2,7 @@ package engineTester;
 
 import engineTester.assets.Models;
 import entities.*;
+import org.lwjgl.Sys;
 import renderEngine.GuiRenderer;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
@@ -12,6 +13,7 @@ import renderEngine.*;
 import terrains.Terrain;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 import world.World;
 
 import java.util.ArrayList;
@@ -101,6 +103,8 @@ public class MainGameLoop {
 		GuiRenderer guiRenderer = new GuiRenderer();
 		MasterRenderer worldRenderer = new MasterRenderer(world);
 
+        MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix());
+
 
 
 		//--RUN
@@ -120,6 +124,9 @@ public class MainGameLoop {
                 player.tick();
                 torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
                 camera.tick();
+
+                picker.update();
+//                System.out.println(picker.getCurrentRay());
                 //--EndTick
                 updates++;
                 delta--;
