@@ -96,6 +96,7 @@ public class MainGameLoop {
 		Player player = new Player(Models.chair, 1);
 		OrbitalCamera camera = new OrbitalCamera(player);
 		world.addEntity(player, 0, 0, 0);
+		world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
 
         List<GuiTexture> guis = new ArrayList<>();
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
@@ -104,7 +105,6 @@ public class MainGameLoop {
 		MasterRenderer worldRenderer = new MasterRenderer(world);
 
         MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
-
         Entity lampPole = new Entity(Models.lamp, 1);
         Light lampLight = new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f));
         world.addEntity(lampPole, 0, 0, 0);

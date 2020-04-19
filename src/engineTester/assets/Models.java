@@ -13,6 +13,7 @@ public class Models {
     public static TexturedModel rock = new TexturedModel(makeRawModel("rock0HD"), makeModelTexture("rock", 0.5f, 1.0f));
     public static TexturedModel grass = new TexturedModel(makeRawModel("grass0"), makeTransparentModelTexture("grass"));
     public static TexturedModel lamp = new TexturedModel(makeRawModel("lampPost0"), makeModelTexture("steel", 0.5f, 1.0f));
+    public static TexturedModel lightTest = new TexturedModel(makeRawModel("lightTest"), makeModelTexture("steel"));
 
     private static RawModel makeRawModel(String objFileName) {
         ModelData modelData = OBJFileLoader.loadOBJ(objFileName);
