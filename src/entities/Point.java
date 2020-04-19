@@ -7,7 +7,7 @@ public class Point {
 
     private World world;
     private Vector3f position;
-    private float rotX, rotY, rotZ;
+    private Vector3f rotation = new Vector3f(0, 0, 0);
 
     public Vector3f getPosition() {
         return position;
@@ -17,10 +17,10 @@ public class Point {
         this.position = position;
     }
 
-    public void movePosition(float dx, float dy, float dz) {
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
+    public void movePosition(float nx, float ny, float nz) {
+        this.position.x += nx;
+        this.position.y += ny;
+        this.position.z += nz;
     }
 
     public float getPosX() {
@@ -59,52 +59,54 @@ public class Point {
         this.position.z += moveZ;
     }
 
-    public void setRotation(float rotX, float rotY, float rotZ) {
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
+    public Vector3f getRotation() {
+        return rotation;
     }
 
-    public void moveRotation(float rotX, float rotY, float rotZ) {
-        this.rotX += rotX;
-        this.rotY += rotY;
-        this.rotZ += rotZ;
+    public void setRotation(Vector3f rotation) {
+        this.rotation = rotation;
+    }
+
+    public void moveRotation(float nx, float ny, float nz) {
+        this.rotation.x += nx;
+        this.rotation.y += ny;
+        this.rotation.z += nz;
     }
 
     public float getRotX() {
-        return rotX;
+        return this.rotation.x;
     }
 
     public void setRotX(float rotX) {
-        this.rotX = rotX;
+        this.rotation.x = rotX;
     }
 
     public void moveRotX(float rotX) {
-        this.rotX += rotX;
+        this.rotation.x += rotX;
     }
 
     public float getRotY() {
-        return rotY;
+        return rotation.y;
     }
 
     public void setRotY(float rotY) {
-        this.rotY = rotY;
+        this.rotation.y = rotY;
     }
 
     public void moveRotY(float rotY) {
-        this.rotY += rotY;
+        this.rotation.y += rotY;
     }
 
     public float getRotZ() {
-        return rotZ;
+        return rotation.z;
     }
 
     public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
+        this.rotation.z = rotZ;
     }
 
     public void moveRotZ(float rotZ) {
-        this.rotZ += rotZ;
+        this.rotation.z += rotZ;
     }
 
     public World getWorld() {

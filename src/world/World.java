@@ -50,7 +50,7 @@ public class World {
 
     public void addEntity(Entity entity, float posX, float posY, float posZ, float rotX, float rotY, float rotZ) {
         entity.setPosition(new Vector3f(posX, posY, posZ));
-        entity.setRotation(rotX, rotY, rotZ);
+        entity.setRotation(new Vector3f(rotX, rotY, rotZ));
         entity.setWorld(this);
         entities.add(entity);
     }
