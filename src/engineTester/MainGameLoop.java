@@ -2,7 +2,7 @@ package engineTester;
 
 import engineTester.assets.Models;
 import entities.*;
-import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
 import renderEngine.GuiRenderer;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
@@ -70,24 +70,24 @@ public class MainGameLoop {
                     0, randRotation(), 0
             );
         }
-		for (int i = 0; i < 2; i++) {
-			float x = random.nextFloat() * 200;
-			float z = random.nextFloat() * 200;
-			float y = terrain.getHeightOfTerrain(x, z);
-            world.addLight(
-                    new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
-                    x, y + 8, z
-            );
-			world.addEntity(
-			        new Entity(Models.lamp, 1),
-                    x, y, z,
-                    0, 0, 0
-            );
-		}
+//		for (int i = 0; i < 2; i++) {
+//			float x = random.nextFloat() * 200;
+//			float z = random.nextFloat() * 200;
+//			float y = terrain.getHeightOfTerrain(x, z);
+//            world.addLight(
+//                    new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
+//                    x, y + 8, z
+//            );
+//			world.addEntity(
+//			        new Entity(Models.lamp, 1),
+//                    x, y, z,
+//                    0, 0, 0
+//            );
+//		}
 		//------
 
 
-        Light ambient = new Light(new Vector3f(0.3f, 0.4f, 0.4f));
+        Light ambient = new Light(new Vector3f(0.3f, 0.3f, 0.3f));
         world.addLight(ambient, 400, 1000, 400);
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
         world.addLight(torch, 0, 0, 0);
@@ -103,9 +103,12 @@ public class MainGameLoop {
 		GuiRenderer guiRenderer = new GuiRenderer();
 		MasterRenderer worldRenderer = new MasterRenderer(world);
 
-        MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix());
+        MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
 
-
+        Entity lampPole = new Entity(Models.lamp, 1);
+        Light lampLight = new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f));
+        world.addEntity(lampPole, 0, 0, 0);
+        world.addLight(lampLight, 0, 0, 0);
 
 		//--RUN
         long lastTime = System.nanoTime();
@@ -126,7 +129,22 @@ public class MainGameLoop {
                 camera.tick();
 
                 picker.update();
-//                System.out.println(picker.getCurrentRay());
+                Vector3f tp = picker.getCurrentTerrainPoint();
+                if (tp != null) {
+                    lampPole.setPosition(new Vector3f(tp.getX(), tp.getY(), tp.getZ()));
+                    lampLight.setPosition(new Vector3f(tp.getX(), tp.getY() + 8, tp.getZ()));
+                    if (Mouse.isButtonDown(0)) {
+                        world.addLight(
+                                new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
+                                tp.getX(), tp.getY() + 8, tp.getZ()
+                        );
+                        world.addEntity(
+                                new Entity(Models.lamp, 1),
+                                tp.getX(), tp.getY(), tp.getZ(),
+                                0, 0, 0
+                        );
+                    }
+                }
                 //--EndTick
                 updates++;
                 delta--;
