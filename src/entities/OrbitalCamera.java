@@ -1,6 +1,7 @@
 package entities;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 
 public class OrbitalCamera extends Camera {
 
@@ -10,7 +11,8 @@ public class OrbitalCamera extends Camera {
 
 	public OrbitalCamera(Entity target) {
 		this.target = target;
-		pitch = 20;
+		super.setWorld(target.getWorld());
+		setRotX(20);
 	}
 	
 	public void tick() {
@@ -20,24 +22,22 @@ public class OrbitalCamera extends Camera {
 		float horizDistance = calcHorizontalDistance();
 		float verticDistance = calcVerticalDistance();
 		calcCameraPosition(horizDistance, verticDistance);
-		this.yaw = 180 - (target.getRotY() + angleAroundTarget);
+		setRotY(180 - (target.getRotY() + angleAroundTarget));
 	}
 
 	private void calcCameraPosition(float horizDistance, float verticDistance) {
 		float theta = target.getRotY() + angleAroundTarget;
 		float offsX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
 		float offsZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-		position.x = target.getPosition().x - offsX;
-		position.y = target.getPosition().y + verticDistance + 4;
-		position.z = target.getPosition().z - offsZ;
+		setPosition(new Vector3f(target.getPosX() - offsX, target.getPosY() + verticDistance + 4, target.getPosZ() - offsZ));
 	}
 
 	private float calcHorizontalDistance() {
-		return  (float) (distFromTarget * Math.cos(Math.toRadians(pitch)));
+		return  (float) (distFromTarget * Math.cos(Math.toRadians(getRotX())));
 	}
 
 	private float calcVerticalDistance() {
-		return  (float) (distFromTarget * Math.sin(Math.toRadians(pitch)));
+		return  (float) (distFromTarget * Math.sin(Math.toRadians(getRotX())));
 	}
 
 	private void calcZoom() {
@@ -52,14 +52,14 @@ public class OrbitalCamera extends Camera {
 	private void calcPitch() {
 		if (Mouse.isButtonDown(1)) {
 			float pitchDiff = Mouse.getDY() * 0.1f;
-			if (pitch - pitchDiff < 90) {
-				if (pitch - pitchDiff > 0) {
-					pitch -= pitchDiff;
+			if (getRotX() - pitchDiff < 90) {
+				if (getRotX() - pitchDiff > 0) {
+					setRotX(getRotX() - pitchDiff);
 				} else {
-					pitch = 0;
+					setRotX(0);
 				}
 			} else {
-				pitch = 90;
+				setRotX(90);
 			}
 		}
 	}
