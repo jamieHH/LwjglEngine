@@ -109,6 +109,10 @@ public class Point {
         this.rotation.z += rotZ;
     }
 
+    public double distanceTo(Point p) {
+        return Math.sqrt(Math.pow(getPosX() - p.getPosX(), 2) + Math.pow(getPosY() - p.getPosY(), 2) + Math.pow(getPosZ() - p.getPosZ(), 2));
+    }
+
     public World getWorld() {
         return world;
     }

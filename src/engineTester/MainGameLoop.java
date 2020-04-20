@@ -88,7 +88,9 @@ public class MainGameLoop {
 
 
         Light ambient = new Light(new Vector3f(0.3f, 0.3f, 0.3f));
-        world.addLight(ambient, 400, 1000, 400);
+        ambient.setPosition(new Vector3f(400, 1000, 400));
+        world.setEnvLight(ambient);
+
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
         world.addLight(torch, 0, 0, 0);
 
@@ -157,7 +159,7 @@ public class MainGameLoop {
                 delta--;
             }
             //--Render
-            worldRenderer.processWorld();
+            worldRenderer.processWorld(camera);
             worldRenderer.render(camera);
             guiRenderer.render(guis);
             DisplayManager.updateDisplay();

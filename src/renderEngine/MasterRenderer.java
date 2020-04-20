@@ -3,6 +3,7 @@ package renderEngine;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Point;
 import models.TexturedModel;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -12,10 +13,7 @@ import shaders.TerrainShader;
 import terrains.Terrain;
 import world.World;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MasterRenderer {
 
@@ -32,8 +30,9 @@ public class MasterRenderer {
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
 
-    private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
+    private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+    private List<Light> lights = new ArrayList<>();
 
     public MasterRenderer(World world) {
         this.world = world;
@@ -57,14 +56,14 @@ public class MasterRenderer {
         prepare();
         entityShader.start();
         entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
-        entityShader.loadLights(world.getLights());
+        entityShader.loadLights(lights);
         entityShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         entityShader.stop();
 
         terrainShader.start();
         terrainShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
-        terrainShader.loadLights(world.getLights());
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
@@ -110,11 +109,27 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
-    public void processWorld() {
+    private void processLights(Point camera, int n) {
+        List<Light> lights = new ArrayList<>(world.getLights());
+        lights.sort((o1, o2) -> {
+            if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
+                return 0;
+            }
+            return o1.distanceTo(camera) < o2.distanceTo(camera) ? -1 : 1;
+        });
+        if (lights.size() >= n) {
+            lights = lights.subList(0, n - 2);
+        }
+        lights.add(world.getEnvLight());
+        this.lights =  lights;
+    }
+
+    public void processWorld(Point camera) {
         processTerrain(world.getTerrain());
         for (Entity entity : world.getEntities()) {
             processEntity(entity);
         }
+        processLights(camera, 8);
     }
 
     public void cleanUp() {
