@@ -77,4 +77,49 @@ public class World {
     public Light getEnvLight() {
         return envLight;
     }
+
+    //---- Helpers
+    public List<Entity> getEntitiesInSquare(float posX0, float posZ0, float posX1, float posZ1) {
+        List<Entity> entities = new ArrayList<>();
+        for (Entity e : getEntities()) {
+            if (e.isInside(posX0, posZ0, posX1, posZ1)) {
+                entities.add(e);
+            }
+        }
+
+        return entities;
+    }
+
+    public List<Entity> getEntitiesInSquare(Vector3f position, float radiusX, float radiusZ) {
+        List<Entity> entities = new ArrayList<>();
+        for (Entity e : getEntities()) {
+            if (e.isInside(position.x - radiusX, position.z - radiusZ, position.x + radiusX, position.z + radiusZ)) {
+                entities.add(e);
+            }
+        }
+
+        return entities;
+    }
+
+    public List<Light> getLightsInSquare(float posX0, float posZ0, float posX1, float posZ1) {
+        List<Light> entities = new ArrayList<>();
+        for (Light l : getLights()) {
+            if (l.isInside(posX0, posZ0, posX1, posZ1)) {
+                entities.add(l);
+            }
+        }
+
+        return entities;
+    }
+
+    public List<Light> getLightsInSquare(Vector3f position, float radiusX, float radiusZ) {
+        List<Light> entities = new ArrayList<>();
+        for (Light l : getLights()) {
+            if (l.isInside(position.x - radiusX, position.z - radiusZ, position.x + radiusX, position.z + radiusZ)) {
+                entities.add(l);
+            }
+        }
+
+        return entities;
+    }
 }

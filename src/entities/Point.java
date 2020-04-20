@@ -8,6 +8,7 @@ public class Point {
     private World world;
     private Vector3f position;
     private Vector3f rotation = new Vector3f(0, 0, 0);
+    private double radius = 0;
 
     public Vector3f getPosition() {
         return position;
@@ -109,15 +110,40 @@ public class Point {
         this.rotation.z += rotZ;
     }
 
-    public double distanceTo(Point p) {
-        return Math.sqrt(Math.pow(getPosX() - p.getPosX(), 2) + Math.pow(getPosY() - p.getPosY(), 2) + Math.pow(getPosZ() - p.getPosZ(), 2));
-    }
-
     public World getWorld() {
         return world;
     }
 
     public void setWorld(World world) {
         this.world = world;
+    }
+
+    //---- Helpers
+    public float distanceTo(Point p) {
+        return (float) Math.sqrt(Math.pow(getPosX() - p.getPosX(), 2) + Math.pow(getPosY() - p.getPosY(), 2) + Math.pow(getPosZ() - p.getPosZ(), 2));
+    }
+
+    public float groundDistanceTo(float x, float z) {
+        return (float) Math.hypot(Math.abs(getPosX() - x), Math.abs(getPosZ() - z));
+    }
+
+    public float squareDistanceTo(float x, float z) {
+        return Math.max(Math.abs(this.getPosX() - x), Math.abs(this.getPosZ() - z));
+    }
+
+    public boolean groundContains(float x, float z) {
+        if (this.getPosX() + radius <= x) return false;
+        if (this.getPosX() - radius >= x) return false;
+        if (this.getPosZ() + radius <= z) return false;
+        if (this.getPosZ() - radius >= z) return false;
+        return true;
+    }
+
+    public boolean isInside(float x0, float z0, float x1, float z1) {
+        if (this.getPosX() + radius <= x0) return false;
+        if (this.getPosX() - radius >= x1) return false;
+        if (this.getPosZ() + radius <= z0) return false;
+        if (this.getPosZ() - radius >= z1) return false;
+        return true;
     }
 }

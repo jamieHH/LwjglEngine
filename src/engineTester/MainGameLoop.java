@@ -114,6 +114,7 @@ public class MainGameLoop {
 
 		//--RUN
         int lampWait = 0;
+        int processWait = 0;
 
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -159,8 +160,15 @@ public class MainGameLoop {
                 delta--;
             }
             //--Render
-            worldRenderer.processWorld(camera);
+            if (processWait > 0) {
+                processWait--;
+            } else {
+                processWait = 10;
+                worldRenderer.clearProcessedWorld();
+                worldRenderer.processWorld(player);
+            }
             worldRenderer.render(camera);
+
             guiRenderer.render(guis);
             DisplayManager.updateDisplay();
             //--EndRender

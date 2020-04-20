@@ -1,5 +1,6 @@
 package shaders;
 
+import entities.Point;
 import org.lwjgl.util.vector.Matrix4f;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -89,8 +90,8 @@ public class StaticShader extends ShaderProgram {
 		}
 	}
 	
-	public void loadViewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+	public void loadViewMatrix(Point point) {
+		Matrix4f viewMatrix = Maths.createViewMatrix(point);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 	

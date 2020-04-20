@@ -1,6 +1,5 @@
 package renderEngine;
 
-import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Point;
@@ -52,24 +51,21 @@ public class MasterRenderer {
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    public void render(Camera camera) {
+    public void render(Point camera) {
         prepare();
         entityShader.start();
+        entityShader.loadViewMatrix(camera);
         entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
         entityShader.loadLights(lights);
-        entityShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         entityShader.stop();
 
         terrainShader.start();
+        terrainShader.loadViewMatrix(camera);
         terrainShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
         terrainShader.loadLights(lights);
-        terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
-
-        entities.clear();
-        terrains.clear();
     }
 
     private void prepare() {
@@ -110,7 +106,7 @@ public class MasterRenderer {
     }
 
     private void processLights(Point camera, int n) {
-        List<Light> lights = new ArrayList<>(world.getLights());
+        List<Light> lights = new ArrayList<>(world.getLightsInSquare(camera.getPosition(), 300, 300));
         lights.sort((o1, o2) -> {
             if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
                 return 0;
@@ -124,12 +120,17 @@ public class MasterRenderer {
         this.lights =  lights;
     }
 
-    public void processWorld(Point camera) {
+    public void processWorld(Point focus) {
         processTerrain(world.getTerrain());
-        for (Entity entity : world.getEntities()) {
+        for (Entity entity : world.getEntitiesInSquare(focus.getPosition(), 300, 300)) {
             processEntity(entity);
         }
-        processLights(camera, 8);
+        processLights(focus, 8);
+    }
+
+    public void clearProcessedWorld() {
+        entities.clear();
+        terrains.clear();
     }
 
     public void cleanUp() {
