@@ -111,6 +111,8 @@ public class MainGameLoop {
         world.addLight(lampLight, 0, 0, 0);
 
 		//--RUN
+        int lampWait = 0;
+
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -133,16 +135,21 @@ public class MainGameLoop {
                 if (tp != null) {
                     lampPole.setPosition(new Vector3f(tp.getX(), tp.getY(), tp.getZ()));
                     lampLight.setPosition(new Vector3f(tp.getX(), tp.getY() + 8, tp.getZ()));
-                    if (Mouse.isButtonDown(0)) {
-                        world.addLight(
-                                new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
-                                tp.getX(), tp.getY() + 8, tp.getZ()
-                        );
-                        world.addEntity(
-                                new Entity(Models.lamp, 1),
-                                tp.getX(), tp.getY(), tp.getZ(),
-                                0, 0, 0
-                        );
+                    if (lampWait > 0) {
+                        lampWait--;
+                    } else {
+                        if (Mouse.isButtonDown(0)) {
+                            lampWait = 15;
+                            world.addLight(
+                                    new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
+                                    tp.getX(), tp.getY() + 8, tp.getZ()
+                            );
+                            world.addEntity(
+                                    new Entity(Models.lamp, 1),
+                                    tp.getX(), tp.getY(), tp.getZ(),
+                                    0, 0, 0
+                            );
+                        }
                     }
                 }
                 //--EndTick
