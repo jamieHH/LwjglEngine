@@ -87,12 +87,11 @@ public class MainGameLoop {
 		//------
 
 
-        Light ambient = new Light(new Vector3f(0.3f, 0.3f, 0.3f));
-        ambient.setPosition(new Vector3f(400, 1000, 400));
-        world.setEnvLight(ambient);
+        EnvLight ambient = new EnvLight(new Vector3f(0.3f, 0.4f, 0.4f), new Vector3f(1, 1, 1));
+        world.addEnvLight(ambient);
 
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
-        world.addLight(torch, 0, 0, 0);
+//        world.addLight(torch, 0, 0, 0);
 
 
 		Player player = new Player(Models.chair, 1);

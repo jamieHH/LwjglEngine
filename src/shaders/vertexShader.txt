@@ -7,6 +7,7 @@ in vec3 normal;
 out vec2 pass_textureCoordinates;
 out vec3 surfaceNormal;
 out vec3 toLightVector[8];
+out vec3 toEnvLightVector[2];
 out vec3 toCameraVector;
 out float visibility;
 
@@ -14,6 +15,7 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[8];
+uniform vec3 envLightDirection[2];
 
 uniform float useFakeLighting;
 
@@ -32,6 +34,11 @@ void main(void) {
 	}
 	
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz;
+
+	for (int i = 0; i < 2; i++) {
+        toEnvLightVector[i] = envLightDirection[i];
+    }
+
 	for (int i = 0; i < 8; i++) {
 	    toLightVector[i] = lightPosition[i] - worldPosition.xyz;
 	}

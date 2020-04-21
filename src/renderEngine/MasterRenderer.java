@@ -54,6 +54,7 @@ public class MasterRenderer {
         entityShader.start();
         entityShader.loadViewMatrix(camera);
         entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
+        entityShader.loadEnvLights(world.getEnvLights());
         entityShader.loadLights(lights);
         entityRenderer.render(entities);
         entityShader.stop();
@@ -112,9 +113,8 @@ public class MasterRenderer {
             return o1.distanceTo(focus) < o2.distanceTo(focus) ? -1 : 1;
         });
         if (lights.size() >= n) {
-            lights = lights.subList(0, n - 2);
+            lights = lights.subList(0, n - 1);
         }
-        lights.add(world.getEnvLight());
         this.lights =  lights;
     }
 

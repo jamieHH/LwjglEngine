@@ -1,6 +1,7 @@
 package world;
 
 import entities.Entity;
+import entities.EnvLight;
 import entities.Light;
 import org.lwjgl.util.vector.Vector3f;
 import terrains.Terrain;
@@ -14,7 +15,7 @@ public class World {
     private float skyG = 0.4f;
     private float skyB = 0.4f;
 
-    private Light envLight;
+    private List<EnvLight> envLights = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
     private Terrain terrain;
@@ -70,12 +71,12 @@ public class World {
         this.terrain = terrain;
     }
 
-    public void setEnvLight(Light envLight) {
-        this.envLight = envLight;
+    public void addEnvLight(EnvLight envLight) {
+        envLights.add(envLight);
     }
 
-    public Light getEnvLight() {
-        return envLight;
+    public List<EnvLight> getEnvLights() {
+        return envLights;
     }
 
     //---- Helpers
