@@ -18,17 +18,15 @@ public class MasterRenderer {
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000;
-
-    private World world;
-
-    private Matrix4f projectionMatrix;
+    private static final float FAR_PLANE = 1000f;
+    private static Matrix4f PROJECTION_MATRIX;
 
     private EntityRenderer entityRenderer;
     private StaticShader entityShader = new StaticShader();
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
 
+    private World world;
     private List<Terrain> terrains = new ArrayList<>();
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Light> lights = new ArrayList<>();
@@ -37,8 +35,8 @@ public class MasterRenderer {
         this.world = world;
         enableCulling();
         createProjectionMatrix();
-        entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
-        terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+        entityRenderer = new EntityRenderer(entityShader, PROJECTION_MATRIX);
+        terrainRenderer = new TerrainRenderer(terrainShader, PROJECTION_MATRIX);
     }
 
     public static void enableCulling() {
@@ -74,19 +72,19 @@ public class MasterRenderer {
         GL11.glClearColor(world.getSkyR(), world.getSkyG(), world.getSkyB(), 1);
     }
 
-    private void createProjectionMatrix() {
+    private static void createProjectionMatrix() {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-        projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-        projectionMatrix.m33 = 0;
+        PROJECTION_MATRIX = new Matrix4f();
+        PROJECTION_MATRIX.m00 = x_scale;
+        PROJECTION_MATRIX.m11 = y_scale;
+        PROJECTION_MATRIX.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+        PROJECTION_MATRIX.m23 = -1;
+        PROJECTION_MATRIX.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+        PROJECTION_MATRIX.m33 = 0;
     }
 
     public void processEntity(Entity entity) {
@@ -105,13 +103,13 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
-    private void processLights(Point camera, int n) {
-        List<Light> lights = new ArrayList<>(world.getLightsInSquare(camera.getPosition(), 300, 300));
+    private void processLights(Point focus, int n) {
+        List<Light> lights = new ArrayList<>(world.getLightsInSquare(focus.getPosition(), 300, 300));
         lights.sort((o1, o2) -> {
-            if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
+            if (o1.distanceTo(focus) == o2.distanceTo(focus)) {
                 return 0;
             }
-            return o1.distanceTo(camera) < o2.distanceTo(camera) ? -1 : 1;
+            return o1.distanceTo(focus) < o2.distanceTo(focus) ? -1 : 1;
         });
         if (lights.size() >= n) {
             lights = lights.subList(0, n - 2);
@@ -139,6 +137,6 @@ public class MasterRenderer {
     }
 
     public Matrix4f getProjectionMatrix() {
-        return projectionMatrix;
+        return PROJECTION_MATRIX;
     }
 }
