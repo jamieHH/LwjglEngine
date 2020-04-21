@@ -87,8 +87,9 @@ public class MainGameLoop {
 		//------
 
 
-        EnvLight ambient = new EnvLight(new Vector3f(0.3f, 0.4f, 0.4f), new Vector3f(1, 1, 1));
+        EnvLight ambient = new EnvLight(new Vector3f(1f, 0.2f, 0.2f), new Vector3f(1, 0.2f, 1));
         world.addEnvLight(ambient);
+        world.addEnvLight(new EnvLight(new Vector3f(0.2f, 0.2f, 1f), new Vector3f(-1, 0.2f, -1)));
 
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
 //        world.addLight(torch, 0, 0, 0);
@@ -107,7 +108,7 @@ public class MainGameLoop {
 
         MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
         Entity lampPole = new Entity(Models.lamp, 1);
-        Light lampLight = new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f));
+        Light lampLight = new Light(new Vector3f(0, 1, 0), new Vector3f(1, 0.01f, 0.002f));
         world.addEntity(lampPole, 0, 0, 0);
         world.addLight(lampLight, 0, 0, 0);
 
@@ -143,7 +144,7 @@ public class MainGameLoop {
                         if (Mouse.isButtonDown(0)) {
                             lampWait = 15;
                             world.addLight(
-                                    new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
+                                    new Light(lampLight.getColor(), lampLight.getAttenuation()),
                                     tp.getX(), tp.getY() + 8, tp.getZ()
                             );
                             world.addEntity(

@@ -34,11 +34,9 @@ void main(void) {
 	}
 	
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz;
-
 	for (int i = 0; i < 2; i++) {
         toEnvLightVector[i] = envLightDirection[i];
     }
-
 	for (int i = 0; i < 8; i++) {
 	    toLightVector[i] = lightPosition[i] - worldPosition.xyz;
 	}

@@ -1,6 +1,7 @@
 package shaders;
 
 import entities.Camera;
+import entities.EnvLight;
 import entities.Light;
 import entities.Point;
 import org.lwjgl.util.vector.Matrix4f;
@@ -12,6 +13,7 @@ import java.util.List;
 public class TerrainShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 8;
+	private static final int MAX_ENV_LIGHTS = 2;
 
 	private static final String VERTEX_FILE = "src/shaders/terrainVertexShader.txt";
 	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.txt";
@@ -22,6 +24,8 @@ public class TerrainShader extends ShaderProgram {
 	private int[] location_lightPosition;
 	private int[] location_lightColor;
 	private int[] location_attenuation;
+	private int[] location_envLightColor;
+	private int[] location_envLightDirection;
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColor;
@@ -53,10 +57,16 @@ public class TerrainShader extends ShaderProgram {
 		location_lightPosition = new int [MAX_LIGHTS];
 		location_lightColor = new int [MAX_LIGHTS];
 		location_attenuation = new int [MAX_LIGHTS];
+		location_envLightColor = new int [MAX_ENV_LIGHTS];
+		location_envLightDirection = new int [MAX_ENV_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
+		}
+		for (int i = 0; i < MAX_ENV_LIGHTS; i++) {
+			location_envLightColor[i] = super.getUniformLocation("envLightColor[" + i + "]");
+			location_envLightDirection[i] = super.getUniformLocation("envLightDirection[" + i + "]");
 		}
 
 		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
@@ -97,6 +107,18 @@ public class TerrainShader extends ShaderProgram {
 				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
 				super.loadVector(location_lightColor[i], new Vector3f(0, 0, 0));
 				super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+			}
+		}
+	}
+
+	public void loadEnvLights(List<EnvLight> lights) {
+		for (int i = 0; i < MAX_ENV_LIGHTS; i++) {
+			if (i < lights.size()) {
+				super.loadVector(location_envLightDirection[i], lights.get(i).getDirection());
+				super.loadVector(location_envLightColor[i], lights.get(i).getColor());
+			} else {
+				super.loadVector(location_envLightDirection[i], new Vector3f(0, 0, 0));
+				super.loadVector(location_envLightColor[i], new Vector3f(0, 0, 0));
 			}
 		}
 	}
