@@ -44,16 +44,6 @@ public class MasterRenderer {
         skyboxRenderer = new SkyboxRenderer(PROJECTION_MATRIX);
     }
 
-    public static void enableCulling() {
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
-    }
-
-    public static void disableCulling() {
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
-    }
-
     public void render(Point camera) {
         prepare();
         entityShader.start();
@@ -72,7 +62,17 @@ public class MasterRenderer {
         terrainRenderer.render(terrains);
         terrainShader.stop();
 
-        skyboxRenderer.render(camera);
+        skyboxRenderer.render(camera, world.getSkyR(), world.getSkyG(), world.getSkyB());
+    }
+
+    public static void enableCulling() {
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
+    }
+
+    public static void disableCulling() {
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
     }
 
     private void prepare() {
