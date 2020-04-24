@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
+import skybox.SkyboxShader;
 import terrains.Terrain;
 import world.World;
 
@@ -25,6 +27,8 @@ public class MasterRenderer {
     private StaticShader entityShader = new StaticShader();
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
+    private SkyboxShader skyboxShader = new SkyboxShader();
+    private SkyboxRenderer skyboxRenderer;
 
     private World world;
     private List<Terrain> terrains = new ArrayList<>();
@@ -37,6 +41,7 @@ public class MasterRenderer {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(entityShader, PROJECTION_MATRIX);
         terrainRenderer = new TerrainRenderer(terrainShader, PROJECTION_MATRIX);
+        skyboxRenderer = new SkyboxRenderer(PROJECTION_MATRIX);
     }
 
     public static void enableCulling() {
@@ -66,6 +71,8 @@ public class MasterRenderer {
         terrainShader.loadLights(lights);
         terrainRenderer.render(terrains);
         terrainShader.stop();
+
+        skyboxRenderer.render(camera);
     }
 
     private void prepare() {
