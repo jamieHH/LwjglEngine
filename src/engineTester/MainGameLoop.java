@@ -91,9 +91,9 @@ public class MainGameLoop {
 		//------
 
 
-        EnvLight ambient = new EnvLight(new Vector3f(1f, 0.2f, 0.2f), new Vector3f(1, 0.2f, 1));
+        EnvLight ambient = new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1));
         world.addEnvLight(ambient);
-        world.addEnvLight(new EnvLight(new Vector3f(0.2f, 0.2f, 1f), new Vector3f(-1, 0.2f, -1)));
+        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
 
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
 //        world.addLight(torch, 0, 0, 0);
@@ -111,8 +111,9 @@ public class MainGameLoop {
 		WorldMasterRenderer worldRenderer = new WorldMasterRenderer(world);
 
         TextMasterRenderer.init();
-        FontType font = new FontType(Loader.loadTexture("font/arialE"), new File("res/font/arial.fnt"));
-        GUIText text = new GUIText("this is a test!", 1, font, new Vector2f(0.5f, 0), 1f, false);
+        FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
+        GUIText text = new GUIText("This is a test of the fire alarm system!", 4f, font, new Vector2f(0f, 0f), 1f, true);
+        text.setColour(1, 0, 0);
 
         MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
         Entity lampPole = new Entity(Models.lamp, 1);
