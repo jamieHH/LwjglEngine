@@ -2,6 +2,9 @@ package engineTester;
 
 import engineTester.assets.Models;
 import entities.*;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMasterRenderer;
 import org.lwjgl.input.Mouse;
 import renderEngine.GuiRenderer;
 import gui.GuiTexture;
@@ -16,6 +19,7 @@ import textures.TerrainTexturePack;
 import toolbox.MousePicker;
 import world.World;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -104,7 +108,11 @@ public class MainGameLoop {
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
 
 		GuiRenderer guiRenderer = new GuiRenderer();
-		MasterRenderer worldRenderer = new MasterRenderer(world);
+		WorldMasterRenderer worldRenderer = new WorldMasterRenderer(world);
+
+        TextMasterRenderer.init();
+        FontType font = new FontType(Loader.loadTexture("font/arialE"), new File("res/font/arial.fnt"));
+        GUIText text = new GUIText("this is a test!", 1, font, new Vector2f(0.5f, 0), 1f, false);
 
         MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
         Entity lampPole = new Entity(Models.lamp, 1);
@@ -170,6 +178,7 @@ public class MainGameLoop {
             worldRenderer.render(camera);
 
             guiRenderer.render(guis);
+            TextMasterRenderer.render();
             DisplayManager.updateDisplay();
             //--EndRender
             frames++;
@@ -183,6 +192,7 @@ public class MainGameLoop {
 		}
         //--ENDRUN
 
+        TextMasterRenderer.cleanUp();
 		guiRenderer.cleanUp();
 		worldRenderer.cleanUp();
 		Loader.cleanUp();

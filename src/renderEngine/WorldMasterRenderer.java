@@ -16,7 +16,7 @@ import world.World;
 
 import java.util.*;
 
-public class MasterRenderer {
+public class WorldMasterRenderer {
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
@@ -35,7 +35,7 @@ public class MasterRenderer {
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Light> lights = new ArrayList<>();
 
-    public MasterRenderer(World world) {
+    public WorldMasterRenderer(World world) {
         this.world = world;
         enableCulling();
         createProjectionMatrix();
