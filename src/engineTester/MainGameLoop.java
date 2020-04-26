@@ -5,6 +5,8 @@ import entities.*;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMasterRenderer;
+import models.TexturedModel;
+import normalMappingObjConverter.NormalMappedObjLoader;
 import org.lwjgl.input.Mouse;
 import renderEngine.GuiRenderer;
 import gui.GuiTexture;
@@ -14,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.*;
 import terrains.Terrain;
+import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;
@@ -100,9 +103,9 @@ public class MainGameLoop {
 
 
 		Player player = new Player(Models.chair, 1);
-		OrbitalCamera camera = new OrbitalCamera(player);
 		world.addEntity(player, 0, 0, 0);
-		world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
+        OrbitalCamera camera = new OrbitalCamera(player);
+        world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
 
         List<GuiTexture> guis = new ArrayList<>();
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
@@ -120,6 +123,14 @@ public class MainGameLoop {
         Light lampLight = new Light(new Vector3f(0, 1, 0), new Vector3f(1, 0.01f, 0.002f));
         world.addEntity(lampPole, 0, 0, 0);
         world.addLight(lampLight, 0, 0, 0);
+
+        TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel"),
+                new ModelTexture(Loader.loadTexture("barrel")));
+        barrelModel.getTexture().setShineDamper(10);
+        barrelModel.getTexture().setShineDamper(10.5f);
+        barrelModel.getTexture().setNormalMapID(Loader.loadTexture("barrelNormal"));
+        barrelModel.getTexture().setIsHasNormalMap(true);
+        world.addEntity(new Entity(barrelModel, 1), 10, 5, 10);
 
 		//--RUN
         int lampWait = 0;

@@ -4,13 +4,13 @@ import entities.Entity;
 import entities.Light;
 import entities.Point;
 import models.TexturedModel;
+import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
-import skybox.SkyboxShader;
 import terrains.Terrain;
 import world.World;
 
@@ -27,12 +27,15 @@ public class WorldMasterRenderer {
     private StaticShader entityShader = new StaticShader();
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
-    private SkyboxShader skyboxShader = new SkyboxShader();
+
+    private NormalMappingRenderer normalMapRenderer;
+
     private SkyboxRenderer skyboxRenderer;
 
     private World world;
     private List<Terrain> terrains = new ArrayList<>();
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+    private Map<TexturedModel, List<Entity>> normalMappedEntities = new HashMap<>();
     private List<Light> lights = new ArrayList<>();
 
     public WorldMasterRenderer(World world) {
@@ -42,6 +45,7 @@ public class WorldMasterRenderer {
         entityRenderer = new EntityRenderer(entityShader, PROJECTION_MATRIX);
         terrainRenderer = new TerrainRenderer(terrainShader, PROJECTION_MATRIX);
         skyboxRenderer = new SkyboxRenderer(PROJECTION_MATRIX);
+        normalMapRenderer = new NormalMappingRenderer(PROJECTION_MATRIX);
     }
 
     public void render(Point camera) {
@@ -53,6 +57,8 @@ public class WorldMasterRenderer {
         entityShader.loadLights(lights);
         entityRenderer.render(entities);
         entityShader.stop();
+
+        normalMapRenderer.render(normalMappedEntities, lights, camera);
 
         terrainShader.start();
         terrainShader.loadViewMatrix(camera);
@@ -108,6 +114,18 @@ public class WorldMasterRenderer {
         }
     }
 
+    public void processNormalMapEntity(Entity entity) {
+        TexturedModel entityModel = entity.getModel();
+        List<Entity> batch = normalMappedEntities.get(entityModel);
+        if (batch != null) {
+            batch.add(entity);
+        } else {
+            List<Entity> newBatch = new ArrayList<>();
+            newBatch.add(entity);
+            normalMappedEntities.put(entityModel, newBatch);
+        }
+    }
+
     public void processTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
@@ -129,19 +147,25 @@ public class WorldMasterRenderer {
     public void processWorld(Point focus) {
         processTerrain(world.getTerrain());
         for (Entity entity : world.getEntitiesInSquare(focus.getPosition(), 300, 300)) {
-            processEntity(entity);
+            if (entity.getModel().getTexture().isHasNormalMap()) {
+                processNormalMapEntity(entity);
+            } else {
+                processEntity(entity);
+            }
         }
         processLights(focus, 8);
     }
 
     public void clearProcessedWorld() {
         entities.clear();
+        normalMappedEntities.clear();
         terrains.clear();
     }
 
     public void cleanUp() {
         entityShader.cleanUp();
         terrainShader.cleanUp();
+        normalMapRenderer.cleanUp();
     }
 
     public Matrix4f getProjectionMatrix() {
