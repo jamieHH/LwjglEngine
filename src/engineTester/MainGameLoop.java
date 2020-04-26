@@ -115,7 +115,7 @@ public class MainGameLoop {
 
         TextMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
-        GUIText text = new GUIText("This is a test of the fire alarm system!", 4f, font, new Vector2f(0f, 0f), 1f, true);
+        GUIText text = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
         text.setColour(1, 0, 0);
 
         MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
@@ -124,13 +124,8 @@ public class MainGameLoop {
         world.addEntity(lampPole, 0, 0, 0);
         world.addLight(lampLight, 0, 0, 0);
 
-        TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel"),
-                new ModelTexture(Loader.loadTexture("barrel")));
-        barrelModel.getTexture().setShineDamper(10);
-        barrelModel.getTexture().setShineDamper(10.5f);
-        barrelModel.getTexture().setNormalMapID(Loader.loadTexture("barrelNormal"));
-        barrelModel.getTexture().setIsHasNormalMap(true);
-        world.addEntity(new Entity(barrelModel, 1), 10, 5, 10);
+        Entity barrel = new Entity(Models.barrelModel, 1);
+        world.addEntity(barrel, 10, 5, 10);
 
 		//--RUN
         int lampWait = 0;
@@ -175,6 +170,8 @@ public class MainGameLoop {
                         }
                     }
                 }
+
+                barrel.setRotY(barrel.getRotY() + 0.2f);
                 //--EndTick
                 updates++;
                 delta--;

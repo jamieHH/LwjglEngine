@@ -8,11 +8,18 @@ public class ModelTexture {
 	private float reflectivity = 0;
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
-	private boolean hasNormalMap = false;
+	private boolean hasNormalMap;
 
 
 	public ModelTexture(int texture) {
 		this.textureID = texture;
+		this.hasNormalMap = false;
+	}
+
+	public ModelTexture(int texture, int normalMap) {
+		this.textureID = texture;
+		this.normalMapID = normalMap;
+		this.hasNormalMap = true;
 	}
 	
 	public int getID() {
@@ -52,18 +59,10 @@ public class ModelTexture {
 	}
 
 	public boolean isHasNormalMap() {
-		return hasNormalMap;
-	}
-
-	public void setIsHasNormalMap(boolean b) {
-		this.hasNormalMap = b;
+		return this.hasNormalMap;
 	}
 
 	public int getNormalMapID() {
-		return normalMapID;
-	}
-
-	public void setNormalMapID(int normalMapID) {
-		this.normalMapID = normalMapID;
+		return this.normalMapID;
 	}
 }
