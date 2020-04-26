@@ -94,9 +94,10 @@ public class MainGameLoop {
 		//------
 
 
-        EnvLight ambient = new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1));
+        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR(), world.getSkyG(), world.getSkyB()), new Vector3f(1, 0.5f, -1));
         world.addEnvLight(ambient);
-        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
+//        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
+//        world.addEnvLight(new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1)));
 
         Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
 //        world.addLight(torch, 0, 0, 0);
@@ -116,9 +117,9 @@ public class MainGameLoop {
         TextMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
         GUIText text = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
-        text.setColour(1, 0, 0);
+        text.setColor(1, 0, 0);
 
-        MousePicker picker = new MousePicker(camera, worldRenderer.getProjectionMatrix(), terrain);
+        MousePicker picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), terrain);
         Entity lampPole = new Entity(Models.lamp, 1);
         Light lampLight = new Light(new Vector3f(0, 1, 0), new Vector3f(1, 0.01f, 0.002f));
         world.addEntity(lampPole, 0, 0, 0);

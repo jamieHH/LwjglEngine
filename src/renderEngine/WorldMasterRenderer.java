@@ -168,7 +168,7 @@ public class WorldMasterRenderer {
         normalMapRenderer.cleanUp();
     }
 
-    public Matrix4f getProjectionMatrix() {
+    public static Matrix4f getProjectionMatrix() {
         return PROJECTION_MATRIX;
     }
 }
