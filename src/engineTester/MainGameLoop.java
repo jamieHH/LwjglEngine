@@ -77,24 +77,24 @@ public class MainGameLoop {
                     0, randRotation(), 0
             );
         }
-//		for (int i = 0; i < 2; i++) {
-//			float x = random.nextFloat() * 200;
-//			float z = random.nextFloat() * 200;
-//			float y = terrain.getHeightOfTerrain(x, z);
-//            world.addLight(
-//                    new Light(new Vector3f(2, 0, 2), new Vector3f(1, 0.01f, 0.002f)),
-//                    x, y + 8, z
-//            );
-//			world.addEntity(
-//			        new Entity(Models.lamp, 1),
-//                    x, y, z,
-//                    0, 0, 0
-//            );
-//		}
+		for (int i = 0; i < 50; i++) {
+			float x = random.nextFloat() * 800;
+			float z = random.nextFloat() * 800;
+			float y = terrain.getHeightOfTerrain(x, z);
+            world.addLight(
+                    new Light(new Vector3f(1, 0, 1), new Vector3f(1, 0.01f, 0.002f)),
+                    x, y + 8, z
+            );
+			world.addEntity(
+			        new Entity(Models.lamp, 1),
+                    x, y, z,
+                    0, 0, 0
+            );
+		}
 		//------
 
 
-        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR(), world.getSkyG(), world.getSkyB()), new Vector3f(1, 0.5f, -1));
+        EnvLight ambient = new EnvLight(world.getSkyColor(), new Vector3f(1, 0.75f, -1));
         world.addEnvLight(ambient);
 //        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
 //        world.addEnvLight(new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1)));
@@ -103,9 +103,13 @@ public class MainGameLoop {
 //        world.addLight(torch, 0, 0, 0);
 
 
-		Player player = new Player(Models.chair, 1);
-		world.addEntity(player, 0, 0, 0);
-        OrbitalCamera camera = new OrbitalCamera(player);
+//		Player player = new Player(Models.chair, 1);
+//		world.addEntity(player, 0, 0, 0);
+//        OrbitalCamera camera = new OrbitalCamera(player);
+        Camera camera = new Camera();
+        camera.setPosition(new Vector3f(0f, 20f, 0f));
+        camera.setRotation(new Vector3f(0f, 135f, 0f));
+        camera.setWorld(world);
         world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
 
         List<GuiTexture> guis = new ArrayList<>();
@@ -139,14 +143,14 @@ public class MainGameLoop {
         long timer = System.currentTimeMillis();
         int frames = 0;
         int updates = 0;
-        while(!Display.isCloseRequested()) {
+        while (!Display.isCloseRequested()) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
-            while(delta >= 1) {
+            while (delta >= 1) {
                 //--Tick (camera and torch)
-                player.tick();
-                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
+//                player.tick();
+//                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
                 camera.tick();
 
                 picker.update();
@@ -157,7 +161,7 @@ public class MainGameLoop {
                     if (lampWait > 0) {
                         lampWait--;
                     } else {
-                        if (Mouse.isButtonDown(0)) {
+                        if (Mouse.isButtonDown(1)) {
                             lampWait = 15;
                             world.addLight(
                                     new Light(lampLight.getColor(), lampLight.getAttenuation()),
@@ -183,7 +187,7 @@ public class MainGameLoop {
             } else {
                 processWait = 10;
                 worldRenderer.clearProcessedWorld();
-                worldRenderer.processWorld(player);
+                worldRenderer.processWorld(camera);
             }
             worldRenderer.render(camera);
 

@@ -82,7 +82,7 @@ public class NormalMappingRenderer {
 	}
 
 	private void prepare(List<Light> lights, Point camera) {
-		shader.loadSkyColor(camera.getWorld().getSkyR(), camera.getWorld().getSkyG(), camera.getWorld().getSkyB());
+		shader.loadSkyColor(camera.getWorld().getSkyColor());
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		shader.loadLights(lights, viewMatrix);
 		shader.loadViewMatrix(viewMatrix);

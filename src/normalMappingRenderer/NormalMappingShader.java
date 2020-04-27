@@ -66,8 +66,8 @@ public class NormalMappingShader extends ShaderProgram{
 		super.loadInt(location_normalMap, 1);
 	}
 	
-	protected void loadSkyColor(float r, float g, float b){
-		super.loadVector(location_skyColor, new Vector3f(r,g,b));
+	protected void loadSkyColor(Vector3f color){
+		super.loadVector(location_skyColor, color);
 	}
 	
 	protected void loadShineVariables(float damper,float reflectivity){

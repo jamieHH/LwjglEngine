@@ -20,7 +20,7 @@ public class WorldMasterRenderer {
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000f;
+    private static final float FAR_PLANE = 2000f;
     private static Matrix4f PROJECTION_MATRIX;
 
     private EntityRenderer entityRenderer;
@@ -52,7 +52,7 @@ public class WorldMasterRenderer {
         prepare();
         entityShader.start();
         entityShader.loadViewMatrix(camera);
-        entityShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
+        entityShader.loadSkyColor(world.getSkyColor());
         entityShader.loadEnvLights(world.getEnvLights());
         entityShader.loadLights(lights);
         entityRenderer.render(entities);
@@ -62,13 +62,13 @@ public class WorldMasterRenderer {
 
         terrainShader.start();
         terrainShader.loadViewMatrix(camera);
-        terrainShader.loadSkyColor(world.getSkyR(), world.getSkyG(), world.getSkyB());
+        terrainShader.loadSkyColor(world.getSkyColor());
         terrainShader.loadEnvLights(world.getEnvLights());
         terrainShader.loadLights(lights);
         terrainRenderer.render(terrains);
         terrainShader.stop();
 
-        skyboxRenderer.render(camera, world.getSkyR(), world.getSkyG(), world.getSkyB());
+        skyboxRenderer.render(camera, world.getSkyColor());
     }
 
     public static void enableCulling() {

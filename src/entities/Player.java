@@ -41,8 +41,8 @@ public class Player extends Entity {
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) rotationMove -= TURN_SPEED;
 
         float nx = (float) (forwardMove * Math.sin(Math.toRadians(super.getRotY())) - rightwardMove * Math.cos(Math.toRadians(super.getRotY())));
-        float zz = (float) (forwardMove * Math.cos(Math.toRadians(super.getRotY())) + rightwardMove * Math.sin(Math.toRadians(super.getRotY())));
-        super.movePosition(nx, 0, zz);
+        float nz = (float) (forwardMove * Math.cos(Math.toRadians(super.getRotY())) + rightwardMove * Math.sin(Math.toRadians(super.getRotY())));
+        super.movePosition(nx, 0, nz);
         forwardMove *= 1 - FRICTION;
         rightwardMove *= 1 - FRICTION;
         super.movePosition(0, upwardsMove, 0);

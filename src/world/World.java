@@ -3,6 +3,7 @@ package world;
 import entities.Entity;
 import entities.EnvLight;
 import entities.Light;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import terrains.Terrain;
 
@@ -11,9 +12,7 @@ import java.util.List;
 
 public class World {
 
-    private float skyR = 0.3f;
-    private float skyG = 0.4f;
-    private float skyB = 0.4f;
+    private Vector3f skyColor = new Vector3f(0.7f, 0.8f, 0.9f);
 
     private List<EnvLight> envLights = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
@@ -25,15 +24,15 @@ public class World {
     }
 
     public float getSkyR() {
-        return skyR;
+        return skyColor.getX();
     }
 
     public float getSkyG() {
-        return skyG;
+        return skyColor.getX();
     }
 
     public float getSkyB() {
-        return skyB;
+        return skyColor.getX();
     }
 
     public List<Entity> getEntities() {
@@ -77,6 +76,10 @@ public class World {
 
     public List<EnvLight> getEnvLights() {
         return envLights;
+    }
+
+    public Vector3f getSkyColor() {
+        return skyColor;
     }
 
     //---- Helpers
