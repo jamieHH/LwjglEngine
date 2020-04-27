@@ -13,6 +13,7 @@ import java.util.List;
 public class World {
 
     private Vector3f skyColor = new Vector3f(0.7f, 0.8f, 0.9f);
+    private float gravity = -0.025f;
 
     private List<EnvLight> envLights = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
@@ -125,5 +126,9 @@ public class World {
         }
 
         return entities;
+    }
+
+    public float getGravity() {
+        return gravity;
     }
 }

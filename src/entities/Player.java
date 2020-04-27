@@ -9,7 +9,6 @@ public class Player extends Entity {
     private static final float TURN_SPEED = 0.8f;
     private static final float JUMP_POWER = 1f;
     private static final float FRICTION = 0.25f;
-    private static final float GRAVITY = -0.025f;
 
     private float terrainHeight = 0;
 
@@ -46,7 +45,7 @@ public class Player extends Entity {
         forwardMove *= 1 - FRICTION;
         rightwardMove *= 1 - FRICTION;
         super.movePosition(0, upwardsMove, 0);
-        upwardsMove += GRAVITY;
+        upwardsMove += getWorld().getGravity();
         super.moveRotation(0, rotationMove, 0);
         rotationMove *= 0.6;
 
