@@ -21,7 +21,7 @@ public class ParticleMasterRenderer {
             Iterator<Particle> iterator = list.iterator();
             while (iterator.hasNext()) {
                 Particle p = iterator.next();
-                boolean stillAlive = p.update();
+                boolean stillAlive = p.update(camera);
                 if (!stillAlive) {
                     iterator.remove();
                     if (list.isEmpty()) {
@@ -32,10 +32,10 @@ public class ParticleMasterRenderer {
 
             // sort in order of distance to the camera
             list.sort((o1, o2) -> {
-                if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
+                if (o1.getDistanceToCamera() == o2.getDistanceToCamera()) {
                     return 0;
                 }
-                return o1.distanceTo(camera) < o2.distanceTo(camera) ? 1 : -1;
+                return o1.getDistanceToCamera() < o2.getDistanceToCamera() ? 1 : -1;
             });
         }
     }

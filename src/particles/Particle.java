@@ -7,19 +7,19 @@ import world.World;
 
 public class Particle {
 
+    private ParticleTexture texture;
     private Vector3f position;
     private World world;
     private Vector3f velocity;
     private float gravityFactor;
-    private float lifeLength;
     private float rotation;
     private float scale;
+    private float distanceToCamera;
 
-    private ParticleTexture texture;
+    private int elapsedTime;
+    private int lifeLength;
 
-    private float elapsedTime;
-
-    public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityFactor, float lifeLength, float rotation, float scale, World world) {
+    public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityFactor, int lifeLength, float rotation, float scale, World world) {
         this.texture = texture;
         this.position = position;
         this.velocity = velocity;
@@ -27,7 +27,6 @@ public class Particle {
         this.lifeLength = lifeLength;
         this.rotation = rotation;
         this.scale = scale;
-
         this.world = world;
 
         ParticleMasterRenderer.addParticle(this);
@@ -49,12 +48,11 @@ public class Particle {
         return scale;
     }
 
-    protected boolean update() {
+    protected boolean update(Point camera) {
+        elapsedTime++;
+        distanceToCamera = distanceTo(camera);
         velocity.y += world.getGravity() * gravityFactor; // + world gravity
-        Vector3f change = new Vector3f(velocity);
-        change.scale(1f);
-        Vector3f.add(change, position, position);
-        elapsedTime += 1;
+        Vector3f.add(velocity, position, position);
         return elapsedTime < lifeLength;
     }
 
@@ -64,5 +62,9 @@ public class Particle {
 
     public float distanceTo(Point point) {
         return Vector3f.sub(point.getPosition(), position, null).lengthSquared();
+    }
+
+    public float getDistanceToCamera() {
+        return distanceToCamera;
     }
 }
