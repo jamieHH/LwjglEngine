@@ -14,9 +14,12 @@ public class Particle {
     private float rotation;
     private float scale;
 
+    private ParticleTexture texture;
+
     private float elapsedTime;
 
-    public Particle(Vector3f position, Vector3f velocity, float gravityFactor, float lifeLength, float rotation, float scale, World world) {
+    public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityFactor, float lifeLength, float rotation, float scale, World world) {
+        this.texture = texture;
         this.position = position;
         this.velocity = velocity;
         this.gravityFactor = gravityFactor;
@@ -27,6 +30,10 @@ public class Particle {
         this.world = world;
 
         ParticleMasterRenderer.addParticle(this);
+    }
+
+    public ParticleTexture getTexture() {
+        return texture;
     }
 
     public Vector3f getPosition() {

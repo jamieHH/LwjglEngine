@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import particles.Particle;
 import particles.ParticleMasterRenderer;
+import particles.ParticleTexture;
 import renderEngine.GuiRenderer;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
@@ -134,6 +135,7 @@ public class MainGameLoop {
         world.addEntity(barrel, 10, 5, 10);
 
         ParticleMasterRenderer.init(WorldMasterRenderer.getProjectionMatrix());
+        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("grass"));
 
 		//--RUN
         int lampWait = 0;
@@ -161,7 +163,7 @@ public class MainGameLoop {
                         float x = (random.nextFloat() - 0.5f) * 1;
                         float y = (random.nextFloat() - 0.5f) * 1;
                         float z = (random.nextFloat() - 0.5f) * 1;
-                        new Particle(new Vector3f(0, 0, 0), new Vector3f(x, y + 1, z), 1, 400, 0, 1f, world);
+                        new Particle(particleTexture, new Vector3f(0, 0, 0), new Vector3f(x, y + 1, z), 1, 400, 0, 1f, world);
                     }
                 }
                 ParticleMasterRenderer.tick();
