@@ -3,37 +3,31 @@ package engineTester.assets;
 import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
-import objConverter.OBJFileLoader;
 import renderEngine.Loader;
 import textures.ModelTexture;
 
 public class Models {
 
-    public static TexturedModel chair = new TexturedModel(makeModelWithTangents("chair0"),
+    public static TexturedModel chair = new TexturedModel(makeRawModel("chair0"),
             makeModelTexture("wood"));
-    public static TexturedModel rock = new TexturedModel(makeModelWithTangents("rock0HD"),
+    public static TexturedModel rock = new TexturedModel(makeRawModel("rock0HD"),
             makeModelTexture("rock", 0.5f, 1.0f));
-    public static TexturedModel grass = new TexturedModel(makeModelWithTangents("grass0"),
+    public static TexturedModel grass = new TexturedModel(makeRawModel("grass0"),
             makeTransparentModelTexture("grass"));
-    public static TexturedModel lamp = new TexturedModel(makeModelWithTangents("lampPost0"),
+    public static TexturedModel lamp = new TexturedModel(makeRawModel("lampPost0"),
             makeModelTexture("steel", 0.5f, 1.0f));
     public static TexturedModel lightTest = new TexturedModel(makeRawModel("lightTest"),
             makeModelTexture("steel"));
-    public static TexturedModel barrelModel = new TexturedModel(makeModelWithTangents("barrel"),
+    public static TexturedModel barrelModel = new TexturedModel(makeRawModel("barrel"),
             makeModelTexture("barrel", "barrelNormal", 1f, 10f));
 
-    private static RawModel makeRawModel(String objFileName) {
-        return OBJFileLoader.loadOBJ(objFileName);
-    }
 
-    private static RawModel makeModelWithTangents(String objFileName) {
+    private static RawModel makeRawModel(String objFileName) {
         return NormalMappedObjLoader.loadOBJ(objFileName);
     }
 
-
     private static ModelTexture makeModelTexture(String fileName) {
-        ModelTexture texture = new ModelTexture(Loader.loadTexture(fileName));
-        return texture;
+        return new ModelTexture(Loader.loadTexture(fileName));
     }
 
     private static ModelTexture makeTransparentModelTexture(String fileName) {
