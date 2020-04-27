@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.RawModel;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import renderEngine.Loader;
 
 public class OBJFileLoader {
 	
 	private static final String RES_LOC = "res/";
 
-	public static ModelData loadOBJ(String objFileName) {
+	public static RawModel loadOBJ(String objFileName) {
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");
 		try {
@@ -76,8 +78,8 @@ public class OBJFileLoader {
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
 				texturesArray, normalsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
-		return new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
-				furthest);
+
+		return Loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
@@ -144,7 +146,6 @@ public class OBJFileLoader {
 				vertices.add(duplicateVertex);
 				indices.add(duplicateVertex.getIndex());
 			}
-
 		}
 	}
 	
