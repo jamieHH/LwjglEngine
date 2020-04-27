@@ -1,6 +1,7 @@
 package particles;
 
 
+import entities.Point;
 import org.lwjgl.util.vector.Vector3f;
 import world.World;
 
@@ -59,5 +60,9 @@ public class Particle {
 
     public World getWorld() {
         return world;
+    }
+
+    public float distanceTo(Point point) {
+        return Vector3f.sub(point.getPosition(), position, null).lengthSquared();
     }
 }

@@ -14,7 +14,7 @@ public class ParticleMasterRenderer {
         renderer = new ParticleRenderer(projectionMatrix);
     }
 
-    public static void tick() {
+    public static void tick(Point camera) {
         Iterator<Map.Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
         while (mapIterator.hasNext()) {
             List<Particle> list = mapIterator.next().getValue();
@@ -29,6 +29,14 @@ public class ParticleMasterRenderer {
                     }
                 }
             }
+
+            // sort in order of distance to the camera
+            list.sort((o1, o2) -> {
+                if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
+                    return 0;
+                }
+                return o1.distanceTo(camera) < o2.distanceTo(camera) ? 1 : -1;
+            });
         }
     }
 

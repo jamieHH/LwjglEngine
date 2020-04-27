@@ -163,10 +163,10 @@ public class MainGameLoop {
                         float x = (random.nextFloat() - 0.5f) * 1;
                         float y = (random.nextFloat() - 0.5f) * 1;
                         float z = (random.nextFloat() - 0.5f) * 1;
-                        new Particle(particleTexture, new Vector3f(0, 0, 0), new Vector3f(x, y + 1, z), 1, 400, 0, 1f, world);
+                        new Particle(particleTexture, new Vector3f(0, 0, 0), new Vector3f(x, y + 1, z), 1, 400, 0, 4, world);
                     }
                 }
-                ParticleMasterRenderer.tick();
+                ParticleMasterRenderer.tick(camera);
 
                 picker.update();
                 Vector3f tp = picker.getCurrentTerrainPoint();
