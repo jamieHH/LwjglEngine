@@ -87,6 +87,7 @@ public class WorldMasterRenderer {
         GL11.glClearColor(world.getSkyR(), world.getSkyG(), world.getSkyB(), 1);
     }
 
+
     private static void createProjectionMatrix() {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));

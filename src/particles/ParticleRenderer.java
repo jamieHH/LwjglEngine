@@ -31,8 +31,8 @@ public class ParticleRenderer {
 	}
 	
 	protected void render(Map<ParticleTexture, List<Particle>> particles, Point camera){
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		for (ParticleTexture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
@@ -41,7 +41,7 @@ public class ParticleRenderer {
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 			}
 		}
-		finishRendering();
+		finish();
 	}
 
 	protected void cleanUp(){
@@ -66,7 +66,7 @@ public class ParticleRenderer {
 		shader.loadModelViewMatrix(modelViewMatrix);
 	}
 	
-	private void prepare(){
+	private void prepare() {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -75,7 +75,7 @@ public class ParticleRenderer {
 		GL11.glDepthMask(false);
 	}
 	
-	private void finishRendering(){
+	private void finish() {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL20.glDisableVertexAttribArray(0);

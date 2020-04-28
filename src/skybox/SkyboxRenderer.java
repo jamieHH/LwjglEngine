@@ -77,7 +77,7 @@ public class SkyboxRenderer {
     private RawModel cube;
     private int dayTexID;
     private int nightTexID;
-    private  SkyboxShader shader;
+    private SkyboxShader shader;
 
     public SkyboxRenderer(Matrix4f projectionMatrix) {
         cube = Loader.loadToVAO(VERTICES, 3);
@@ -91,9 +91,16 @@ public class SkyboxRenderer {
     }
 
     public void render(Point camera, Vector3f skyColor) {
+        prepare(camera, skyColor);
+        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
+        finish();
+    }
+
+    private void prepare(Point camera, Vector3f skyColor) {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadFogColor(skyColor);
+        shader.loadBlendFactor(0.1f);
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -101,8 +108,9 @@ public class SkyboxRenderer {
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, dayTexID);
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, nightTexID);
-        shader.loadBlendFactor(0.1f);
-        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
+    }
+
+    private void finish() {
         GL20.glDisableVertexAttribArray(0);
         shader.stop();
     }
