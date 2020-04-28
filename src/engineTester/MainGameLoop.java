@@ -8,6 +8,7 @@ import fontRendering.TextMasterRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import particles.Particle;
+import particles.ParticleEmitter;
 import particles.ParticleMasterRenderer;
 import particles.ParticleTexture;
 import gui.GuiTexture;
@@ -134,6 +135,9 @@ public class MainGameLoop {
 
         ParticleMasterRenderer.init(WorldMasterRenderer.getProjectionMatrix());
         ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("grass"));
+        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 1, 1);
+        emitter.setPosition(new Vector3f(0, 0, 0));
+        emitter.setWorld(world);
 
 		//--RUN
         int lampWait = 0;
@@ -157,12 +161,7 @@ public class MainGameLoop {
                 camera.tick();
 
                 if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
-                    for (int i = 0; i < 1000; i++) {
-                        float x = (random.nextFloat() - 0.5f) * 1;
-                        float y = (random.nextFloat() - 0.5f) * 1;
-                        float z = (random.nextFloat() - 0.5f) * 1;
-                        new Particle(particleTexture, new Vector3f(0, 0, 0), new Vector3f(x, y + 1, z), 1, 400, 0, 4, world);
-                    }
+                    emitter.emitParticles();
                 }
                 ParticleMasterRenderer.tick(camera);
 
