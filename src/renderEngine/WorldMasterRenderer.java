@@ -8,8 +8,6 @@ import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
-import shaders.StaticShader;
-import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrains.Terrain;
 import world.World;
@@ -24,12 +22,8 @@ public class WorldMasterRenderer {
     private static Matrix4f PROJECTION_MATRIX;
 
     private EntityRenderer entityRenderer;
-    private StaticShader entityShader = new StaticShader();
     private TerrainRenderer terrainRenderer;
-    private TerrainShader terrainShader = new TerrainShader();
-
     private NormalMappingRenderer normalMapRenderer;
-
     private SkyboxRenderer skyboxRenderer;
 
     private World world;
@@ -42,32 +36,17 @@ public class WorldMasterRenderer {
         this.world = world;
         enableCulling();
         createProjectionMatrix();
-        entityRenderer = new EntityRenderer(entityShader, PROJECTION_MATRIX);
-        terrainRenderer = new TerrainRenderer(terrainShader, PROJECTION_MATRIX);
+        entityRenderer = new EntityRenderer(PROJECTION_MATRIX);
+        terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
         skyboxRenderer = new SkyboxRenderer(PROJECTION_MATRIX);
         normalMapRenderer = new NormalMappingRenderer(PROJECTION_MATRIX);
     }
 
     public void render(Point camera) {
         prepare();
-        entityShader.start();
-        entityShader.loadViewMatrix(camera);
-        entityShader.loadSkyColor(world.getSkyColor());
-        entityShader.loadEnvLights(world.getEnvLights());
-        entityShader.loadLights(lights);
-        entityRenderer.render(entities);
-        entityShader.stop();
-
-        normalMapRenderer.render(normalMappedEntities, lights, camera);
-
-        terrainShader.start();
-        terrainShader.loadViewMatrix(camera);
-        terrainShader.loadSkyColor(world.getSkyColor());
-        terrainShader.loadEnvLights(world.getEnvLights());
-        terrainShader.loadLights(lights);
-        terrainRenderer.render(terrains);
-        terrainShader.stop();
-
+        entityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        normalMapRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        terrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
         skyboxRenderer.render(camera, world.getSkyColor());
     }
 
@@ -164,8 +143,9 @@ public class WorldMasterRenderer {
     }
 
     public void cleanUp() {
-        entityShader.cleanUp();
-        terrainShader.cleanUp();
+        entityRenderer.cleanUp();
+        terrainRenderer.cleanUp();
+        skyboxRenderer.cleanUp();
         normalMapRenderer.cleanUp();
     }
 

@@ -10,7 +10,6 @@ import org.lwjgl.input.Mouse;
 import particles.Particle;
 import particles.ParticleMasterRenderer;
 import particles.ParticleTexture;
-import renderEngine.GuiRenderer;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
@@ -18,7 +17,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.*;
 import terrains.Terrain;
-import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.MousePicker;

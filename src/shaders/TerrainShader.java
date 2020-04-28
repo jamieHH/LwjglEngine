@@ -1,6 +1,5 @@
 package shaders;
 
-import entities.Camera;
 import entities.EnvLight;
 import entities.Light;
 import entities.Point;

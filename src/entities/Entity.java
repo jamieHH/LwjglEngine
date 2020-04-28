@@ -2,8 +2,6 @@ package entities;
 
 import models.TexturedModel;
 
-import org.lwjgl.util.vector.Vector3f;
-
 public class Entity extends Point {
 
 	private TexturedModel model;
