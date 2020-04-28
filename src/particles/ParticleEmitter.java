@@ -13,7 +13,7 @@ public class ParticleEmitter extends Point {
     private int count;
     private float force;
     private float gravityFactor;
-    private int lifeLength = 120;
+    private int lifeLength = 240;
     private Random random = new Random();
 
     private List<Particle> particles = new ArrayList<>();

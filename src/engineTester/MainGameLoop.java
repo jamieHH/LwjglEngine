@@ -116,8 +116,8 @@ public class MainGameLoop {
         List<GuiTexture> guis = new ArrayList<>();
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
 
-		GuiRenderer guiRenderer = new GuiRenderer();
-		WorldMasterRenderer worldRenderer = new WorldMasterRenderer(world);
+		GuiRenderer.init();
+		WorldMasterRenderer.init(world);
 
         TextMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
@@ -134,9 +134,9 @@ public class MainGameLoop {
         world.addEntity(barrel, 10, 5, 10);
 
         ParticleMasterRenderer.init(WorldMasterRenderer.getProjectionMatrix());
-        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("grass"));
-        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 1, 1);
-        emitter.setPosition(new Vector3f(0, 0, 0));
+        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
+        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
+        emitter.setPosition(new Vector3f(200, 100, 200));
         emitter.setWorld(world);
 
 		//--RUN
@@ -198,14 +198,12 @@ public class MainGameLoop {
                 processWait--;
             } else {
                 processWait = 10;
-                worldRenderer.clearProcessedWorld();
-                worldRenderer.processWorld(camera);
+                WorldMasterRenderer.clearProcessedWorld();
+                WorldMasterRenderer.processWorld(camera);
             }
-            worldRenderer.render(camera);
-
+            WorldMasterRenderer.render(camera);
             ParticleMasterRenderer.renderParticles(camera);
-
-            guiRenderer.render(guis);
+            GuiRenderer.render(guis);
             TextMasterRenderer.render();
             DisplayManager.updateDisplay();
             //--EndRender
@@ -222,8 +220,8 @@ public class MainGameLoop {
 
         ParticleMasterRenderer.cleanUp();
         TextMasterRenderer.cleanUp();
-		guiRenderer.cleanUp();
-		worldRenderer.cleanUp();
+		GuiRenderer.cleanUp();
+		WorldMasterRenderer.cleanUp();
 		Loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
