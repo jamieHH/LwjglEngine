@@ -85,8 +85,8 @@ public class SkyboxRenderer {
         nightTexID = Loader.loadCubeMap(NIGHT_TEXTURE_FILES);
         shader = new SkyboxShader();
         shader.start();
-        shader.connectTextureUnits();
         shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextureUnits();
         shader.stop();
     }
 
@@ -101,7 +101,7 @@ public class SkyboxRenderer {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadFogColor(skyColor);
-        shader.loadBlendFactor(0.1f);
+        shader.loadBlendFactor(0.9f);
         // bind vertexes
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);

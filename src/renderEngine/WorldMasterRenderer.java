@@ -32,6 +32,8 @@ public class WorldMasterRenderer {
     private static Map<TexturedModel, List<Entity>> normalMappedEntities = new HashMap<>();
     private static List<Light> lights = new ArrayList<>();
 
+    private static int processWait = 0;
+
     public static void init(World world) {
         WorldMasterRenderer.world = world;
         enableCulling();
@@ -43,7 +45,14 @@ public class WorldMasterRenderer {
     }
 
     public static void render(Point camera) {
-        prepare();
+        if (processWait > 0) {
+            processWait--;
+        } else {
+            processWait = 10;
+            WorldMasterRenderer.clearProcessedWorld();
+            WorldMasterRenderer.processWorld(camera);
+        }
+        prepare(camera);
         entityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         normalMapRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         terrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
@@ -60,12 +69,11 @@ public class WorldMasterRenderer {
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    private static void prepare() {
+    private static void prepare(Point camera) {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(world.getSkyR(), world.getSkyG(), world.getSkyB(), 1);
     }
-
 
     private static void createProjectionMatrix() {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
@@ -133,7 +141,7 @@ public class WorldMasterRenderer {
                 processEntity(entity);
             }
         }
-        processLights(focus, 8);
+        processLights(focus, 16);
     }
 
     public static void clearProcessedWorld() {

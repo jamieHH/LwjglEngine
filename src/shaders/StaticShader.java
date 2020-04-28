@@ -13,7 +13,7 @@ import java.util.List;
 
 public class StaticShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 8;
+	private static final int MAX_LIGHTS = 16;
 	private static final int MAX_ENV_LIGHTS = 2;
 
 	private static final String VERTEX_FILE = "src/shaders/vertexShader.txt";

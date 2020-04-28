@@ -43,7 +43,7 @@ public class NormalMappingRenderer {
 			}
 			unbindTexturedModel();
 		}
-		shader.stop();
+		finish();
 	}
 
 	private void prepareTexturedModel(TexturedModel model) {
@@ -88,6 +88,10 @@ public class NormalMappingRenderer {
 		shader.loadLights(lights, viewMatrix);
 		shader.loadViewMatrix(viewMatrix);
 		shader.loadSkyColor(skyColor);
+	}
+
+	private void finish() {
+		shader.stop();
 	}
 
 	public void cleanUp(){

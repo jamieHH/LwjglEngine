@@ -11,7 +11,7 @@ import java.util.List;
 
 public class World {
 
-    private Vector3f skyColor = new Vector3f(0.7f, 0.8f, 0.9f);
+    private Vector3f skyColor = new Vector3f(0.1f, 0.2f, 0.2f);
     private float gravity = -0.025f;
 
     private List<EnvLight> envLights = new ArrayList<>();

@@ -40,7 +40,7 @@ public class ParticleMasterRenderer {
         }
     }
 
-    public static void renderParticles(Point camera) {
+    public static void render(Point camera) {
         renderer.render(particles, camera);
     }
 
