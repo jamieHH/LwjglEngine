@@ -32,8 +32,6 @@ public class WorldMasterRenderer {
     private static Map<TexturedModel, List<Entity>> normalMappedEntities = new HashMap<>();
     private static List<Light> lights = new ArrayList<>();
 
-    private static int processWait = 0;
-
     public static void init(World world) {
         WorldMasterRenderer.world = world;
         enableCulling();
@@ -45,13 +43,8 @@ public class WorldMasterRenderer {
     }
 
     public static void render(Point camera) {
-        if (processWait > 0) {
-            processWait--;
-        } else {
-            processWait = 10;
-            WorldMasterRenderer.clearProcessedWorld();
-            WorldMasterRenderer.processWorld(camera);
-        }
+        WorldMasterRenderer.clearProcessedWorld();
+        WorldMasterRenderer.processWorld(camera);
         prepare(camera);
         entityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         normalMapRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);

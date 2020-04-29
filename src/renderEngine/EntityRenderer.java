@@ -34,11 +34,7 @@ public class EntityRenderer {
 	}
 
 	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
-		shader.start();
-		shader.loadViewMatrix(camera);
-		shader.loadSkyColor(skyColor);
-		shader.loadEnvLights(envLights);
-		shader.loadLights(lights);
+		prepare(lights, envLights, skyColor, camera);
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
@@ -49,7 +45,7 @@ public class EntityRenderer {
 			}
 			unbindTexturedModel();
 		}
-		shader.stop();
+		finish();
 	}
 
 	private void prepareTexturedModel(TexturedModel model) {
@@ -72,8 +68,20 @@ public class EntityRenderer {
 
 	private void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
-				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+				entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
+	}
+
+	private void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
+		shader.start();
+		shader.loadViewMatrix(camera);
+		shader.loadSkyColor(skyColor);
+		shader.loadEnvLights(envLights);
+		shader.loadLights(lights);
+	}
+
+	private void finish() {
+		shader.stop();
 	}
 
 	private void unbindTexturedModel() {
