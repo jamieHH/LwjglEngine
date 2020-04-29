@@ -28,8 +28,6 @@ public class Particle {
         this.rotation = rotation;
         this.scale = scale;
         this.world = world;
-
-        ParticleMasterRenderer.addParticle(this);
     }
 
     public ParticleTexture getTexture() {

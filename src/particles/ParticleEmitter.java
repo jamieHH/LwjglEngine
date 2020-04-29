@@ -3,9 +3,7 @@ package particles;
 import entities.Point;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ParticleEmitter extends Point {
 
@@ -25,18 +23,34 @@ public class ParticleEmitter extends Point {
         this.gravityFactor = gravityFactor;
     }
 
+    public void tick(Point camera) {
+        for (int i = 0; i < particles.size(); i++) {
+            boolean stillAlive = particles.get(i).update(camera);
+            if (!stillAlive) {
+                particles.remove(particles.get(i));
+            }
+
+            // sort in order of distance to the camera
+            particles.sort((o1, o2) -> {
+                if (o1.getDistanceToCamera() == o2.getDistanceToCamera()) {
+                    return 0;
+                }
+                return o1.getDistanceToCamera() < o2.getDistanceToCamera() ? 1 : -1;
+            });
+        }
+    }
+
     public void emitParticles() {
         for (int i = 0; i < count; i++){
             emitParticle(new Vector3f(getPosition()));
         }
     }
 
-    private void emitParticle(Vector3f position){
+    private void emitParticle(Vector3f position) {
         float x = (random.nextFloat() - 0.5f) * force;
         float y = 1 + (random.nextFloat() - 0.5f) * force;
         float z = (random.nextFloat() - 0.5f) * force;
-        new Particle(texture, position, new Vector3f(x, y, z), gravityFactor, lifeLength, 0, 4, this.getWorld());
-        // TODO: prevent particle form auto adding to particle renderer, add to particle list to render after
+        particles.add(new Particle(texture, position, new Vector3f(x, y, z), gravityFactor, lifeLength, 0, 4, this.getWorld()));
     }
 
     public List<Particle> getParticles() {

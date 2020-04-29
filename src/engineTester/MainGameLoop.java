@@ -8,7 +8,6 @@ import fontRendering.TextMasterRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import particles.ParticleEmitter;
-import particles.ParticleMasterRenderer;
 import particles.ParticleTexture;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
@@ -132,15 +131,12 @@ public class MainGameLoop {
         Entity barrel = new Entity(Models.barrelModel, 1);
         world.addEntity(barrel, 10, 5, 10);
 
-        ParticleMasterRenderer.init(WorldMasterRenderer.getProjectionMatrix());
         ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
         ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
-        emitter.setPosition(new Vector3f(200, 100, 200));
-        emitter.setWorld(world);
+        world.addParticleEmitter(emitter, 200, 100, 200);
 
 		//--RUN
         int lampWait = 0;
-        int processWait = 0;
 
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -162,8 +158,7 @@ public class MainGameLoop {
                 if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
                     emitter.emitParticles();
                 }
-                ParticleMasterRenderer.tick(camera);
-
+                emitter.tick(camera);
                 picker.update();
                 Vector3f tp = picker.getCurrentTerrainPoint();
                 if (tp != null) {
@@ -193,13 +188,7 @@ public class MainGameLoop {
                 delta--;
             }
             //--Render
-            if (processWait > 0) {
-                processWait--;
-            } else {
-                processWait = 10;
-            }
             WorldMasterRenderer.render(camera);
-            ParticleMasterRenderer.render(camera);
             GuiRenderer.render(guis);
             TextMasterRenderer.render();
             DisplayManager.updateDisplay();
@@ -215,7 +204,6 @@ public class MainGameLoop {
 		}
         //--ENDRUN
 
-        ParticleMasterRenderer.cleanUp();
         TextMasterRenderer.cleanUp();
 		GuiRenderer.cleanUp();
 		WorldMasterRenderer.cleanUp();

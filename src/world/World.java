@@ -4,6 +4,7 @@ import entities.Entity;
 import entities.EnvLight;
 import entities.Light;
 import org.lwjgl.util.vector.Vector3f;
+import particles.ParticleEmitter;
 import terrains.Terrain;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class World {
     private List<EnvLight> envLights = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
+    private List<ParticleEmitter> particleEmitters = new ArrayList<>();
     private Terrain terrain;
 
     public World() {
@@ -80,6 +82,16 @@ public class World {
 
     public Vector3f getSkyColor() {
         return skyColor;
+    }
+
+    public List<ParticleEmitter> getParticleEmitters() {
+        return particleEmitters;
+    }
+
+    public void addParticleEmitter(ParticleEmitter particleEmitter, float posX, float posY, float posZ) {
+        particleEmitter.setPosition(new Vector3f(posX, posY, posZ));
+        particleEmitter.setWorld(this);
+        this.particleEmitters.add(particleEmitter);
     }
 
     //---- Helpers

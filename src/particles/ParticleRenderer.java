@@ -22,7 +22,7 @@ public class ParticleRenderer {
 	private RawModel quad;
 	private ParticleShader shader;
 	
-	protected ParticleRenderer(Matrix4f projectionMatrix){
+	public ParticleRenderer(Matrix4f projectionMatrix){
 		quad = Loader.loadToVAO(VERTICES, 2);
 		shader = new ParticleShader();
 		shader.start();
@@ -30,7 +30,7 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	protected void render(Map<ParticleTexture, List<Particle>> particles, Point camera){
+	public void render(Map<ParticleTexture, List<Particle>> particles, Point camera){
 		prepare();
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		for (ParticleTexture texture : particles.keySet()) {
@@ -42,10 +42,6 @@ public class ParticleRenderer {
 			}
 		}
 		finish();
-	}
-
-	protected void cleanUp(){
-		shader.cleanUp();
 	}
 
 	private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix) {
@@ -81,5 +77,9 @@ public class ParticleRenderer {
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stop();
+	}
+
+	public void cleanUp() {
+		shader.cleanUp();
 	}
 }
