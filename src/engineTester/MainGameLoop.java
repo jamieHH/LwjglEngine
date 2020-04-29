@@ -155,10 +155,10 @@ public class MainGameLoop {
 //                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
                 camera.tick();
 
+                emitter.tick();
                 if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
                     emitter.emitParticles();
                 }
-                emitter.tick(camera);
                 picker.update();
                 Vector3f tp = picker.getCurrentTerrainPoint();
                 if (tp != null) {

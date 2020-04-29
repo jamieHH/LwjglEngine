@@ -91,7 +91,7 @@ public class WorldMasterRenderer {
         PROJECTION_MATRIX.m33 = 0;
     }
 
-    private static void processEntity(Entity entity) {
+    private static void addEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
         if (batch != null) {
@@ -103,7 +103,7 @@ public class WorldMasterRenderer {
         }
     }
 
-    private static void processNormalMapEntity(Entity entity) {
+    private static void addNormalMappedEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = normalMappedEntities.get(entityModel);
         if (batch != null) {
@@ -136,9 +136,9 @@ public class WorldMasterRenderer {
     private static void processEntities(Point focus) {
         for (Entity entity : world.getEntitiesInSquare(focus.getPosition(), 300, 300)) {
             if (entity.getModel().getTexture().isHasNormalMap()) {
-                processNormalMapEntity(entity);
+                addNormalMappedEntity(entity);
             } else {
-                processEntity(entity);
+                addEntity(entity);
             }
         }
     }
@@ -147,11 +147,17 @@ public class WorldMasterRenderer {
         processTerrain(world.getTerrain());
         processEntities(focus);
         processLights(focus, 16);
-        processParticles(world);
+        processParticles(world.getParticleEmitters(), focus);
     }
 
-    public static void processParticles(World world) {
-        for (ParticleEmitter emitter : world.getParticleEmitters()) {
+    public static void processParticles(List<ParticleEmitter> emitters, Point camera) {
+        for (ParticleEmitter emitter : emitters) {
+            emitter.getParticles().sort((o1, o2) -> {
+                if (o1.distanceTo(camera) == o2.distanceTo(camera)) {
+                    return 0;
+                }
+                return o1.distanceTo(camera) < o2.distanceTo(camera) ? 1 : -1;
+            });
             for (Particle particle : emitter.getParticles()) {
                 addParticle(particle);
             }

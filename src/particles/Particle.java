@@ -14,7 +14,6 @@ public class Particle {
     private float gravityFactor;
     private float rotation;
     private float scale;
-    private float distanceToCamera;
 
     private int elapsedTime;
     private int lifeLength;
@@ -46,9 +45,8 @@ public class Particle {
         return scale;
     }
 
-    protected boolean update(Point camera) {
+    protected boolean update() {
         elapsedTime++;
-        distanceToCamera = distanceTo(camera);
         velocity.y += world.getGravity() * gravityFactor; // + world gravity
         Vector3f.add(velocity, position, position);
         return elapsedTime < lifeLength;
@@ -60,9 +58,5 @@ public class Particle {
 
     public float distanceTo(Point point) {
         return Vector3f.sub(point.getPosition(), position, null).lengthSquared();
-    }
-
-    public float getDistanceToCamera() {
-        return distanceToCamera;
     }
 }

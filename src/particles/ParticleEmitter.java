@@ -23,20 +23,12 @@ public class ParticleEmitter extends Point {
         this.gravityFactor = gravityFactor;
     }
 
-    public void tick(Point camera) {
+    public void tick() {
         for (int i = 0; i < particles.size(); i++) {
-            boolean stillAlive = particles.get(i).update(camera);
+            boolean stillAlive = particles.get(i).update();
             if (!stillAlive) {
                 particles.remove(particles.get(i));
             }
-
-            // sort in order of distance to the camera
-            particles.sort((o1, o2) -> {
-                if (o1.getDistanceToCamera() == o2.getDistanceToCamera()) {
-                    return 0;
-                }
-                return o1.getDistanceToCamera() < o2.getDistanceToCamera() ? 1 : -1;
-            });
         }
     }
 
