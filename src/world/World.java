@@ -6,6 +6,8 @@ import entities.Light;
 import org.lwjgl.util.vector.Vector3f;
 import particles.ParticleEmitter;
 import terrains.Terrain;
+import toolbox.sortAndPrune.Box;
+import toolbox.sortAndPrune.SortAndPrune;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +23,23 @@ public class World {
     private List<ParticleEmitter> particleEmitters = new ArrayList<>();
     private Terrain terrain;
 
+    private SortAndPrune sap = new SortAndPrune();
+    private List<Box> boundingBoxes = new ArrayList<>();
+
     public World() {
 
+    }
+
+    public void tick() {
+//        updateBoundingBoxes();
+//        sap.update(boundingBoxes);
+    }
+
+    public void updateBoundingBoxes() {
+        boundingBoxes.clear();
+        for (Entity entity : entities) {
+            boundingBoxes.add(entity.getBoundingBox());
+        }
     }
 
     public float getSkyR() {

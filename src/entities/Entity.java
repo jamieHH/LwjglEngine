@@ -8,6 +8,7 @@ public class Entity extends Point {
 
 	private TexturedModel model;
 	private float scale;
+	private Box boundingBox = null;
 
     public Entity(TexturedModel model, float scale) {
         this.model = model;
@@ -30,19 +31,25 @@ public class Entity extends Point {
 		this.scale = scale;
 	}
 
-	public Box getBoundingBox(int id) {
-		return new Box(id,
-				new EndPoint[] {
-						new EndPoint(id, getPosX() -1, true),
-						new EndPoint(id, getPosY() -1, true),
-						new EndPoint(id, getPosZ() -1, true)
-				},
-				new EndPoint[] {
-						new EndPoint(id, getPosX() +1, false),
-						new EndPoint(id, getPosY() +1, false),
-						new EndPoint(id, getPosZ() +1, false)
-				}
+	public Box getBoundingBox() {
+    	if (boundingBox != null) {
+    		return boundingBox;
+		} else {
+			int id = this.hashCode();
+			return new Box(id,
+					new EndPoint[]{
+							new EndPoint(id, getPosX() - 1, true),
+							new EndPoint(id, getPosY() - 1, true),
+							new EndPoint(id, getPosZ() - 1, true)
+					},
+					new EndPoint[]{
+							new EndPoint(id, getPosX() + 1, false),
+							new EndPoint(id, getPosY() + 1, false),
+							new EndPoint(id, getPosZ() + 1, false)
+					}
 
-		);
+			);
+
+		}
 	}
 }

@@ -10,10 +10,10 @@ public class SortAndPrune {
 
     private class Pair {
 
-        public Box box0;
-        public Box box1;
+        public int box0;
+        public int box1;
 
-        public Pair(Box b0, Box b1) {
+        public Pair(int b0, int b1) {
             this.box0 = b0;
             this.box1 = b1;
         }
@@ -22,8 +22,9 @@ public class SortAndPrune {
     private List<Box> boxes = new ArrayList<>();
     private List<EndPoint>[] endPoints;
     public List<Pair>[] intersectingPairs = new ArrayList[3];
+    public List<Pair> fullIntersects = new ArrayList<>();
 
-    private SortAndPrune() {
+    public SortAndPrune() {
         boxes.add(new Box(1, new EndPoint(1, 0, true), new EndPoint(1, 3, false)));
         boxes.add(new Box(2, new EndPoint(2, 1, true), new EndPoint(2, 4, false)));
         boxes.add(new Box(3, new EndPoint(3, 10, true), new EndPoint(3, 12, false)));
@@ -31,11 +32,50 @@ public class SortAndPrune {
         boxes.add(new Box(5, new EndPoint(5, 9, true), new EndPoint(5, 11, false)));
     }
 
-    private  void tick() {
-        List<Box> sortBoxes = new ArrayList<>(boxes);
+    public void update(List<Box> sort) {
+        fullIntersects.clear();
+        List<Box> sortBoxes = new ArrayList<>(sort);
 
-        sortAlongAxis(sortBoxes, 0);
-        intersectingPairs[0] = findPairsAlongAxis(sortBoxes, 0);
+        for (int i = 0; i < 3; i++) {
+            sortAlongAxis(sortBoxes, i);
+            intersectingPairs[i] = findPairsAlongAxis(sortBoxes, i);
+        }
+
+        List<Pair> xyIntersects = new ArrayList<>();
+        for (Pair pair : intersectingPairs[0]) {
+            if (pairExistsInList(intersectingPairs[2], pair)) {
+                xyIntersects.add(pair);
+//                fullIntersects.add(pair);
+            }
+        }
+        for (Pair pair : xyIntersects) {
+            if (pairExistsInList(intersectingPairs[2], pair)) {
+                fullIntersects.add(pair);
+            }
+        }
+    }
+
+    public List<Integer> findFullIntersects(int searchId) {
+        List<Integer> matches = new ArrayList<>();
+        for (Pair pair: fullIntersects) {
+            if (pair.box0 == searchId) {
+                matches.add(pair.box1);
+            } else if (pair.box1 == searchId) {
+                matches.add(pair.box1);
+            }
+        }
+        return matches;
+    }
+
+    private boolean pairExistsInList(List<Pair> pairs, Pair pair) {
+        for (Pair p : pairs) {
+            if (p.box0 == pair.box0 && p.box1 == pair.box1) {
+                return true;
+            } else if (p.box0 == pair.box1 && p.box1 == pair.box0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void sortAlongAxis(List<Box> sortList, int axis) {
@@ -49,17 +89,14 @@ public class SortAndPrune {
 
     private List<Pair> findPairsAlongAxis(List<Box> sortList, int axis) {
         List<Pair> pairList = new ArrayList<>();
-        int count = 1;
         for (int i = 0; i < sortList.size(); i++) {
             for (int j = i+1; j < sortList.size(); j++) {
-                count++;
                 if (sortList.get(i).max[axis].value > sortList.get(j).min[axis].value) {
-                    pairList.add(new Pair(sortList.get(i), sortList.get(j)));
+                    pairList.add(new Pair(sortList.get(i).id, sortList.get(j).id));
                 }
             }
         }
 
-        System.out.println(count + " checks");
         return pairList;
     }
 
@@ -75,8 +112,11 @@ public class SortAndPrune {
         }
         System.out.println();
         System.out.println("*******************************");
-        for (int i = 0; i < intersectingPairs[axis].size(); i++) {
-            System.out.print("["+intersectingPairs[axis].get(i).box0.id+","+intersectingPairs[axis].get(i).box1.id+"] ");
+//        for (int i = 0; i < intersectingPairs[axis].size(); i++) {
+//            System.out.print("["+intersectingPairs[axis].get(i).box0+","+intersectingPairs[axis].get(i).box1+"] ");
+//        }
+        for (int i = 0; i < fullIntersects.size(); i++) {
+            System.out.print("["+fullIntersects.get(i).box0+","+fullIntersects.get(i).box1+"] ");
         }
         System.out.println();
         System.out.println("*******************************");
@@ -95,7 +135,7 @@ public class SortAndPrune {
         SortAndPrune c = new SortAndPrune();
         boolean running = true;
         while (running) {
-            c.tick();
+            c.update(c.boxes);
             c.render(0);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

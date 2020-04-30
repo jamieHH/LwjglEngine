@@ -46,29 +46,29 @@ public class MainGameLoop {
 
 		//---- Random Scene objects
         Random random = new Random();
-		for (int i = 0; i < 100000; i++) {
-			float x = random.nextFloat() * 800;
-			float z = random.nextFloat() * 800;
-			float y = terrain.getHeightOfTerrain(x, z);
-			world.addEntity(
-			        new Entity(Models.grass, random.nextFloat() + 1),
-                    x, y, z,
-                    0, randRotation(), 0
-            );
-		}
-		for (int i = 0; i < 2000; i++) {
-			float x = random.nextFloat() * 800;
-			float z = random.nextFloat() * 800;
-			float y = terrain.getHeightOfTerrain(x, z);
-            world.addEntity(
-                    new Entity(Models.rock, random.nextFloat() + 0.5f),
-                    x, y, z,
-                    0, randRotation(), 0
-            );
-		}
-        for (int i = 0; i < 1000; i++) {
-            float x = random.nextFloat() * 800;
-            float z = random.nextFloat() * 800;
+//		for (int i = 0; i < 100000; i++) {
+//			float x = random.nextFloat() * 800;
+//			float z = random.nextFloat() * 800;
+//			float y = terrain.getHeightOfTerrain(x, z);
+//			world.addEntity(
+//			        new Entity(Models.grass, random.nextFloat() + 1),
+//                    x, y, z,
+//                    0, randRotation(), 0
+//            );
+//		}
+//		for (int i = 0; i < 2000; i++) {
+//			float x = random.nextFloat() * 800;
+//			float z = random.nextFloat() * 800;
+//			float y = terrain.getHeightOfTerrain(x, z);
+//            world.addEntity(
+//                    new Entity(Models.rock, random.nextFloat() + 0.5f),
+//                    x, y, z,
+//                    0, randRotation(), 0
+//            );
+//		}
+        for (int i = 0; i < 10; i++) {
+            float x = random.nextFloat() * 100;
+            float z = random.nextFloat() * 100;
             float y = terrain.getHeightOfTerrain(x, z);
             world.addEntity(
                     new Entity(Models.chair, 1),
@@ -76,45 +76,44 @@ public class MainGameLoop {
                     0, randRotation(), 0
             );
         }
-		for (int i = 0; i < 50; i++) {
-			float x = random.nextFloat() * 800;
-			float z = random.nextFloat() * 800;
-			float y = terrain.getHeightOfTerrain(x, z);
-            world.addLight(
-                    new Light(new Vector3f(1, 0, 1), new Vector3f(1, 0.01f, 0.002f)),
-                    x, y + 8, z
-            );
-			world.addEntity(
-			        new Entity(Models.lamp, 1),
-                    x, y, z,
-                    0, 0, 0
-            );
-		}
+//		for (int i = 0; i < 50; i++) {
+//			float x = random.nextFloat() * 800;
+//			float z = random.nextFloat() * 800;
+//			float y = terrain.getHeightOfTerrain(x, z);
+//            world.addLight(
+//                    new Light(new Vector3f(1, 0, 1), new Vector3f(1, 0.01f, 0.002f)),
+//                    x, y + 8, z
+//            );
+//			world.addEntity(
+//			        new Entity(Models.lamp, 1),
+//                    x, y, z,
+//                    0, 0, 0
+//            );
+//		}
 		//------
 
 
+        world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
         EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR(), world.getSkyG(), world.getSkyB()), new Vector3f(1, 0.75f, -1));
         world.addEnvLight(ambient);
 //        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
 //        world.addEnvLight(new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1)));
 
-        Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
+//        Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
 //        world.addLight(torch, 0, 0, 0);
 
+        Player player = new Player(Models.chair, 1);
+        world.addEntity(player, 0, 0, 0);
+        OrbitalCamera camera = new OrbitalCamera(player);
+//        Camera camera = new Camera();
+//        camera.setPosition(new Vector3f(0f, 20f, 0f));
+//        camera.setRotation(new Vector3f(0f, 135f, 0f));
+//        camera.setWorld(world);
 
-//		Player player = new Player(Models.chair, 1);
-//		world.addEntity(player, 0, 0, 0);
-//        OrbitalCamera camera = new OrbitalCamera(player);
-        Camera camera = new Camera();
-        camera.setPosition(new Vector3f(0f, 20f, 0f));
-        camera.setRotation(new Vector3f(0f, 135f, 0f));
-        camera.setWorld(world);
-        world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
-
+        GuiRenderer.init();
         List<GuiTexture> guis = new ArrayList<>();
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
 
-		GuiRenderer.init();
 		WorldMasterRenderer.init(world);
 
         TextMasterRenderer.init();
@@ -151,7 +150,8 @@ public class MainGameLoop {
             lastTime = now;
             while (delta >= 1) {
                 //--Tick (camera and torch)
-//                player.tick();
+                world.tick();
+                player.tick();
 //                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
                 camera.tick();
 
