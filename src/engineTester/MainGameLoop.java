@@ -66,7 +66,7 @@ public class MainGameLoop {
 //                    0, randRotation(), 0
 //            );
 //		}
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 260; i++) { // 260 = 100fps| target: 300 better fps
             float x = random.nextFloat() * 100;
             float z = random.nextFloat() * 100;
             float y = terrain.getHeightOfTerrain(x, z);
@@ -127,9 +127,6 @@ public class MainGameLoop {
         world.addEntity(lampPole, 0, 0, 0);
         world.addLight(lampLight, 0, 0, 0);
 
-        Entity barrel = new Entity(Models.barrelModel, 1);
-        world.addEntity(barrel, 10, 5, 10);
-
         ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
         ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
         world.addParticleEmitter(emitter, 200, 100, 200);
@@ -181,8 +178,6 @@ public class MainGameLoop {
                         }
                     }
                 }
-
-                barrel.setRotY(barrel.getRotY() + 0.2f);
                 //--EndTick
                 updates++;
                 delta--;

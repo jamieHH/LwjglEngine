@@ -2,6 +2,7 @@ package entities;
 
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Player extends Entity {
 
@@ -16,6 +17,8 @@ public class Player extends Entity {
     private float rightwardMove = 0;
     private float upwardsMove = 0;
     private float rotationMove = 0;
+
+    private Vector3f velocity = new Vector3f(0, 0, 0);
 
     public Player(TexturedModel model, float scale) {
         super(model, scale);
@@ -41,11 +44,13 @@ public class Player extends Entity {
 
         float nx = (float) (forwardMove * Math.sin(Math.toRadians(super.getRotY())) - rightwardMove * Math.cos(Math.toRadians(super.getRotY())));
         float nz = (float) (forwardMove * Math.cos(Math.toRadians(super.getRotY())) + rightwardMove * Math.sin(Math.toRadians(super.getRotY())));
-        super.movePosition(nx, 0, nz);
+        velocity.translate(nx, 0, nz);
         forwardMove *= 1 - FRICTION;
         rightwardMove *= 1 - FRICTION;
-        super.movePosition(0, upwardsMove, 0);
+        velocity.translate(0, upwardsMove, 0);
         upwardsMove += getWorld().getGravity();
+        processMovement();
+
         super.moveRotation(0, rotationMove, 0);
         rotationMove *= 0.6;
 
@@ -54,5 +59,14 @@ public class Player extends Entity {
             super.getPosition().y = terrainHeight;
             upwardsMove = 0;
         }
+
+    }
+
+    private void processMovement() {
+        if (getWorld().findWorldIntersects(getBoundingBox()).size() > 0) {
+            System.err.println("COLLISION "+getWorld().findWorldIntersects(getBoundingBox()).size());
+        };
+        super.movePosition(velocity.x, velocity.y, velocity.z);
+        velocity.set(0, 0,0);
     }
 }

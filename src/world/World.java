@@ -24,22 +24,21 @@ public class World {
     private Terrain terrain;
 
     private SortAndPrune sap = new SortAndPrune();
-    private List<Box> boundingBoxes = new ArrayList<>();
 
     public World() {
 
     }
 
     public void tick() {
-//        updateBoundingBoxes();
-//        sap.update(boundingBoxes);
+        sap.boxes.clear();
+        for (Entity e : entities) {
+            sap.addBox(e.getBoundingBox());
+        }
+        sap.update();
     }
 
-    public void updateBoundingBoxes() {
-        boundingBoxes.clear();
-        for (Entity entity : entities) {
-            boundingBoxes.add(entity.getBoundingBox());
-        }
+    public List<Integer> findWorldIntersects(Box b) {
+        return sap.findFullIntersects(b.id);
     }
 
     public float getSkyR() {
@@ -66,6 +65,7 @@ public class World {
         entity.setPosition(new Vector3f(posX, posY, posZ));
         entity.setWorld(this);
         entities.add(entity);
+        sap.addBox(entity.getBoundingBox());
     }
 
     public void addEntity(Entity entity, float posX, float posY, float posZ, float rotX, float rotY, float rotZ) {
@@ -73,6 +73,7 @@ public class World {
         entity.setRotation(new Vector3f(rotX, rotY, rotZ));
         entity.setWorld(this);
         entities.add(entity);
+        sap.addBox(entity.getBoundingBox());
     }
 
     public void addLight(Light light, float posX, float posY, float posZ) {

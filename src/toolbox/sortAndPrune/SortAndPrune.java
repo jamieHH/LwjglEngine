@@ -19,49 +19,64 @@ public class SortAndPrune {
         }
     }
 
-    private List<Box> boxes = new ArrayList<>();
-    private List<EndPoint>[] endPoints;
-    public List<Pair>[] intersectingPairs = new ArrayList[3];
-    public List<Pair> fullIntersects = new ArrayList<>();
+    public List<Box> boxes = new ArrayList<>();
+    private List<EndPoint> endPointsX;
+    private List<EndPoint> endPointsY;
+    private List<EndPoint> endPointsZ;
+    public List<Pair> activePairs = new ArrayList<>();
 
-    public SortAndPrune() {
-        boxes.add(new Box(1, new EndPoint(1, 0, true), new EndPoint(1, 3, false)));
-        boxes.add(new Box(2, new EndPoint(2, 1, true), new EndPoint(2, 4, false)));
-        boxes.add(new Box(3, new EndPoint(3, 10, true), new EndPoint(3, 12, false)));
-        boxes.add(new Box(4, new EndPoint(4, 9, true), new EndPoint(4, 11, false)));
-        boxes.add(new Box(5, new EndPoint(5, 9, true), new EndPoint(5, 11, false)));
+    public SortAndPrune(boolean isTest) {
+        addBox(new Box(1, new EndPoint(1, 0, true), new EndPoint(1, 3, false)));
+        addBox(new Box(2, new EndPoint(2, 1, true), new EndPoint(2, 4, false)));
+        addBox(new Box(3, new EndPoint(3, 10, true), new EndPoint(3, 12, false)));
+        addBox(new Box(4, new EndPoint(4, 9, true), new EndPoint(4, 11, false)));
+        addBox(new Box(5, new EndPoint(5, 9, true), new EndPoint(5, 11, false)));
     }
 
-    public void update(List<Box> sort) {
-        fullIntersects.clear();
-        List<Box> sortBoxes = new ArrayList<>(sort);
+    public SortAndPrune() {
+
+    }
+
+    public void addBox(Box b) {
+        boxes.add(b);
+    }
+
+    public void removeBox(Box b) {
+        boxes.remove(b);
+    }
+
+    public void update() {
+        activePairs.clear();
+        List<List<Pair>> axisPairs = new ArrayList<>(3);
+
+        List<Box> sortBoxes = new ArrayList<>(boxes);
+
 
         for (int i = 0; i < 3; i++) {
             sortAlongAxis(sortBoxes, i);
-            intersectingPairs[i] = findPairsAlongAxis(sortBoxes, i);
+            axisPairs.add(findPairsAlongAxis(sortBoxes, i));
         }
 
         List<Pair> xyIntersects = new ArrayList<>();
-        for (Pair pair : intersectingPairs[0]) {
-            if (pairExistsInList(intersectingPairs[2], pair)) {
+        for (Pair pair : axisPairs.get(0)) {
+            if (pairExistsInList(axisPairs.get(1), pair)) {
                 xyIntersects.add(pair);
-//                fullIntersects.add(pair);
             }
         }
         for (Pair pair : xyIntersects) {
-            if (pairExistsInList(intersectingPairs[2], pair)) {
-                fullIntersects.add(pair);
+            if (pairExistsInList(axisPairs.get(2), pair)) {
+                activePairs.add(pair);
             }
         }
     }
 
     public List<Integer> findFullIntersects(int searchId) {
         List<Integer> matches = new ArrayList<>();
-        for (Pair pair: fullIntersects) {
+        for (Pair pair: activePairs) {
             if (pair.box0 == searchId) {
                 matches.add(pair.box1);
             } else if (pair.box1 == searchId) {
-                matches.add(pair.box1);
+                matches.add(pair.box0);
             }
         }
         return matches;
@@ -88,16 +103,15 @@ public class SortAndPrune {
     }
 
     private List<Pair> findPairsAlongAxis(List<Box> sortList, int axis) {
-        List<Pair> pairList = new ArrayList<>();
+        List<Pair> pairs = new ArrayList<>();
         for (int i = 0; i < sortList.size(); i++) {
             for (int j = i+1; j < sortList.size(); j++) {
                 if (sortList.get(i).max[axis].value > sortList.get(j).min[axis].value) {
-                    pairList.add(new Pair(sortList.get(i).id, sortList.get(j).id));
+                    pairs.add(new Pair(sortList.get(i).id, sortList.get(j).id));
                 }
             }
         }
-
-        return pairList;
+        return pairs;
     }
 
     private void render(int axis) {
@@ -115,8 +129,8 @@ public class SortAndPrune {
 //        for (int i = 0; i < intersectingPairs[axis].size(); i++) {
 //            System.out.print("["+intersectingPairs[axis].get(i).box0+","+intersectingPairs[axis].get(i).box1+"] ");
 //        }
-        for (int i = 0; i < fullIntersects.size(); i++) {
-            System.out.print("["+fullIntersects.get(i).box0+","+fullIntersects.get(i).box1+"] ");
+        for (int i = 0; i < activePairs.size(); i++) {
+            System.out.print("["+ activePairs.get(i).box0+","+ activePairs.get(i).box1+"] ");
         }
         System.out.println();
         System.out.println("*******************************");
@@ -132,10 +146,10 @@ public class SortAndPrune {
     }
 
     public static void main(String[] args) throws IOException {
-        SortAndPrune c = new SortAndPrune();
+        SortAndPrune c = new SortAndPrune(true);
         boolean running = true;
         while (running) {
-            c.update(c.boxes);
+            c.update();
             c.render(0);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
