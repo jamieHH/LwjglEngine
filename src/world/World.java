@@ -30,9 +30,13 @@ public class World {
     }
 
     public void tick() {
-        sap.boxes.clear();
+//        sap.boxes.clear();
         for (Entity e : entities) {
-            sap.addBox(e.getBoundingBox());
+            if (e.isHasMoved()) {
+                e.setHasMoved(false);
+                sap.removeBoxId(e.getBoundingBox().id);
+                sap.addBox(e.getBoundingBox());
+            }
         }
         sap.update();
     }

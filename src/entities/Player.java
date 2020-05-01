@@ -63,10 +63,15 @@ public class Player extends Entity {
     }
 
     private void processMovement() {
-        if (getWorld().findWorldIntersects(getBoundingBox()).size() > 0) {
-            System.err.println("COLLISION "+getWorld().findWorldIntersects(getBoundingBox()).size());
-        };
-        super.movePosition(velocity.x, velocity.y, velocity.z);
-        velocity.set(0, 0,0);
+        if (velocity.length() > 0) {
+            super.setHasMoved(true);
+            if (getWorld().findWorldIntersects(getBoundingBox()).size() > 0) {
+                System.err.println("COLLISION "+getWorld().findWorldIntersects(getBoundingBox()).size());
+            };
+            super.movePosition(velocity.x, velocity.y, velocity.z);
+            velocity.set(0, 0,0);
+        } else {
+            System.out.println("No Movement");
+        }
     }
 }

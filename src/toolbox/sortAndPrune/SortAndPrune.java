@@ -41,8 +41,13 @@ public class SortAndPrune {
         boxes.add(b);
     }
 
-    public void removeBox(Box b) {
-        boxes.remove(b);
+    public void removeBoxId(int boxId) {
+        for (Box b : boxes) {
+            if (b.id == boxId) {
+                boxes.remove(b);
+                return;
+            }
+        }
     }
 
     public void update() {
@@ -126,9 +131,6 @@ public class SortAndPrune {
         }
         System.out.println();
         System.out.println("*******************************");
-//        for (int i = 0; i < intersectingPairs[axis].size(); i++) {
-//            System.out.print("["+intersectingPairs[axis].get(i).box0+","+intersectingPairs[axis].get(i).box1+"] ");
-//        }
         for (int i = 0; i < activePairs.size(); i++) {
             System.out.print("["+ activePairs.get(i).box0+","+ activePairs.get(i).box1+"] ");
         }

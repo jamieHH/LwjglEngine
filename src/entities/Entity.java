@@ -1,6 +1,7 @@
 package entities;
 
 import models.TexturedModel;
+import org.lwjgl.util.vector.Vector3f;
 import toolbox.sortAndPrune.Box;
 import toolbox.sortAndPrune.EndPoint;
 
@@ -9,6 +10,7 @@ public class Entity extends Point {
 	private TexturedModel model;
 	private float scale;
 	private Box boundingBox = null;
+	private boolean hasMoved = false;
 
     public Entity(TexturedModel model, float scale) {
         this.model = model;
@@ -52,4 +54,60 @@ public class Entity extends Point {
 
 		}
 	}
+
+    @Override
+    public void setPosition(Vector3f position) {
+        super.setPosition(position);
+        hasMoved = true;
+    }
+
+    @Override
+    public void movePosition(float nx, float ny, float nz) {
+        super.movePosition(nx, ny, nz);
+        hasMoved = true;
+    }
+
+    @Override
+    public void setPosX(float posX) {
+        super.setPosX(posX);
+        hasMoved = true;
+    }
+
+    @Override
+    public void movePosX(float moveX) {
+        super.movePosX(moveX);
+        hasMoved = true;
+    }
+
+    @Override
+    public void setPosY(float posY) {
+        super.setPosY(posY);
+        hasMoved = true;
+    }
+
+    @Override
+    public void movePosY(float moveY) {
+        super.movePosY(moveY);
+        hasMoved = true;
+    }
+
+    @Override
+    public void setPosZ(float posZ) {
+        super.setPosZ(posZ);
+        hasMoved = true;
+    }
+
+    @Override
+    public void movePosZ(float moveZ) {
+        super.movePosZ(moveZ);
+        hasMoved = true;
+    }
+
+    public boolean isHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
 }
