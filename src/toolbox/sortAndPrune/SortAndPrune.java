@@ -20,9 +20,9 @@ public class SortAndPrune {
     }
 
     public List<Box> boxes = new ArrayList<>();
-    private List<EndPoint> endPointsX;
-    private List<EndPoint> endPointsY;
-    private List<EndPoint> endPointsZ;
+    private List<EndPoint> endPointsX = new ArrayList<>();
+    private List<EndPoint> endPointsY = new ArrayList<>();
+    private List<EndPoint> endPointsZ = new ArrayList<>();
     public List<Pair> activePairs = new ArrayList<>();
 
     public SortAndPrune(boolean isTest) {
@@ -52,24 +52,21 @@ public class SortAndPrune {
 
     public void update() {
         activePairs.clear();
-        List<List<Pair>> axisPairs = new ArrayList<>(3);
+        endPointsX.clear();
+        endPointsY.clear();
+        endPointsZ.clear();
 
         List<Box> sortBoxes = new ArrayList<>(boxes);
-
-
-        for (int i = 0; i < 3; i++) {
-            sortAlongAxis(sortBoxes, i);
-            axisPairs.add(findPairsAlongAxis(sortBoxes, i));
-        }
+        addAxisEndPoints(sortBoxes);
 
         List<Pair> xyIntersects = new ArrayList<>();
-        for (Pair pair : axisPairs.get(0)) {
-            if (pairExistsInList(axisPairs.get(1), pair)) {
+        for (Pair pair : findAxisPairs(endPointsX)) {
+            if (pairExistsInList(findAxisPairs(endPointsY), pair)) {
                 xyIntersects.add(pair);
             }
         }
         for (Pair pair : xyIntersects) {
-            if (pairExistsInList(axisPairs.get(2), pair)) {
+            if (pairExistsInList(findAxisPairs(endPointsZ), pair)) {
                 activePairs.add(pair);
             }
         }
@@ -98,12 +95,32 @@ public class SortAndPrune {
         return false;
     }
 
-    private void sortAlongAxis(List<Box> sortList, int axis) {
-        sortList.sort((o1, o2) -> {
-            if (o1.min[axis].value == o2.min[axis].value) {
+    private void addAxisEndPoints(List<Box> boxes) {
+        for (Box box : boxes) {
+            endPointsX.add(box.min[0]);
+            endPointsX.add(box.max[0]);
+            endPointsY.add(box.min[1]);
+            endPointsY.add(box.max[1]);
+            endPointsZ.add(box.min[2]);
+            endPointsZ.add(box.max[2]);
+        }
+        endPointsX.sort((o1, o2) -> {
+            if (o1.value == o2.value) {
                 return 0;
             }
-            return o1.min[axis].value < o2.min[axis].value ? -1 : 1;
+            return o1.value < o2.value ? -1 : 1;
+        });
+        endPointsY.sort((o1, o2) -> {
+            if (o1.value == o2.value) {
+                return 0;
+            }
+            return o1.value < o2.value ? -1 : 1;
+        });
+        endPointsZ.sort((o1, o2) -> {
+            if (o1.value == o2.value) {
+                return 0;
+            }
+            return o1.value < o2.value ? -1 : 1;
         });
     }
 
@@ -117,6 +134,41 @@ public class SortAndPrune {
             }
         }
         return pairs;
+    }
+
+    private List<Pair> findAxisPairs(List<EndPoint> endPointsAxis) {
+        List<Integer> checked = new ArrayList<>();
+        List<Pair> pairs = new ArrayList<>();
+        for (int i = 0; i < endPointsAxis.size(); i++) {
+            EndPoint ep0 = endPointsAxis.get(i);
+            if (!checked.contains(ep0.boxId)) {
+                for (Integer id : getIdsBetweenId(endPointsAxis, ep0.boxId)) {
+                    if (!checked.contains(id)) {
+                        pairs.add(new Pair(ep0.boxId, id));
+                    }
+                }
+                checked.add(ep0.boxId);
+            }
+        }
+        return pairs;
+    }
+
+    private List<Integer> getIdsBetweenId(List<EndPoint> endPointsAxis, int boxId) {
+        List<Integer> ids = new ArrayList<>();
+        boolean write = false;
+        for (EndPoint endPoint : endPointsAxis) {
+            if (endPoint.boxId == boxId) {
+                if (write) {
+                    break;
+                }
+                write = true;
+            } else {
+                if (write) {
+                    ids.add(endPoint.boxId);
+                }
+            }
+        }
+        return ids;
     }
 
     private void render(int axis) {
