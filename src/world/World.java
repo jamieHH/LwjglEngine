@@ -30,7 +30,6 @@ public class World {
     }
 
     public void tick() {
-//        sap.boxes.clear();
         for (Entity e : entities) {
             if (e.isHasMoved()) {
                 e.setHasMoved(false);

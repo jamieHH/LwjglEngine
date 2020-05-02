@@ -23,7 +23,8 @@ public class SortAndPrune {
     private List<EndPoint> endPointsX = new ArrayList<>();
     private List<EndPoint> endPointsY = new ArrayList<>();
     private List<EndPoint> endPointsZ = new ArrayList<>();
-    public List<Pair> activePairs = new ArrayList<>();
+    private List<List<Pair>> axisPairs = new ArrayList<>(3);
+    private List<Pair> activePairs = new ArrayList<>();
 
     public SortAndPrune(boolean isTest) {
         addBox(new Box(1, new EndPoint(1, 0, true), new EndPoint(1, 3, false)));
@@ -51,13 +52,31 @@ public class SortAndPrune {
     }
 
     public void update() {
+        axisPairs.clear();
+        for (int i = 0; i < 3; i++) {
+            axisPairs.add(findPairsAlongAxis(boxes, i));
+        }
+        List<Pair> xyIntersects = new ArrayList<>();
+        for (Pair pair : axisPairs.get(0)) {
+            if (pairExistsInList(axisPairs.get(1), pair)) {
+                xyIntersects.add(pair);
+            }
+        }
+        activePairs.clear();
+        for (Pair pair : xyIntersects) {
+            if (pairExistsInList(axisPairs.get(2), pair)) {
+                activePairs.add(pair);
+            }
+        }
+    }
+
+    public void update2() {
         activePairs.clear();
         endPointsX.clear();
         endPointsY.clear();
         endPointsZ.clear();
 
-        List<Box> sortBoxes = new ArrayList<>(boxes);
-        addAxisEndPoints(sortBoxes);
+        addAxisEndPoints(boxes);
 
         List<Pair> xyIntersects = new ArrayList<>();
         for (Pair pair : findAxisPairs(endPointsX)) {
@@ -95,6 +114,15 @@ public class SortAndPrune {
         return false;
     }
 
+    private void sortAlongAxis(List<Box> sortList, int axis) {
+        sortList.sort((o1, o2) -> {
+            if (o1.min[axis].value == o2.min[axis].value) {
+                return 0;
+            }
+            return o1.min[axis].value < o2.min[axis].value ? -1 : 1;
+        });
+    }
+
     private void addAxisEndPoints(List<Box> boxes) {
         for (Box box : boxes) {
             endPointsX.add(box.min[0]);
@@ -125,9 +153,10 @@ public class SortAndPrune {
     }
 
     private List<Pair> findPairsAlongAxis(List<Box> sortList, int axis) {
+        sortAlongAxis(sortList, axis);
         List<Pair> pairs = new ArrayList<>();
         for (int i = 0; i < sortList.size(); i++) {
-            for (int j = i+1; j < sortList.size(); j++) {
+            for (int j = i + 1; j < sortList.size(); j++) {
                 if (sortList.get(i).max[axis].value > sortList.get(j).min[axis].value) {
                     pairs.add(new Pair(sortList.get(i).id, sortList.get(j).id));
                 }

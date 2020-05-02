@@ -70,8 +70,6 @@ public class Player extends Entity {
             };
             super.movePosition(velocity.x, velocity.y, velocity.z);
             velocity.set(0, 0,0);
-        } else {
-            System.out.println("No Movement");
         }
     }
 }
