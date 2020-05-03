@@ -15,13 +15,13 @@ public class NormalMappingShader extends ShaderProgram{
 
 	private static final String VERTEX_FILE = "src/normalMappingRenderer/normalMapVShader.txt";
 	private static final String FRAGMENT_FILE = "src/normalMappingRenderer/normalMapFShader.txt";
+	private static final Vector3f NULL_VECTOR = new Vector3f(0, 0, 0);
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
 	private int[] location_lightPositionEyeSpace;
 	private int[] location_lightColor;
-	private int[] location_attenuation;
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColor;
@@ -50,14 +50,11 @@ public class NormalMappingShader extends ShaderProgram{
 		location_skyColor = super.getUniformLocation("skyColor");
 		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_normalMap = super.getUniformLocation("normalMap");
-
-		location_lightPositionEyeSpace = new int[MAX_LIGHTS];
 		location_lightColor = new int[MAX_LIGHTS];
-		location_attenuation = new int[MAX_LIGHTS];
+		location_lightPositionEyeSpace = new int[MAX_LIGHTS];
 		for(int i = 0; i < MAX_LIGHTS; i++){
-			location_lightPositionEyeSpace[i] = super.getUniformLocation("lightPositionEyeSpace[" + i + "]");
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
-			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
+			location_lightPositionEyeSpace[i] = super.getUniformLocation("lightPositionEyeSpace[" + i + "]");
 		}
 	}
 	
@@ -82,13 +79,11 @@ public class NormalMappingShader extends ShaderProgram{
 	protected void loadLights(List<Light> lights, Matrix4f viewMatrix){
 		for (int i = 0; i < MAX_LIGHTS; i++){
 			if (i < lights.size()){
-				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i).getPosition(), viewMatrix));
 				super.loadVector(location_lightColor[i], lights.get(i).getColor());
-				super.loadVector(location_attenuation[i], lights.get(i).getAttenuation());
+				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i).getPosition(), viewMatrix));
 			}else{
-				super.loadVector(location_lightPositionEyeSpace[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_lightColor[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+				super.loadVector(location_lightColor[i], NULL_VECTOR);
+				super.loadVector(location_lightPositionEyeSpace[i], NULL_VECTOR);
 			}
 		}
 	}

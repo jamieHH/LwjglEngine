@@ -15,6 +15,7 @@ public class StaticShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 16;
 	private static final int MAX_ENV_LIGHTS = 2;
+	private static final Vector3f NULL_VECTOR = new Vector3f(0, 0, 0);
 
 	private static final String VERTEX_FILE = "src/shaders/vertexShader.txt";
 	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
@@ -22,8 +23,8 @@ public class StaticShader extends ShaderProgram {
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
-	private int[] location_lightPosition;
 	private int[] location_lightColor;
+	private int[] location_lightPosition;
 	private int[] location_envLightColor;
 	private int[] location_envLightDirection;
 	private int location_shineDamper;
@@ -51,13 +52,13 @@ public class StaticShader extends ShaderProgram {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
 		location_skyColor = super.getUniformLocation("skyColor");
-		location_lightPosition = new int [MAX_LIGHTS];
 		location_lightColor = new int [MAX_LIGHTS];
+		location_lightPosition = new int [MAX_LIGHTS];
 		location_envLightColor = new int [MAX_ENV_LIGHTS];
 		location_envLightDirection = new int [MAX_ENV_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++) {
-			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
+			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 		}
 		for (int i = 0; i < MAX_ENV_LIGHTS; i++) {
 			location_envLightColor[i] = super.getUniformLocation("envLightColor[" + i + "]");
@@ -85,11 +86,11 @@ public class StaticShader extends ShaderProgram {
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
-				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
 				super.loadVector(location_lightColor[i], lights.get(i).getColor());
+				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
 			} else {
-				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_lightColor[i], new Vector3f(0, 0, 0));
+				super.loadVector(location_lightColor[i], NULL_VECTOR);
+				super.loadVector(location_lightPosition[i], NULL_VECTOR);
 			}
 		}
 	}
@@ -97,11 +98,11 @@ public class StaticShader extends ShaderProgram {
 	public void loadEnvLights(List<EnvLight> lights) {
 		for (int i = 0; i < MAX_ENV_LIGHTS; i++) {
 			if (i < lights.size()) {
-				super.loadVector(location_envLightDirection[i], lights.get(i).getDirection());
 				super.loadVector(location_envLightColor[i], lights.get(i).getColor());
+				super.loadVector(location_envLightDirection[i], lights.get(i).getDirection());
 			} else {
-				super.loadVector(location_envLightDirection[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_envLightColor[i], new Vector3f(0, 0, 0));
+				super.loadVector(location_envLightColor[i], NULL_VECTOR);
+				super.loadVector(location_envLightDirection[i], NULL_VECTOR);
 			}
 		}
 	}
