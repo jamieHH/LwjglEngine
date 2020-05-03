@@ -81,7 +81,7 @@ public class MainGameLoop {
 //			float z = random.nextFloat() * 800;
 //			float y = terrain.getHeightOfTerrain(x, z);
 //            world.addLight(
-//                    new Light(new Vector3f(1, 0, 1), new Vector3f(1, 0.01f, 0.002f)),
+//                    new Light(new Vector3f(0, 1, 0), 1f),
 //                    x, y + 8, z
 //            );
 //			world.addEntity(
@@ -92,23 +92,20 @@ public class MainGameLoop {
 //		}
 		//------
 
-
         world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
-        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR()+1, world.getSkyG()+1, world.getSkyB()+1), new Vector3f(1, 0.75f, -1));
-        world.addEnvLight(ambient);
-//        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
-//        world.addEnvLight(new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1)));
+//        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR()+1, world.getSkyG()+1, world.getSkyB()+1), new Vector3f(1, 0.75f, -1));
+////        world.addEnvLight(ambient);
+        world.addEnvLight(new EnvLight(new Vector3f(0f, 0f, 1f), new Vector3f(-1, 0.0f, 1)));
+        world.addEnvLight(new EnvLight(new Vector3f(1f, 0f, 0f), new Vector3f(1, 0.0f, -1)));
 
-//        Light torch = new Light(new Vector3f(1, 1, 1), new Vector3f(1, 0.01f, 0.002f));
-//        world.addLight(torch, 0, 0, 0);
-
+//        Camera camera = new Camera();
+//        camera.setRotation(new Vector3f(0f, 135f, 0f));
+//        camera.setPosition(new Vector3f(0f, 20f, 0f));
+//        camera.setWorld(world);
         Player player = new Player(Models.chair, 1);
+        player.setRotation(new Vector3f(0, 45, 0));
         world.addEntity(player, 0, 0, 0);
         OrbitalCamera camera = new OrbitalCamera(player);
-//        Camera camera = new Camera();
-//        camera.setPosition(new Vector3f(0f, 20f, 0f));
-//        camera.setRotation(new Vector3f(0f, 135f, 0f));
-//        camera.setWorld(world);
 
         GuiRenderer.init();
         List<GuiTexture> guis = new ArrayList<>();
@@ -119,14 +116,9 @@ public class MainGameLoop {
         TextMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
         GUIText text = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
-        text.setColor(1, 0, 0);
+        text.setColor(1, 1, 0);
 
         MousePicker picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), terrain);
-        Entity lampPole = new Entity(Models.lamp, 1);
-        Light lampLight = new Light(new Vector3f(0, 1, 0), new Vector3f(1, 0.01f, 0.002f));
-        world.addEntity(lampPole, 0, 0, 0);
-        world.addLight(lampLight, 0, 0, 0);
-
         ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
         ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
         world.addParticleEmitter(emitter, 200, 100, 200);
@@ -149,7 +141,6 @@ public class MainGameLoop {
                 //--Tick (camera and torch)
                 world.tick();
                 player.tick();
-//                torch.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + 4, player.getPosition().z));
                 camera.tick();
 
                 emitter.tick();
@@ -159,15 +150,13 @@ public class MainGameLoop {
                 picker.update();
                 Vector3f tp = picker.getCurrentTerrainPoint();
                 if (tp != null) {
-                    lampPole.setPosition(new Vector3f(tp.getX(), tp.getY(), tp.getZ()));
-                    lampLight.setPosition(new Vector3f(tp.getX(), tp.getY() + 8, tp.getZ()));
                     if (lampWait > 0) {
                         lampWait--;
                     } else {
                         if (Mouse.isButtonDown(1)) {
                             lampWait = 15;
                             world.addLight(
-                                    new Light(lampLight.getColor(), lampLight.getAttenuation()),
+                                    new Light(new Vector3f(0, 1, 0), 1f),
                                     tp.getX(), tp.getY() + 8, tp.getZ()
                             );
                             world.addEntity(
