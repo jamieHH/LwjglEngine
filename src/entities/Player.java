@@ -18,8 +18,6 @@ public class Player extends Entity {
     private float upwardsMove = 0;
     private float rotationMove = 0;
 
-    private Vector3f velocity = new Vector3f(0, 0, 0);
-
     public Player(TexturedModel model, float scale) {
         super(model, scale);
     }
@@ -44,10 +42,10 @@ public class Player extends Entity {
 
         float nx = (float) (forwardMove * Math.sin(Math.toRadians(super.getRotY())) - rightwardMove * Math.cos(Math.toRadians(super.getRotY())));
         float nz = (float) (forwardMove * Math.cos(Math.toRadians(super.getRotY())) + rightwardMove * Math.sin(Math.toRadians(super.getRotY())));
-        velocity.translate(nx, 0, nz);
+        super.getVelocity().translate(nx, 0, nz);
         forwardMove *= 1 - FRICTION;
         rightwardMove *= 1 - FRICTION;
-        velocity.translate(0, upwardsMove, 0);
+        super.getVelocity().translate(0, upwardsMove, 0);
         upwardsMove += getWorld().getGravity();
         processMovement();
 
@@ -63,13 +61,13 @@ public class Player extends Entity {
     }
 
     private void processMovement() {
-        if (velocity.length() > 0) {
+        if (getVelocity().length() > 0) {
             super.setHasMoved(true);
             if (getWorld().findWorldIntersects(getBoundingBox()).size() > 0) {
                 System.err.println("COLLISION "+getWorld().findWorldIntersects(getBoundingBox()).size());
             };
-            super.movePosition(velocity.x, velocity.y, velocity.z);
-            velocity.set(0, 0,0);
+            super.movePosition(getVelocity().x, getVelocity().y, getVelocity().z);
+            getVelocity().set(0, 0,0);
         }
     }
 }

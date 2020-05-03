@@ -1,6 +1,5 @@
 package world;
 
-import engineTester.assets.Models;
 import entities.Entity;
 import entities.EnvLight;
 import entities.Light;
@@ -12,7 +11,6 @@ import toolbox.sortAndPrune.SortAndPrune;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class World {
 
@@ -26,6 +24,8 @@ public class World {
     private Terrain terrain;
 
     private SortAndPrune sap = new SortAndPrune();
+    private int sapWait = 5;
+    private int sapTick = 0;
 
     public World() {
 
@@ -40,14 +40,19 @@ public class World {
         }
 
         //collision
-        for (Entity e : entities) {
-            if (e.isHasMoved()) {
-                e.setHasMoved(false);
-                sap.removeBoxId(e.getBoundingBox().id);
-                sap.addBox(e.getBoundingBox());
+        if (sapTick > 0) {
+            sapTick--;
+        } else {
+            sapTick = sapWait;
+            for (Entity e : entities) {
+                if (e.isHasMoved()) {
+                    e.setHasMoved(false);
+                    sap.removeBoxId(e.getBoundingBox().id);
+                    sap.addBox(e.getBoundingBox());
+                }
             }
+            sap.update();
         }
-        sap.update();
         //endCollision
     }
 

@@ -3,7 +3,6 @@ package engineTester;
 import engineTester.assets.Models;
 import entities.Entity;
 import entities.EnvLight;
-import entities.Light;
 import org.lwjgl.util.vector.Vector3f;
 import particles.ParticleEmitter;
 import particles.ParticleTexture;

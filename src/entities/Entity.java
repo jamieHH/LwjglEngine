@@ -7,10 +7,11 @@ import toolbox.sortAndPrune.EndPoint;
 
 public class Entity extends Point {
 
-	private TexturedModel model;
-	private float scale;
-	private Box boundingBox = null;
-	private boolean hasMoved = false;
+    private Vector3f velocity = new Vector3f(0, 0, 0);
+    private TexturedModel model;
+    private float scale;
+    private Box boundingBox = null;
+    private boolean hasMoved = false;
 
     public Entity(TexturedModel model, float scale) {
         this.model = model;
@@ -58,6 +59,14 @@ public class Entity extends Point {
 
 		}
 	}
+
+    public Vector3f getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector3f velocity) {
+        this.velocity = velocity;
+    }
 
     @Override
     public void setPosition(Vector3f position) {

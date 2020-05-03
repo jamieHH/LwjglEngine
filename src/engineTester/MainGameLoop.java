@@ -5,26 +5,17 @@ import entities.*;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import renderEngine.GuiMasterRenderer;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import particles.ParticleEmitter;
-import particles.ParticleTexture;
 import gui.GuiTexture;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.*;
-import terrains.Terrain;
-import textures.TerrainTexture;
-import textures.TerrainTexturePack;
 import toolbox.MousePicker;
 import world.World;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class MainGameLoop {
 
@@ -38,15 +29,15 @@ public class MainGameLoop {
 
         world = new TestWorld();
 
-        camera = new Camera();
-        camera.setPosition(new Vector3f(0f, 20f, 0f));
-        camera.setRotation(new Vector3f(0f, 135f, 0f));
-        camera.setWorld(world);
-
         Player player = new Player(Models.chair, 1);
         player.setRotation(new Vector3f(0, 45, 0));
         world.addEntity(player, 0, 0, 0);
-//        camera = new OrbitalCamera(player);
+        camera = new OrbitalCamera(player);
+
+//        camera = new Camera();
+//        camera.setPosition(new Vector3f(0f, 20f, 0f));
+//        camera.setRotation(new Vector3f(0f, 135f, 0f));
+//        camera.setWorld(world);
 
         WorldMasterRenderer.init(world, camera);
         GuiMasterRenderer.init();
@@ -138,9 +129,5 @@ public class MainGameLoop {
                 }
             }
         }
-    }
-
-	private static float randRotation() {
-	    return new Random().nextFloat() * 360;
     }
 }
