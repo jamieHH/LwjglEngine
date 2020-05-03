@@ -1,24 +1,28 @@
-package fontRendering;
+package renderEngine;
 
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontMeshCreator.TextMeshData;
-import renderEngine.Loader;
+import fontRendering.FontRenderer;
+import gui.GuiTexture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TextMasterRenderer {
+public class GuiMasterRenderer {
 
     private static Map<FontType, List<GUIText>> texts = new HashMap<>();
+    private static List<GuiTexture> textures = new ArrayList<>();
 
     public static void init() {
+        GuiRenderer.init();
         FontRenderer.init();
     }
 
     public static void render() {
+        GuiRenderer.render(textures);
         FontRenderer.render(texts);
     }
 
@@ -35,6 +39,10 @@ public class TextMasterRenderer {
         textBatch.add(text);
     }
 
+    public static void loadTexture(GuiTexture texture) {
+        textures.add(texture);
+    }
+
     public static void removeText(GUIText text) {
         List<GUIText> textBatch = texts.get(text.getFont());
         textBatch.remove(text);
@@ -43,7 +51,12 @@ public class TextMasterRenderer {
         }
     }
 
+    public static void removeTexture(GuiTexture texture) {
+        textures.remove(texture);
+    }
+
     public static void cleanUp() {
+        GuiRenderer.cleanUp();
         FontRenderer.cleanUp();
     }
 }

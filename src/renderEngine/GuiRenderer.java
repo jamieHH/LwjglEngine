@@ -15,10 +15,10 @@ import java.util.List;
 public class GuiRenderer {
 
     private static final RawModel quad = Loader.loadToVAO(new float[] {-1, 1, -1, -1, 1, 1, 1, -1}, 2);;
-    private static GuiShader shader;
+    private static GuiShader shader = new GuiShader();
 
     public static void init() {
-        shader = new GuiShader();
+
     }
 
     public static void render(List<GuiTexture> guis) {

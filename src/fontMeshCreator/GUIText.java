@@ -1,6 +1,5 @@
 package fontMeshCreator;
 
-import fontRendering.TextMasterRenderer;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -17,7 +16,7 @@ public class GUIText {
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector3f color = new Vector3f(0f, 0f, 0f);
+	private Vector3f color = new Vector3f(1f, 1f, 0f);
 
 	private Vector2f position;
 	private float lineMaxSize;
@@ -60,14 +59,6 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMasterRenderer.loadText(this);
-	}
-
-	/**
-	 * Remove the text from the screen.
-	 */
-	public void remove() {
-		TextMasterRenderer.removeText(this);
 	}
 
 	/**

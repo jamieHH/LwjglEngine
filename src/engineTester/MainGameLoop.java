@@ -4,7 +4,7 @@ import engineTester.assets.Models;
 import entities.*;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
-import fontRendering.TextMasterRenderer;
+import renderEngine.GuiMasterRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import particles.ParticleEmitter;
@@ -107,16 +107,14 @@ public class MainGameLoop {
         world.addEntity(player, 0, 0, 0);
         OrbitalCamera camera = new OrbitalCamera(player);
 
-        GuiRenderer.init();
-        List<GuiTexture> guis = new ArrayList<>();
-        guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
-
         WorldMasterRenderer.init(world);
 
-        TextMasterRenderer.init();
+        GuiMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
-        GUIText text = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
-        text.setColor(1, 1, 0);
+        GUIText guiText = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
+        GuiMasterRenderer.loadText(guiText);
+        GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
+        GuiMasterRenderer.loadTexture(guiTexture);
 
         MousePicker picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), terrain);
         ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
@@ -173,14 +171,16 @@ public class MainGameLoop {
             }
             //--Render
             WorldMasterRenderer.render(camera);
-            GuiRenderer.render(guis);
-            TextMasterRenderer.render();
+            GuiMasterRenderer.render();
             DisplayManager.updateDisplay();
             //--EndRender
             frames++;
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
+                GuiMasterRenderer.removeText(guiText);
+                guiText = new GUIText("FPS: " + frames + " | " + "UPS: " + updates, 1f, font, new Vector2f(0f, 0f), 1f, false);
+                GuiMasterRenderer.loadText(guiText);
                 System.out.println("FPS: " + frames + " | " + "UPS: " + updates);
                 frames = 0;
                 updates = 0;
@@ -188,10 +188,9 @@ public class MainGameLoop {
 		}
         //--ENDRUN
 
-        TextMasterRenderer.cleanUp();
-		GuiRenderer.cleanUp();
 		WorldMasterRenderer.cleanUp();
-		Loader.cleanUp();
+        GuiMasterRenderer.cleanUp();
+        Loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 

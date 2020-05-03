@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class FontRenderer {
 
-	private static FontShader shader;
+	private static FontShader shader = new FontShader();
 
 	public static void init() {
-		shader = new FontShader();
+
 	}
 
 	public static void render(Map<FontType, List<GUIText>> texts) {
