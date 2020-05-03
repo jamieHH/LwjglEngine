@@ -51,6 +51,10 @@ public class GuiMasterRenderer {
         }
     }
 
+    public static void clearText() {
+        texts.clear();
+    }
+
     public static void removeTexture(GuiTexture texture) {
         textures.remove(texture);
     }

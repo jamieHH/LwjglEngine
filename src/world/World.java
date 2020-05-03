@@ -1,5 +1,6 @@
 package world;
 
+import engineTester.assets.Models;
 import entities.Entity;
 import entities.EnvLight;
 import entities.Light;
@@ -11,6 +12,7 @@ import toolbox.sortAndPrune.SortAndPrune;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class World {
 
@@ -31,6 +33,14 @@ public class World {
 
     public void tick() {
         for (Entity e : entities) {
+            e.tick();
+        }
+        for (ParticleEmitter emitter : particleEmitters) {
+            emitter.tick();
+        }
+
+        //collision
+        for (Entity e : entities) {
             if (e.isHasMoved()) {
                 e.setHasMoved(false);
                 sap.removeBoxId(e.getBoundingBox().id);
@@ -38,6 +48,7 @@ public class World {
             }
         }
         sap.update();
+        //endCollision
     }
 
     public List<Integer> findWorldIntersects(Box b) {

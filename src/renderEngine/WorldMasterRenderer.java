@@ -26,14 +26,16 @@ public class WorldMasterRenderer {
     private static Matrix4f PROJECTION_MATRIX;
 
     private static World world;
+    private static Point camera;
     private static List<Terrain> terrains = new ArrayList<>();
     private static Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private static Map<TexturedModel, List<Entity>> normalMappedEntities = new HashMap<>();
     private static Map<ParticleTexture, List<Particle>> particles = new HashMap<>();
     private static List<Light> lights = new ArrayList<>();
 
-    public static void init(World world) {
+    public static void init(World world, Point camera) {
         WorldMasterRenderer.world = world;
+        WorldMasterRenderer.camera = camera;
         enableCulling();
         createProjectionMatrix();
         EntityRenderer.init(PROJECTION_MATRIX);
@@ -43,10 +45,10 @@ public class WorldMasterRenderer {
         ParticleRenderer.init(PROJECTION_MATRIX);
     }
 
-    public static void render(Point camera) {
+    public static void render() {
         WorldMasterRenderer.clearProcessedWorld();
         WorldMasterRenderer.processWorld(camera);
-        prepare(camera);
+        prepare();
         EntityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
@@ -64,7 +66,7 @@ public class WorldMasterRenderer {
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    private static void prepare(Point camera) {
+    private static void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(world.getSkyR(), world.getSkyG(), world.getSkyB(), 1);
@@ -141,10 +143,10 @@ public class WorldMasterRenderer {
         processTerrain(world.getTerrain());
         processEntities(focus);
         processLights(focus, 16);
-        processParticles(world.getParticleEmitters(), focus);
+        processParticles(world.getParticleEmitters());
     }
 
-    public static void processParticles(List<ParticleEmitter> emitters, Point camera) {
+    public static void processParticles(List<ParticleEmitter> emitters) {
         for (ParticleEmitter emitter : emitters) {
             emitter.getParticles().sort((o1, o2) -> {
                 if (o1.distanceTo(camera) == o2.distanceTo(camera)) {

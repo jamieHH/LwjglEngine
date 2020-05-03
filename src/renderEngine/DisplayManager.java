@@ -24,6 +24,7 @@ public class DisplayManager {
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 			Display.setTitle("LWJGL Engine");
 		} catch (LWJGLException e) {
+			System.out.println("Could not create the display!");
 			e.printStackTrace();
 		}
 		

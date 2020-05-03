@@ -17,6 +17,10 @@ public class Entity extends Point {
         this.scale = scale;
     }
 
+    public void tick() {
+
+    }
+
 	public TexturedModel getModel() {
 		return model;
 	}

@@ -28,102 +28,44 @@ import java.util.Random;
 
 public class MainGameLoop {
 
-	public static void main(String[] args) {
+    private static World world;
+    private static Camera camera;
+    private static MousePicker picker;
+    private int lampWait = 0;
 
-		DisplayManager.createDisplay();
-        World world = new World();
+    public MainGameLoop() {
+        DisplayManager.createDisplay();
 
-		//-------------- Terrain
-		TerrainTexture backgroundTexture = new TerrainTexture(Loader.loadTexture("grassy"));
-		TerrainTexture rTexture = new TerrainTexture(Loader.loadTexture("mud"));
-		TerrainTexture gTexture = new TerrainTexture(Loader.loadTexture("flowers"));
-		TerrainTexture bTexture = new TerrainTexture(Loader.loadTexture("path"));
-		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-		TerrainTexture blendmap = new TerrainTexture(Loader.loadTexture("blendMap"));
-		Terrain terrain = new Terrain(0, 0, texturePack, blendmap, "terrainHeightmap");
-		world.setTerrain(terrain);
-		//--------------
+        world = new TestWorld();
 
-		//---- Random Scene objects
-        Random random = new Random();
-//		for (int i = 0; i < 100000; i++) {
-//			float x = random.nextFloat() * 800;
-//			float z = random.nextFloat() * 800;
-//			float y = terrain.getHeightOfTerrain(x, z);
-//			world.addEntity(
-//			        new Entity(Models.grass, random.nextFloat() + 1),
-//                    x, y, z,
-//                    0, randRotation(), 0
-//            );
-//		}
-//		for (int i = 0; i < 2000; i++) {
-//			float x = random.nextFloat() * 800;
-//			float z = random.nextFloat() * 800;
-//			float y = terrain.getHeightOfTerrain(x, z);
-//            world.addEntity(
-//                    new Entity(Models.rock, random.nextFloat() + 0.5f),
-//                    x, y, z,
-//                    0, randRotation(), 0
-//            );
-//		}
-        for (int i = 0; i < 260; i++) { // 260 = 100fps| target: 300 better fps
-            float x = random.nextFloat() * 100;
-            float z = random.nextFloat() * 100;
-            float y = terrain.getHeightOfTerrain(x, z);
-            world.addEntity(
-                    new Entity(Models.chair, 1),
-                    x, y, z,
-                    0, randRotation(), 0
-            );
-        }
-//		for (int i = 0; i < 50; i++) {
-//			float x = random.nextFloat() * 800;
-//			float z = random.nextFloat() * 800;
-//			float y = terrain.getHeightOfTerrain(x, z);
-//            world.addLight(
-//                    new Light(new Vector3f(0, 1, 0), 1f),
-//                    x, y + 8, z
-//            );
-//			world.addEntity(
-//			        new Entity(Models.lamp, 1),
-//                    x, y, z,
-//                    0, 0, 0
-//            );
-//		}
-		//------
+        camera = new Camera();
+        camera.setPosition(new Vector3f(0f, 20f, 0f));
+        camera.setRotation(new Vector3f(0f, 135f, 0f));
+        camera.setWorld(world);
 
-        world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
-//        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR()+1, world.getSkyG()+1, world.getSkyB()+1), new Vector3f(1, 0.75f, -1));
-////        world.addEnvLight(ambient);
-        world.addEnvLight(new EnvLight(new Vector3f(0f, 0f, 1f), new Vector3f(-1, 0.0f, 1)));
-        world.addEnvLight(new EnvLight(new Vector3f(1f, 0f, 0f), new Vector3f(1, 0.0f, -1)));
-
-//        Camera camera = new Camera();
-//        camera.setRotation(new Vector3f(0f, 135f, 0f));
-//        camera.setPosition(new Vector3f(0f, 20f, 0f));
-//        camera.setWorld(world);
         Player player = new Player(Models.chair, 1);
         player.setRotation(new Vector3f(0, 45, 0));
         world.addEntity(player, 0, 0, 0);
-        OrbitalCamera camera = new OrbitalCamera(player);
+//        camera = new OrbitalCamera(player);
 
-        WorldMasterRenderer.init(world);
-
+        WorldMasterRenderer.init(world, camera);
         GuiMasterRenderer.init();
-        FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
-        GUIText guiText = new GUIText("Demo", 1f, font, new Vector2f(0f, 0f), 1f, false);
-        GuiMasterRenderer.loadText(guiText);
         GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
         GuiMasterRenderer.loadTexture(guiTexture);
 
-        MousePicker picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), terrain);
-        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
-        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
-        world.addParticleEmitter(emitter, 200, 100, 200);
+        picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
+    }
 
-		//--RUN
-        int lampWait = 0;
+    public static void main(String[] args) {
+        new MainGameLoop().run();
+    }
 
+	public void run() {
+        gameLoop();
+        stop();
+	}
+
+	public void gameLoop() {
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -136,70 +78,66 @@ public class MainGameLoop {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1) {
-                //--Tick (camera and torch)
-                world.tick();
-                player.tick();
-                camera.tick();
-
-                emitter.tick();
-                if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
-                    emitter.emitParticles();
-                }
-                picker.update();
-                Vector3f tp = picker.getCurrentTerrainPoint();
-                if (tp != null) {
-                    if (lampWait > 0) {
-                        lampWait--;
-                    } else {
-                        if (Mouse.isButtonDown(0)) {
-                            lampWait = 15;
-                            world.addLight(
-                                    new Light(new Vector3f(0, 1, 0), 1f),
-                                    tp.getX(), tp.getY() + 8, tp.getZ()
-                            );
-                            world.addEntity(
-                                    new Entity(Models.lamp, 1),
-                                    tp.getX(), tp.getY(), tp.getZ(),
-                                    0, 0, 0
-                            );
-                        }
-                    }
-                }
-                //--EndTick
+                tick();
                 updates++;
                 delta--;
             }
-            //--Render
-            WorldMasterRenderer.render(camera);
-            GuiMasterRenderer.render();
-            DisplayManager.updateDisplay();
-            //--EndRender
+            render();
             frames++;
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                GuiMasterRenderer.removeText(guiText);
-                guiText = new GUIText("FPS: " + frames + " | " + "UPS: " + updates, 1f, font, new Vector2f(0f, 0f), 1f, false);
+                GuiMasterRenderer.clearText();
+                FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
+                GUIText guiText = new GUIText("FPS: " + frames + " | " + "UPS: " + updates, 1f, font, new Vector2f(0f, 0f), 1f, false);
                 GuiMasterRenderer.loadText(guiText);
-                System.out.println("FPS: " + frames + " | " + "UPS: " + updates);
                 frames = 0;
                 updates = 0;
             }
-		}
-        //--ENDRUN
+        }
+    }
 
-		WorldMasterRenderer.cleanUp();
-        GuiMasterRenderer.cleanUp();
-        Loader.cleanUp();
-		DisplayManager.closeDisplay();
-	}
-
-	private void render() {
+    public void start() {
 
     }
 
-    private void tick() {
+    public void stop() {
+        WorldMasterRenderer.cleanUp();
+        GuiMasterRenderer.cleanUp();
+        Loader.cleanUp();
+        DisplayManager.closeDisplay();
+    }
 
+	private void render() {
+        WorldMasterRenderer.render();
+        GuiMasterRenderer.render();
+        DisplayManager.updateDisplay();
+    }
+
+    private void tick() {
+        world.tick();
+        camera.tick();
+
+        picker.update();
+        Vector3f tp = picker.getCurrentTerrainPoint();
+        if (tp != null) {
+            if (lampWait > 0) {
+                lampWait--;
+            } else {
+                if (Mouse.isButtonDown(0)) {
+                    lampWait = 15;
+                    world.addLight(
+                            new Light(new Vector3f(0, 1, 0), 1f),
+                            tp.getX(), tp.getY() + 8, tp.getZ()
+                    );
+                    world.addEntity(
+                            new Entity(Models.lamp, 1),
+                            tp.getX(), tp.getY(), tp.getZ(),
+                            0, 0, 0
+                    );
+                }
+            }
+        }
     }
 
 	private static float randRotation() {

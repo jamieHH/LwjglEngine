@@ -35,7 +35,7 @@ public class Camera extends Point {
 	}
 
 	private void calcPitch() {
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(1)) {
 			float pitchDiff = Mouse.getDY() * 0.5f;
 			if (getRotX() - pitchDiff < 90) {
 				if (getRotX() - pitchDiff > -90) {
@@ -50,7 +50,7 @@ public class Camera extends Point {
 	}
 
 	private void calcYaw() {
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(1)) {
 			float angleDiff = Mouse.getDX() * 0.5f;
 			setRotY(getRotY() + angleDiff);
 		}

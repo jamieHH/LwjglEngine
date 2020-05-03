@@ -1,6 +1,7 @@
 package particles;
 
 import entities.Point;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.*;
@@ -24,6 +25,10 @@ public class ParticleEmitter extends Point {
     }
 
     public void tick() {
+        if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
+            this.emitParticles();
+        }
+
         for (int i = 0; i < particles.size(); i++) {
             boolean stillAlive = particles.get(i).update();
             if (!stillAlive) {
