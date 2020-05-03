@@ -19,18 +19,16 @@ public class ParticleRenderer {
 	
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
 	
-	private RawModel quad;
-	private ParticleShader shader;
+	private static RawModel quad = Loader.loadToVAO(VERTICES, 2);
+	private static ParticleShader shader = new ParticleShader();
 	
-	public ParticleRenderer(Matrix4f projectionMatrix){
-		quad = Loader.loadToVAO(VERTICES, 2);
-		shader = new ParticleShader();
+	public static void init(Matrix4f projectionMatrix){
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	public void render(Map<ParticleTexture, List<Particle>> particles, Point camera){
+	public static void render(Map<ParticleTexture, List<Particle>> particles, Point camera){
 		prepare();
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		for (ParticleTexture texture : particles.keySet()) {
@@ -44,7 +42,7 @@ public class ParticleRenderer {
 		finish();
 	}
 
-	private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix) {
+	private static void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix) {
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(position, modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;
@@ -62,7 +60,7 @@ public class ParticleRenderer {
 		shader.loadModelViewMatrix(modelViewMatrix);
 	}
 	
-	private void prepare() {
+	private static void prepare() {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -71,7 +69,7 @@ public class ParticleRenderer {
 		GL11.glDepthMask(false);
 	}
 	
-	private void finish() {
+	private static void finish() {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL20.glDisableVertexAttribArray(0);
@@ -79,7 +77,7 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 
-	public void cleanUp() {
+	public static void cleanUp() {
 		shader.cleanUp();
 	}
 }

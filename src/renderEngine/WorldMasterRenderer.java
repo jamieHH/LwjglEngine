@@ -25,12 +25,6 @@ public class WorldMasterRenderer {
     private static final float FAR_PLANE = 2000f;
     private static Matrix4f PROJECTION_MATRIX;
 
-    private static EntityRenderer entityRenderer;
-    private static TerrainRenderer terrainRenderer;
-    private static NormalMappingRenderer normalMapRenderer;
-    private static SkyboxRenderer skyboxRenderer;
-    private static ParticleRenderer particleRenderer;
-
     private static World world;
     private static List<Terrain> terrains = new ArrayList<>();
     private static Map<TexturedModel, List<Entity>> entities = new HashMap<>();
@@ -42,22 +36,22 @@ public class WorldMasterRenderer {
         WorldMasterRenderer.world = world;
         enableCulling();
         createProjectionMatrix();
-        entityRenderer = new EntityRenderer(PROJECTION_MATRIX);
-        terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
-        skyboxRenderer = new SkyboxRenderer(PROJECTION_MATRIX);
-        normalMapRenderer = new NormalMappingRenderer(PROJECTION_MATRIX);
-        particleRenderer = new ParticleRenderer(PROJECTION_MATRIX);
+        EntityRenderer.init(PROJECTION_MATRIX);
+        NormalMappingRenderer.init(PROJECTION_MATRIX);
+        TerrainRenderer.init(PROJECTION_MATRIX);
+        SkyboxRenderer.init(PROJECTION_MATRIX);
+        ParticleRenderer.init(PROJECTION_MATRIX);
     }
 
     public static void render(Point camera) {
         WorldMasterRenderer.clearProcessedWorld();
         WorldMasterRenderer.processWorld(camera);
         prepare(camera);
-        entityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        normalMapRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        terrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        skyboxRenderer.render(camera, world.getSkyColor());
-        particleRenderer.render(particles, camera);
+        EntityRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        SkyboxRenderer.render(camera, world.getSkyColor());
+        ParticleRenderer.render(particles, camera);
     }
 
     public static void enableCulling() {
@@ -181,11 +175,11 @@ public class WorldMasterRenderer {
     }
 
     public static void cleanUp() {
-        entityRenderer.cleanUp();
-        terrainRenderer.cleanUp();
-        skyboxRenderer.cleanUp();
-        normalMapRenderer.cleanUp();
-        particleRenderer.cleanUp();
+        EntityRenderer.cleanUp();
+        NormalMappingRenderer.cleanUp();
+        TerrainRenderer.cleanUp();
+        SkyboxRenderer.cleanUp();
+        ParticleRenderer.cleanUp();
     }
 
     public static Matrix4f getProjectionMatrix() {

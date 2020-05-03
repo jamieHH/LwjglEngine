@@ -24,16 +24,15 @@ import java.util.Map;
 
 public class EntityRenderer {
 
-	private StaticShader shader;
+	private static StaticShader shader = new StaticShader();
 	
-	public EntityRenderer(Matrix4f projectionMatrix) {
-		this.shader = new StaticShader();
+	public static void init(Matrix4f projectionMatrix) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
+	public static void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
 		prepare(lights, envLights, skyColor, camera);
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
@@ -48,7 +47,7 @@ public class EntityRenderer {
 		finish();
 	}
 
-	private void prepareTexturedModel(TexturedModel model) {
+	private static void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		// bind vertexes
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -66,13 +65,13 @@ public class EntityRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 	}
 
-	private void prepareInstance(Entity entity) {
+	private static void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 				entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
+	private static void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadSkyColor(skyColor);
@@ -80,11 +79,11 @@ public class EntityRenderer {
 		shader.loadLights(lights);
 	}
 
-	private void finish() {
+	private static void finish() {
 		shader.stop();
 	}
 
-	private void unbindTexturedModel() {
+	private static void unbindTexturedModel() {
 		WorldMasterRenderer.enableCulling();
 		// unbind vertexes
 		GL20.glDisableVertexAttribArray(0);
@@ -93,7 +92,7 @@ public class EntityRenderer {
 		GL30.glBindVertexArray(0);
 	}
 
-	public void cleanUp(){
+	public static void cleanUp(){
 		shader.cleanUp();
 	}
 }

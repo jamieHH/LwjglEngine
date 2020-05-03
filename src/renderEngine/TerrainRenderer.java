@@ -19,17 +19,16 @@ import java.util.List;
 
 public class TerrainRenderer {
 
-	private TerrainShader shader;
+	private static TerrainShader shader = new TerrainShader();
 
-	public TerrainRenderer(Matrix4f projectionMatrix) {
-		this.shader = new TerrainShader();
+	public static void init(Matrix4f projectionMatrix) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
 		shader.stop();
 	}
 
-	public void render(List<Terrain> terrains, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
+	public static void render(List<Terrain> terrains, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadSkyColor(skyColor);
@@ -45,7 +44,7 @@ public class TerrainRenderer {
 		shader.stop();
 	}
 
-	private void prepareTerrain(Terrain terrain) {
+	private static void prepareTerrain(Terrain terrain) {
 		RawModel rawModel = terrain.getModel();
 		// bind vertexes
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -56,7 +55,7 @@ public class TerrainRenderer {
 		shader.loadShineVariables(1, 0);
 	}
 
-	private void bindTextures(Terrain terrain) {
+	private static void bindTextures(Terrain terrain) {
 		// bind textures
 		TerrainTexturePack texturesPack = terrain.getTexturePack();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -71,12 +70,12 @@ public class TerrainRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
 
-	private void loadModelMatrix(Terrain terrain) {
+	private static void loadModelMatrix(Terrain terrain) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(terrain.getX(), 0, terrain.getZ()), new Vector3f(0, 0, 0), 1);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void unbindTexturedModel() {
+	private static void unbindTexturedModel() {
 		// unbind vertexes
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
@@ -84,7 +83,7 @@ public class TerrainRenderer {
 		GL30.glBindVertexArray(0);
 	}
 
-	public void cleanUp() {
+	public static void cleanUp() {
 		shader.cleanUp();
 	}
 }
