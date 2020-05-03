@@ -94,7 +94,7 @@ public class MainGameLoop {
 
 
         world.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
-        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR(), world.getSkyG(), world.getSkyB()), new Vector3f(1, 0.75f, -1));
+        EnvLight ambient = new EnvLight(new Vector3f(world.getSkyR()+1, world.getSkyG()+1, world.getSkyB()+1), new Vector3f(1, 0.75f, -1));
         world.addEnvLight(ambient);
 //        world.addEnvLight(new EnvLight(new Vector3f(0.0f, 0.0f, 1f), new Vector3f(-1, 0.2f, 1)));
 //        world.addEnvLight(new EnvLight(new Vector3f(1f, 0.0f, 0.0f), new Vector3f(1, 0.2f, -1)));

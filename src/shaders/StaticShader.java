@@ -24,7 +24,6 @@ public class StaticShader extends ShaderProgram {
 	private int location_viewMatrix;
 	private int[] location_lightPosition;
 	private int[] location_lightColor;
-	private int[] location_attenuation;
 	private int[] location_envLightColor;
 	private int[] location_envLightDirection;
 	private int location_shineDamper;
@@ -54,13 +53,11 @@ public class StaticShader extends ShaderProgram {
 		location_skyColor = super.getUniformLocation("skyColor");
 		location_lightPosition = new int [MAX_LIGHTS];
 		location_lightColor = new int [MAX_LIGHTS];
-		location_attenuation = new int [MAX_LIGHTS];
 		location_envLightColor = new int [MAX_ENV_LIGHTS];
 		location_envLightDirection = new int [MAX_ENV_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
-			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 		for (int i = 0; i < MAX_ENV_LIGHTS; i++) {
 			location_envLightColor[i] = super.getUniformLocation("envLightColor[" + i + "]");
@@ -90,11 +87,9 @@ public class StaticShader extends ShaderProgram {
 			if (i < lights.size()) {
 				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
 				super.loadVector(location_lightColor[i], lights.get(i).getColor());
-				super.loadVector(location_attenuation[i], lights.get(i).getAttenuation());
 			} else {
 				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
 				super.loadVector(location_lightColor[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
 			}
 		}
 	}
