@@ -111,7 +111,7 @@ public class MainGameLoop {
         List<GuiTexture> guis = new ArrayList<>();
         guis.add(new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f)));
 
-		WorldMasterRenderer.init(world);
+        WorldMasterRenderer.init(world);
 
         TextMasterRenderer.init();
         FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
@@ -153,7 +153,7 @@ public class MainGameLoop {
                     if (lampWait > 0) {
                         lampWait--;
                     } else {
-                        if (Mouse.isButtonDown(1)) {
+                        if (Mouse.isButtonDown(0)) {
                             lampWait = 15;
                             world.addLight(
                                     new Light(new Vector3f(0, 1, 0), 1f),

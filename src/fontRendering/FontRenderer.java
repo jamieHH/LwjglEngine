@@ -12,13 +12,13 @@ import java.util.Map;
 
 public class FontRenderer {
 
-	private FontShader shader;
+	private static FontShader shader;
 
-	public FontRenderer() {
+	public static void init() {
 		shader = new FontShader();
 	}
 
-	public void render(Map<FontType, List<GUIText>> texts) {
+	public static void render(Map<FontType, List<GUIText>> texts) {
 		prepare();
 		for (FontType font : texts.keySet()) {
 			// bind textures
@@ -42,20 +42,20 @@ public class FontRenderer {
 		finish();
 	}
 
-	private void prepare() {
+	private static void prepare() {
 		shader.start();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
 	
-	private void finish() {
+	private static void finish() {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		shader.stop();
 	}
 
-	public void cleanUp(){
+	public static void cleanUp(){
 		shader.cleanUp();
 	}
 }

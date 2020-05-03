@@ -13,14 +13,13 @@ import java.util.Map;
 public class TextMasterRenderer {
 
     private static Map<FontType, List<GUIText>> texts = new HashMap<>();
-    private static  FontRenderer renderer;
 
     public static void init() {
-        renderer = new FontRenderer();
+        FontRenderer.init();
     }
 
     public static void render() {
-        renderer.render(texts);
+        FontRenderer.render(texts);
     }
 
     public static void loadText(GUIText text) {
@@ -45,6 +44,6 @@ public class TextMasterRenderer {
     }
 
     public static void cleanUp() {
-        renderer.cleanUp();
+        FontRenderer.cleanUp();
     }
 }

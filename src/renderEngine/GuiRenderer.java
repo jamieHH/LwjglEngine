@@ -22,21 +22,33 @@ public class GuiRenderer {
     }
 
     public static void render(List<GuiTexture> guis) {
+        prepare();
+        for (GuiTexture gui : guis) {
+            // bind textures
+            GL13.glActiveTexture(GL13.GL_TEXTURE0);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTextureID());
+            Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
+            shader.loadTransformation(matrix);
+            // draw call
+            GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+        }
+        finish();
+    }
+
+    private static void prepare() {
         shader.start();
+        // bind vertexes
         GL30.glBindVertexArray(quad.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        for (GuiTexture gui : guis) {
-            GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTextureID());
-            Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
-            shader.loadTransformation(matrix);
-            GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-        }
+    }
+
+    private static void finish() {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+        // unbind vertexes
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
         shader.stop();
