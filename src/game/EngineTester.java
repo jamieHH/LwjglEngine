@@ -29,7 +29,7 @@ public class EngineTester implements IGameLogic {
     }
 
     public void init() {
-        world = new TestWorld();
+        world = new RenderTest();
 
         Player player = new Player(Models.chair, 1);
         player.setRotation(new Vector3f(0, 45, 0));
@@ -48,47 +48,6 @@ public class EngineTester implements IGameLogic {
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
-
-//    public static void main(String[] args) {
-//        new EngineTester().run();
-//    }
-
-//	public void run() {
-//        init();
-//        gameLoop();
-//	}
-
-//	public void gameLoop() {
-//        long lastTime = System.nanoTime();
-//        double amountOfTicks = 60.0;
-//        double ns = 1000000000 / amountOfTicks;
-//        double delta = 0;
-//        long timer = System.currentTimeMillis();
-//        int frames = 0;
-//        int updates = 0;
-//        while (!Display.isCloseRequested()) {
-//            long now = System.nanoTime();
-//            delta += (now - lastTime) / ns;
-//            lastTime = now;
-//            while (delta >= 1) {
-//                tick();
-//                updates++;
-//                delta--;
-//            }
-//            render();
-//            frames++;
-//
-//            if (System.currentTimeMillis() - timer > 1000000000) {
-//                timer += 1000;
-//                GuiMasterRenderer.clearText();
-//                FontType font = new FontType(Loader.loadFontTexture("font/arial"), new File("res/font/arial.fnt"));
-//                GuiText guiText = new GuiText("FPS: " + frames + " | " + "UPS: " + updates, 1f, font, new Vector2f(0f, 0f), 1f, false);
-//                GuiMasterRenderer.loadText(guiText);
-//                frames = 0;
-//                updates = 0;
-//            }
-//        }
-//    }
 
     public void tick() {
         world.tick();

@@ -118,7 +118,7 @@ public class WorldMasterRenderer {
     }
 
     private static void processLights(Point focus, int n) {
-        List<Light> lights = new ArrayList<>(world.getLightsInSquare(focus.getPosition(), 300, 300));
+        List<Light> lights = new ArrayList<>(world.getLights());
         lights.sort((o1, o2) -> {
             if (o1.distanceTo(focus) == o2.distanceTo(focus)) {
                 return 0;
@@ -132,7 +132,7 @@ public class WorldMasterRenderer {
     }
 
     private static void processEntities(Point focus) {
-        for (Entity entity : world.getEntitiesInSquare(focus.getPosition(), 300, 300)) {
+        for (Entity entity : world.getEntities()) {
             if (entity.getModel().getTexture().isHasNormalMap()) {
                 addNormalMappedEntity(entity);
             } else {
