@@ -3,7 +3,9 @@ package game;
 import engine.entities.Entity;
 import engine.entities.EnvLight;
 import engine.entities.Light;
+import engine.entities.ParticleEmitter;
 import engine.loaders.Loader;
+import engine.particles.ParticleTexture;
 import engine.terrains.Terrain;
 import engine.terrains.TerrainTexture;
 import engine.terrains.TerrainTexturePack;
@@ -60,5 +62,9 @@ public class RenderTest extends World {
                 }
             }
         }
+
+        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
+        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
+        this.addParticleEmitter(emitter, 400, 100, 400);
     }
 }

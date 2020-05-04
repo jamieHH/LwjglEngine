@@ -6,7 +6,7 @@ import org.lwjgl.opengl.*;
 public class DisplayManager {
 
 	public static void createDisplay(int width, int height, int samples, String title) {
-		ContextAttribs attribs = new ContextAttribs(3,2)
+		ContextAttribs attribs = new ContextAttribs(3,3)
 		.withForwardCompatible(true)
 		.withProfileCore(true);
 		

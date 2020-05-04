@@ -1,7 +1,6 @@
 package engine.entities;
 
 
-import engine.entities.Point;
 import engine.particles.ParticleTexture;
 import org.lwjgl.util.vector.Vector3f;
 import engine.world.World;

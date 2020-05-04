@@ -80,10 +80,6 @@ public class TestWorld extends World {
             this.addEntity(e, x, y, z, 0, randRotation(), 0);
         }
         this.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
-
-        ParticleTexture particleTexture = new ParticleTexture(Loader.loadTexture("star0"));
-        ParticleEmitter emitter = new ParticleEmitter(particleTexture, 1000, 2, 1);
-        this.addParticleEmitter(emitter, 200, 100, 200);
         //------
 
 
