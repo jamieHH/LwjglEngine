@@ -32,7 +32,7 @@ public class RenderTest extends World {
 
         for (int x = 0; x < 800; x++) {
             for (int z = 0; z < 800; z++) {
-                if (x % 16 == 0 && z % 16 == 0) {
+                if (x % 10 == 0 && z % 10 == 0) {
                     this.addEntity(
                             new Entity(Models.rock, 1),
                             x, this.getTerrain().getHeightOfTerrain(x, z), z,

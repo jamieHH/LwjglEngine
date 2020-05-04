@@ -10,6 +10,6 @@ public class Main {
 //        LwjglEngine gameEng = new LwjglEngine("Lwjgl Engine", 1280, 720, 1, gameLogic);
         LwjglEngine gameEng = new LwjglEngine("Lwjgl Engine", 1920, 1080, 16, gameLogic);
 //        LwjglEngine gameEng = new LwjglEngine("Lwjgl Engine", 2560, 1440, 1, gameLogic);
-        gameEng.run();
+        gameEng.start();
     }
 }

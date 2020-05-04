@@ -9,17 +9,31 @@ import org.lwjgl.util.vector.Vector2f;
 
 import java.io.File;
 
-public class LwjglEngine {
+public class LwjglEngine implements Runnable {
 
     private static IGameLogic gameLogic;
+    private final Thread gameLoopThread;
+    private static String title;
+    private static int width;
+    private static int height;
+    private static int samples;
 
     public LwjglEngine(String title, int width, int height, int samples, IGameLogic gameLogic) {
-        DisplayManager.createDisplay(width, height, samples, title);
+        gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
         LwjglEngine.gameLogic = gameLogic;
+        LwjglEngine.title = title;
+        LwjglEngine.width = width;
+        LwjglEngine.height = height;
+        LwjglEngine.samples = samples;
     }
 
     public void init() {
+        DisplayManager.createDisplay(width, height, samples, title);
         gameLogic.init();
+    }
+
+    public void start() {
+        gameLoopThread.start();
     }
 
 	public void run() {
