@@ -9,7 +9,6 @@ public class ParticleShader extends ShaderProgram {
 	private static final String VERTEX_FILE = "src/engine/particles/particleVShader.txt";
 	private static final String FRAGMENT_FILE = "src/engine/particles/particleFShader.txt";
 
-	private int location_modelViewMatrix;
 	private int location_projectionMatrix;
 
 	public ParticleShader() {
@@ -18,17 +17,13 @@ public class ParticleShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_modelViewMatrix = super.getUniformLocation("modelViewMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 	}
 
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
-	}
-
-	protected void loadModelViewMatrix(Matrix4f modelView) {
-		super.loadMatrix(location_modelViewMatrix, modelView);
+		super.bindAttribute(1, "modelViewMatrix");
 	}
 
 	protected void loadProjectionMatrix(Matrix4f projectionMatrix) {
