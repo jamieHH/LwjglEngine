@@ -18,9 +18,9 @@ import engine.utils.Maths;
 public class ParticleRenderer {
 	
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
-	private static final int MAX_INSTANCES = 1000000;
+	private static final int MAX_INSTANCES = 100000;
 	private static final int INSTANCE_DATA_LENGTH = 16;
-	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
+	private static FloatBuffer buffer;
 
 	private static RawModel quad = Loader.loadToVAO(VERTICES, 2);
 	private static ParticleShader shader = new ParticleShader();
@@ -45,15 +45,15 @@ public class ParticleRenderer {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		for (ParticleTexture texture : particles.keySet()) {
 			bindTextures(texture);
-			List<Particle> particleList = particles.get(texture);
+			List<Particle> batch = particles.get(texture);
 			pointer = 0;
-			float[] vboData = new float[particleList.size() * INSTANCE_DATA_LENGTH];
-			for (Particle particle : particleList) {
-				updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(),
-						viewMatrix, vboData);
+			buffer = BufferUtils.createFloatBuffer(batch.size() * INSTANCE_DATA_LENGTH);
+			float[] vboData = new float[batch.size() * INSTANCE_DATA_LENGTH];
+			for (Particle particle : batch) {
+				updateModelViewMatrix(particle, viewMatrix, vboData);
 			}
 			Loader.updateVbo(vbo, vboData, buffer);
-			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), particleList.size());
+			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), batch.size());
 		}
 		finish();
 	}
@@ -63,9 +63,9 @@ public class ParticleRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 	}
 
-	private static void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix, float[] vboData) {
+	private static void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix, float[] vboData) {
 		Matrix4f modelMatrix = new Matrix4f();
-		Matrix4f.translate(position, modelMatrix, modelMatrix);
+		Matrix4f.translate(particle.getPosition(), modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;
 		modelMatrix.m01 = viewMatrix.m10;
 		modelMatrix.m02 = viewMatrix.m20;
@@ -75,8 +75,8 @@ public class ParticleRenderer {
 		modelMatrix.m20 = viewMatrix.m02;
 		modelMatrix.m21 = viewMatrix.m12;
 		modelMatrix.m22 = viewMatrix.m22;
-		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 0, 1), modelMatrix, modelMatrix);
-		Matrix4f.scale(new Vector3f(scale, scale,scale), modelMatrix, modelMatrix);
+		Matrix4f.rotate((float) Math.toRadians(particle.getRotation()), new Vector3f(0, 0, 1), modelMatrix, modelMatrix);
+		Matrix4f.scale(new Vector3f(particle.getScale(), particle.getScale(), particle.getScale()), modelMatrix, modelMatrix);
 		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
 		storeMatrixData(modelViewMatrix, vboData);
 	}
