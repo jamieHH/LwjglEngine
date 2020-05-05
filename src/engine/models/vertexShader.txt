@@ -1,6 +1,7 @@
 #version 400
 
 in vec3 position;
+in mat4 transformationMatrix;
 in vec2 textureCoordinates;
 in vec3 normal;
 
@@ -11,9 +12,8 @@ out vec3 toEnvLightVector[2];
 out vec3 toCameraVector;
 out float visibility;
 
-in mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
-in mat4 viewMatrix;
+uniform mat4 viewMatrix;
 uniform vec3 lightPosition[16];
 uniform vec3 envLightDirection[2];
 

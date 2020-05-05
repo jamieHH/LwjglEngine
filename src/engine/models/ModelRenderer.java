@@ -18,7 +18,7 @@ import java.util.Map;
 public class ModelRenderer {
 
 	private static final int MAX_INSTANCES = 100000;
-	private static final int INSTANCE_DATA_LENGTH = 32;
+	private static final int INSTANCE_DATA_LENGTH = 16;
 	private static FloatBuffer buffer;
 
 	private static int vbo;
@@ -42,7 +42,7 @@ public class ModelRenderer {
 			float[] vboData = new float[batch.size() * INSTANCE_DATA_LENGTH];
             buffer = BufferUtils.createFloatBuffer(batch.size() * INSTANCE_DATA_LENGTH);
 			for (Entity entity : batch) {
-				prepareInstance(entity, camera, vboData);
+				prepareInstance(entity, vboData);
 			}
 			Loader.updateVbo(vbo, vboData, buffer);
 			GL31.glDrawElementsInstanced(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0, batch.size());
@@ -59,9 +59,6 @@ public class ModelRenderer {
 		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 8);
 		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 12);
 		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 7, 4, INSTANCE_DATA_LENGTH, 16);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 8, 4, INSTANCE_DATA_LENGTH, 20);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 9, 4, INSTANCE_DATA_LENGTH, 24);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 10, 4, INSTANCE_DATA_LENGTH, 28);
 
 		// bind vertexes
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -72,10 +69,6 @@ public class ModelRenderer {
 		GL20.glEnableVertexAttribArray(4);
 		GL20.glEnableVertexAttribArray(5);
 		GL20.glEnableVertexAttribArray(6);
-		GL20.glEnableVertexAttribArray(7);
-		GL20.glEnableVertexAttribArray(8);
-		GL20.glEnableVertexAttribArray(9);
-		GL20.glEnableVertexAttribArray(10);
 		ModelTexture texture = model.getTexture();
 		if (texture.isHasTransparency()) {
 			WorldMasterRenderer.disableCulling();
@@ -87,12 +80,10 @@ public class ModelRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 	}
 
-	private static void prepareInstance(Entity entity, Point camera, float[] vboData) {
+	private static void prepareInstance(Entity entity, float[] vboData) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
 				entity.getRotation(), entity.getScale());
 		storeMatrixData(transformationMatrix, vboData);
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		storeMatrixData(viewMatrix, vboData);
 	}
 
 	private static void storeMatrixData(Matrix4f matrix, float[] vboData) {
@@ -115,7 +106,9 @@ public class ModelRenderer {
 	}
 
 	private static void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
+        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		shader.start();
+        shader.loadViewMatrix(viewMatrix);
 		shader.loadSkyColor(skyColor);
 		shader.loadEnvLights(envLights);
 		shader.loadLights(lights);
@@ -135,10 +128,6 @@ public class ModelRenderer {
 		GL20.glDisableVertexAttribArray(4);
 		GL20.glDisableVertexAttribArray(5);
 		GL20.glDisableVertexAttribArray(6);
-		GL20.glDisableVertexAttribArray(7);
-		GL20.glDisableVertexAttribArray(8);
-		GL20.glDisableVertexAttribArray(9);
-		GL20.glDisableVertexAttribArray(10);
 		GL30.glBindVertexArray(0);
 	}
 

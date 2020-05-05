@@ -21,6 +21,7 @@ public class ModelShader extends ShaderProgram {
 	private static final String VERTEX_FILE = "src/engine/models/vertexShader.txt";
 	private static final String FRAGMENT_FILE = "src/engine/models/fragmentShader.txt";
 
+	private int location_viewMatrix;
 	private int location_projectionMatrix;
 	private int[] location_lightColor;
 	private int[] location_lightPosition;
@@ -41,11 +42,11 @@ public class ModelShader extends ShaderProgram {
         super.bindAttribute(1, "textureCoordinates");
         super.bindAttribute(2, "normal");
         super.bindAttribute(3, "transformationMatrix");
-        super.bindAttribute(7, "viewMatrix");
     }
 
 	@Override
 	protected void getAllUniformLocations() {
+		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
@@ -100,6 +101,10 @@ public class ModelShader extends ShaderProgram {
 				super.loadVector(location_envLightDirection[i], NULL_VECTOR);
 			}
 		}
+	}
+
+	protected void loadViewMatrix(Matrix4f viewMatrix){
+		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f projection) {
