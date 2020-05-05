@@ -1,9 +1,9 @@
 #version 400
 
 in vec3 position;
-in mat4 transformationMatrix;
 in vec2 textureCoordinates;
 in vec3 normal;
+in mat4 transformationMatrix;
 
 out vec2 pass_textureCoordinates;
 out vec3 surfaceNormal;
