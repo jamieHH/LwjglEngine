@@ -50,7 +50,7 @@ public class ParticleRenderer {
 			buffer = BufferUtils.createFloatBuffer(batch.size() * INSTANCE_DATA_LENGTH);
 			float[] vboData = new float[batch.size() * INSTANCE_DATA_LENGTH];
 			for (Particle particle : batch) {
-				updateModelViewMatrix(particle, viewMatrix, vboData);
+				prepareInstance(particle, viewMatrix, vboData);
 			}
 			Loader.updateVbo(vbo, vboData, buffer);
 			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), batch.size());
@@ -63,7 +63,7 @@ public class ParticleRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 	}
 
-	private static void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix, float[] vboData) {
+	private static void prepareInstance(Particle particle, Matrix4f viewMatrix, float[] vboData) {
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(particle.getPosition(), modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;

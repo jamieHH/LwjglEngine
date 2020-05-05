@@ -20,10 +20,8 @@ public class ModelShader extends ShaderProgram {
 
 	private static final String VERTEX_FILE = "src/engine/models/vertexShader.txt";
 	private static final String FRAGMENT_FILE = "src/engine/models/fragmentShader.txt";
-	
-	private int location_transformationMatrix;
+
 	private int location_projectionMatrix;
-	private int location_viewMatrix;
 	private int[] location_lightColor;
 	private int[] location_lightPosition;
 	private int[] location_envLightColor;
@@ -42,13 +40,13 @@ public class ModelShader extends ShaderProgram {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoordinates");
         super.bindAttribute(2, "normal");
+        super.bindAttribute(3, "transformationMatrix");
+        super.bindAttribute(7, "viewMatrix");
     }
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
@@ -79,10 +77,6 @@ public class ModelShader extends ShaderProgram {
 		super.loadFloat(location_shineDamper, damper);
 		super.loadFloat(location_reflectivity, reflectivity);
 	}
-	
-	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
-	}
 
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < MAX_LIGHTS; i++) {
@@ -106,11 +100,6 @@ public class ModelShader extends ShaderProgram {
 				super.loadVector(location_envLightDirection[i], NULL_VECTOR);
 			}
 		}
-	}
-	
-	public void loadViewMatrix(Point point) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(point);
-		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f projection) {
