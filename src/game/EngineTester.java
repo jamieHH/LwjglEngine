@@ -29,7 +29,7 @@ public class EngineTester implements IGameLogic {
     }
 
     public void init() {
-        world = new RenderTest();
+        world = new TestWorld();
 
         Player player = new Player(Models.chair, 1);
         player.setRotation(new Vector3f(0, 45, 0));
@@ -60,16 +60,28 @@ public class EngineTester implements IGameLogic {
                 lampWait--;
             } else {
                 if (Mouse.isButtonDown(0)) {
-                    lampWait = 15;
-                    world.addLight(
-                            new Light(new Vector3f(0, 1, 0), 1f),
-                            tp.getX(), tp.getY() + 8, tp.getZ()
-                    );
-                    world.addEntity(
-                            new Entity(Models.lamp, 1),
-                            tp.getX(), tp.getY(), tp.getZ(),
-                            0, 0, 0
-                    );
+                    // modify heights
+                    Vector3f tv = world.getTerrain().worldToTerrainVector(tp);
+                    float radius = 5;
+                    float amount = 0.5f;
+                    for (int x = 0; x < radius; x++) {
+                        for (int z = 0; z < radius; z++) {
+                            world.getTerrain().heights[(int) (tv.getX() + x)][(int) (tv.getZ() + z)] += amount;
+                        }
+                    }
+                    world.getTerrain().updateTerrain();
+
+                    // place lamp
+//                    lampWait = 15;
+//                    world.addLight(
+//                            new Light(new Vector3f(0, 1, 0), 1f),
+//                            tp.getX(), tp.getY() + 8, tp.getZ()
+//                    );
+//                    world.addEntity(
+//                            new Entity(Models.lamp, 1),
+//                            tp.getX(), tp.getY(), tp.getZ(),
+//                            0, 0, 0
+//                    );
                 }
             }
         }

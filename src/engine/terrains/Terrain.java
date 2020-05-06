@@ -23,7 +23,13 @@ public class Terrain {
     private TerrainTexturePack texturePack;
     private TerrainTexture blendMap;
 
-    private float[][] heights;
+    public float[][] heights;
+
+    private int VERTEX_COUNT;
+    private float[] vertices;
+    private float[] normals;
+    private float[] textureCoords;
+    private int[] indices;
 
     public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap) {
         this.texturePack = texturePack;
@@ -31,6 +37,10 @@ public class Terrain {
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(heightmap);
+    }
+
+    public Vector3f worldToTerrainVector(Vector3f wv) {
+        return new Vector3f(wv.x * (VERTEX_COUNT/SIZE), wv.y * (VERTEX_COUNT/SIZE), wv.z * (VERTEX_COUNT/SIZE));
     }
 
     public float getHeightOfTerrain(float worldX, float worldZ) {
@@ -54,24 +64,63 @@ public class Terrain {
                             heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,
                             heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
         }
+    }
 
+    public void updateTerrain() {
+        int count = VERTEX_COUNT * VERTEX_COUNT;
+        vertices = new float[count * 3];
+        normals = new float[count * 3];
+        textureCoords = new float[count * 2];
+        indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)];
+        int vertexPointer = 0;
+        for (int z = 0; z < VERTEX_COUNT; z++) {
+            for (int x = 0; x < VERTEX_COUNT; x++) {
+                vertices[vertexPointer * 3] = (float) x / ((float) VERTEX_COUNT - 1) * SIZE;
+                float height = heights[x][z];
+                heights[x][z] = height;
+                vertices[vertexPointer * 3 + 1] = height;
+                vertices[vertexPointer * 3 + 2] = (float) z / ((float) VERTEX_COUNT - 1) * SIZE;
+                Vector3f normal = calculateNormal(x, z);
+                normals[vertexPointer * 3] = normal.x;
+                normals[vertexPointer * 3 + 1] = normal.y;
+                normals[vertexPointer * 3 + 2] = normal.z;
+                textureCoords[vertexPointer * 2] = (float) x / ((float) VERTEX_COUNT - 1);
+                textureCoords[vertexPointer * 2 + 1] = (float) z / ((float) VERTEX_COUNT - 1);
+                vertexPointer++;
+            }
+        }
+        int pointer = 0;
+        for (int gz = 0; gz < VERTEX_COUNT - 1; gz++) {
+            for (int gx = 0; gx < VERTEX_COUNT - 1; gx++) {
+                int topLeft = (gz * VERTEX_COUNT) + gx;
+                int topRight = topLeft + 1;
+                int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
+                int bottomRight = bottomLeft + 1;
+                indices[pointer++] = topLeft;
+                indices[pointer++] = bottomLeft;
+                indices[pointer++] = topRight;
+                indices[pointer++] = topRight;
+                indices[pointer++] = bottomLeft;
+                indices[pointer++] = bottomRight;
+            }
+        }
+        this.model = Loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
 
     private RawModel generateTerrain(String heightmap) {
-
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File("res/" + heightmap + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int VERTEX_COUNT = image.getHeight();
-        this.heights = new float[VERTEX_COUNT][VERTEX_COUNT];
+        VERTEX_COUNT = image.getHeight();
+        heights = new float[VERTEX_COUNT][VERTEX_COUNT];
         int count = VERTEX_COUNT * VERTEX_COUNT;
-        float[] vertices = new float[count * 3];
-        float[] normals = new float[count * 3];
-        float[] textureCoords = new float[count * 2];
-        int[] indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)];
+        vertices = new float[count * 3];
+        normals = new float[count * 3];
+        textureCoords = new float[count * 2];
+        indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)];
         int vertexPointer = 0;
         for (int z = 0; z < VERTEX_COUNT; z++) {
             for (int x = 0; x < VERTEX_COUNT; x++) {
@@ -107,6 +156,17 @@ public class Terrain {
         return Loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
 
+    private Vector3f calculateNormal(int x, int z) {
+        float heightL = getHeight(x - 1, z);
+        float heightR = getHeight(x + 1, z);
+        float heightD = getHeight(x, z - 1);
+        float heightU = getHeight(x, z + 1);
+
+        Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
+        normal.normalise();
+        return normal;
+    }
+
     private Vector3f calculateNormal(int x, int z, BufferedImage image) {
         float heightL = getHeight(x - 1, z, image);
         float heightR = getHeight(x + 1, z, image);
@@ -116,6 +176,13 @@ public class Terrain {
         Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
         normal.normalise();
         return normal;
+    }
+
+    private float getHeight(int x, int z) {
+        if (x < 0 || x >= heights.length || z < 0 || z >= heights[0].length) {
+            return 0;
+        }
+        return heights[x][z];
     }
 
     private float getHeight(int x, int z, BufferedImage image) {
