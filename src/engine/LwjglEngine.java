@@ -53,14 +53,24 @@ public class LwjglEngine implements Runnable {
         while (!Display.isCloseRequested()) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
+            boolean ticked = false;
             lastTime = now;
             while (delta >= 1) {
+                ticked = true;
                 tick();
                 updates++;
                 delta--;
             }
-            render();
-            frames++;
+            if (ticked) {
+                render();
+                frames++;
+            } else {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
