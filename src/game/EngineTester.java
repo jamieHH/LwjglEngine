@@ -66,13 +66,13 @@ public class EngineTester implements IGameLogic {
                     float amount = 0.5f;
                     for (int x = (int) (-radius/2); x < radius/2; x++) {
                         for (int z = (int) (-radius/2); z < radius/2; z++) {
-                            world.getTerrain().heights[(int) (tv.getX() + x)][(int) (tv.getZ() + z)] += amount;
+                            world.getTerrain().moveTerrainHeight((int) (tv.getX() + x), (int) (tv.getZ() + z), amount);
                         }
                     }
                     world.getTerrain().updateTerrain();
 
                 }
-                if (Mouse.isButtonDown(1)) {
+                if (Mouse.isButtonDown(2)) {
                     //place lamp
                     lampWait = 15;
                     world.addLight(

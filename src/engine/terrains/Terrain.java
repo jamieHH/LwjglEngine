@@ -300,6 +300,12 @@ public class Terrain {
         //
     }
 
+    public void moveTerrainHeight(int pointX, int pointZ, float value) {
+        if ((pointX >= 0 && pointX < VERTEX_COUNT) && (pointZ >= 0 && pointZ < VERTEX_COUNT)) {
+            heights[pointX][pointZ] += value;
+        }
+    }
+
     private Vector3f calculateNormal(int x, int z) {
         float heightL = getHeight(x - 1, z);
         float heightR = getHeight(x + 1, z);
