@@ -1,6 +1,11 @@
 package engine.terrains;
 
 import engine.models.RawModel;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import engine.loaders.Loader;
@@ -10,6 +15,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class Terrain {
 
@@ -30,6 +37,11 @@ public class Terrain {
     private float[] normals;
     private float[] textureCoords;
     private int[] indices;
+
+    private int verticesVboId;
+    private int textureCoordsVboId;
+    private int normalsVboId;
+    private int indicesVboId;
 
     public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap) {
         this.texturePack = texturePack;
@@ -104,7 +116,74 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        this.model = Loader.loadToVAO(getModel().getVaoID(), vertices, textureCoords, normals, indices);
+
+
+//        this.model = Loader.loadToVAO(getModel().getVaoID(), vertices, textureCoords, normals, indices);
+        // decompiled loader
+        //return Loader.loadToVAO(vertices, textureCoords, normals, indices);
+        int vaoID = this.model.getVaoID();
+        //bindIndicesBuffer(indices);
+        /////////vaos.add(vaoID);
+        GL30.glBindVertexArray(vaoID);
+
+//        int indicesVboId = GL15.glGenBuffers();
+        /////////vbos.add(indicesVboId);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesVboId);
+
+        //IntBuffer buffer = storeDataInIntBuffer(indices);
+        IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
+
+        //storeDataInAttributeList(0,3, vertices);
+//        verticesVboId = GL15.glGenBuffers();
+        /////////vbos.add(verticesVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, verticesVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(vertices);
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //storeDataInAttributeList(1,2, textureCoords);
+//        textureCoordsVboId = GL15.glGenBuffers();
+        /////////vbos.add(textureCordsVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, textureCoordsVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(textureCoords);
+        FloatBuffer textureCoordsBuffer = BufferUtils.createFloatBuffer(textureCoords.length);
+        textureCoordsBuffer.put(textureCoords);
+        textureCoordsBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoordsBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //storeDataInAttributeList(2,3, normals);
+//        normalsVboId = GL15.glGenBuffers();
+        /////////vbos.add(normalsVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, normalsVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(data);
+        FloatBuffer normalsBuffer = BufferUtils.createFloatBuffer(normals.length);
+        normalsBuffer.put(normals);
+        normalsBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalsBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //unbindVAO();
+        GL30.glBindVertexArray(0);
+
+        this.model = new RawModel(vaoID, indices.length);
+        //
     }
 
     private RawModel generateTerrain(String heightmap) {
@@ -153,7 +232,72 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return Loader.loadToVAO(vertices, textureCoords, normals, indices);
+
+        // decompiled loader
+        //return Loader.loadToVAO(vertices, textureCoords, normals, indices);
+        int vaoID = GL30.glGenVertexArrays();
+        //bindIndicesBuffer(indices);
+        /////////vaos.add(vaoID);
+        GL30.glBindVertexArray(vaoID);
+
+        indicesVboId = GL15.glGenBuffers();
+        /////////vbos.add(indicesVboId);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesVboId);
+
+        //IntBuffer buffer = storeDataInIntBuffer(indices);
+        IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
+
+        //storeDataInAttributeList(0,3, vertices);
+        verticesVboId = GL15.glGenBuffers();
+        /////////vbos.add(verticesVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, verticesVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(vertices);
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //storeDataInAttributeList(1,2, textureCoords);
+        textureCoordsVboId = GL15.glGenBuffers();
+        /////////vbos.add(textureCordsVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, textureCoordsVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(textureCoords);
+        FloatBuffer textureCoordsBuffer = BufferUtils.createFloatBuffer(textureCoords.length);
+        textureCoordsBuffer.put(textureCoords);
+        textureCoordsBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoordsBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //storeDataInAttributeList(2,3, normals);
+        normalsVboId = GL15.glGenBuffers();
+        /////////vbos.add(normalsVboId);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, normalsVboId);
+
+        //FloatBuffer buffer = storeDataInFloatBuffer(data);
+        FloatBuffer normalsBuffer = BufferUtils.createFloatBuffer(normals.length);
+        normalsBuffer.put(normals);
+        normalsBuffer.flip();
+
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalsBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        //unbindVAO();
+        GL30.glBindVertexArray(0);
+
+        return new RawModel(vaoID, indices.length);
+        //
     }
 
     private Vector3f calculateNormal(int x, int z) {

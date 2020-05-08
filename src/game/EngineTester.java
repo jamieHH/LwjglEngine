@@ -62,7 +62,7 @@ public class EngineTester implements IGameLogic {
                 if (Mouse.isButtonDown(0)) {
                     // modify heights
                     Vector3f tv = world.getTerrain().worldToTerrainVector(tp);
-                    float radius = 10;
+                    float radius = 40;
                     float amount = 0.5f;
                     for (int x = (int) (-radius/2); x < radius/2; x++) {
                         for (int z = (int) (-radius/2); z < radius/2; z++) {
@@ -71,17 +71,19 @@ public class EngineTester implements IGameLogic {
                     }
                     world.getTerrain().updateTerrain();
 
-                    // place lamp
-//                    lampWait = 15;
-//                    world.addLight(
-//                            new Light(new Vector3f(0, 1, 0), 1f),
-//                            tp.getX(), tp.getY() + 8, tp.getZ()
-//                    );
-//                    world.addEntity(
-//                            new Entity(Models.lamp, 1),
-//                            tp.getX(), tp.getY(), tp.getZ(),
-//                            0, 0, 0
-//                    );
+                }
+                if (Mouse.isButtonDown(1)) {
+                    //place lamp
+                    lampWait = 15;
+                    world.addLight(
+                            new Light(new Vector3f(0, 1, 0), 1f),
+                            tp.getX(), tp.getY() + 8, tp.getZ()
+                    );
+                    world.addEntity(
+                            new Entity(Models.lamp, 1),
+                            tp.getX(), tp.getY(), tp.getZ(),
+                            0, 0, 0
+                    );
                 }
             }
         }
