@@ -104,7 +104,7 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        this.model = Loader.loadToVAO(vertices, textureCoords, normals, indices);
+        this.model = Loader.loadToVAO(getModel().getVaoID(), vertices, textureCoords, normals, indices);
     }
 
     private RawModel generateTerrain(String heightmap) {

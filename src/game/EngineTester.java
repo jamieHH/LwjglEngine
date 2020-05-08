@@ -62,10 +62,10 @@ public class EngineTester implements IGameLogic {
                 if (Mouse.isButtonDown(0)) {
                     // modify heights
                     Vector3f tv = world.getTerrain().worldToTerrainVector(tp);
-                    float radius = 5;
+                    float radius = 10;
                     float amount = 0.5f;
-                    for (int x = 0; x < radius; x++) {
-                        for (int z = 0; z < radius; z++) {
+                    for (int x = (int) (-radius/2); x < radius/2; x++) {
+                        for (int z = (int) (-radius/2); z < radius/2; z++) {
                             world.getTerrain().heights[(int) (tv.getX() + x)][(int) (tv.getZ() + z)] += amount;
                         }
                     }

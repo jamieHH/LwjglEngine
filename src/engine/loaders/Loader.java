@@ -32,6 +32,17 @@ public class Loader {
 		return new RawModel(vaoID,indices.length);
 	}
 
+	public static RawModel loadToVAO(int vaoID, float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+		// TODO: only using to update terrain model, find a way to prevent genBuffers consuming vRAM. updaveVBO?
+		GL30.glBindVertexArray(vaoID);
+//		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0,3, positions);
+//		storeDataInAttributeList(1,2, textureCoords);
+//		storeDataInAttributeList(2,3, normals);
+		unbindVAO();
+		return new RawModel(vaoID, indices.length);
+	}
+
 	public static RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
@@ -40,7 +51,7 @@ public class Loader {
 		storeDataInAttributeList(2,3, normals);
 		storeDataInAttributeList(3,3, tangents);
 		unbindVAO();
-		return new RawModel(vaoID,indices.length);
+		return new RawModel(vaoID, indices.length);
 	}
 
 	public static int loadToVAO(float[] positions, float[] textureCoords) {
@@ -183,7 +194,7 @@ public class Loader {
 		return vaoID;
 	}
 	
-	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize,float[] data) {
+	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
