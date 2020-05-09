@@ -20,11 +20,11 @@ public class Fbo {
 
 	private int frameBuffer;
 
-	private int colourTexture;
+	private int colorTexture;
 	private int depthTexture;
 
 	private int depthBuffer;
-	private int colourBuffer;
+	private int colorBuffer;
 
 	/**
 	 * Creates an FBO of a specified width and height, with the desired type of
@@ -49,10 +49,10 @@ public class Fbo {
 	 */
 	public void cleanUp() {
 		GL30.glDeleteFramebuffers(frameBuffer);
-		GL11.glDeleteTextures(colourTexture);
+		GL11.glDeleteTextures(colorTexture);
 		GL11.glDeleteTextures(depthTexture);
 		GL30.glDeleteRenderbuffers(depthBuffer);
-		GL30.glDeleteRenderbuffers(colourBuffer);
+		GL30.glDeleteRenderbuffers(colorBuffer);
 	}
 
 	/**
@@ -84,10 +84,10 @@ public class Fbo {
 	}
 
 	/**
-	 * @return The ID of the texture containing the colour buffer of the FBO.
+	 * @return The ID of the texture containing the color buffer of the FBO.
 	 */
-	public int getColourTexture() {
-		return colourTexture;
+	public int getColorTexture() {
+		return colorTexture;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class Fbo {
 	}
 
 	/**
-	 * Creates the FBO along with a colour buffer texture attachment, and
+	 * Creates the FBO along with a color buffer texture attachment, and
 	 * possibly a depth buffer.
 	 * 
 	 * @param type
@@ -118,7 +118,7 @@ public class Fbo {
 
 	/**
 	 * Creates a new frame buffer object and sets the buffer to which drawing
-	 * will occur - colour attachment 0. This is the attachment where the colour
+	 * will occur - color attachment 0. This is the attachment where the color
 	 * buffer texture is.
 	 * 
 	 */
@@ -129,19 +129,19 @@ public class Fbo {
 	}
 
 	/**
-	 * Creates a texture and sets it as the colour buffer attachment for this
+	 * Creates a texture and sets it as the color buffer attachment for this
 	 * FBO.
 	 */
 	private void createTextureAttachment() {
-		colourTexture = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
+		colorTexture = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
 				(ByteBuffer) null);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colourTexture,
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture,
 				0);
 	}
 

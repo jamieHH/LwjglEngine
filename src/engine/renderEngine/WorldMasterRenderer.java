@@ -54,7 +54,7 @@ public class WorldMasterRenderer {
         ModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
         TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        SkyboxRenderer.render(camera, world.getSkyColor());
+        SkyboxRenderer.render(camera, world.getSkyColor(), world.getSkybox(), 0.1f);
         ParticleRenderer.render(particles, camera);
     }
 

@@ -18,9 +18,9 @@ public class PostProcessing {
 		contrastChanger = new ContrastChanger();
 	}
 	
-	public static void doPostProcessing(int colourTexture) {
+	public static void doPostProcessing(int colorTexture) {
 		start();
-		contrastChanger.render(colourTexture);
+		contrastChanger.render(colorTexture);
 		end();
 	}
 	

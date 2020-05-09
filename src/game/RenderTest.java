@@ -6,6 +6,7 @@ import engine.entities.Light;
 import engine.entities.ParticleEmitter;
 import engine.loaders.Loader;
 import engine.particles.ParticleTexture;
+import engine.skybox.Skybox;
 import engine.terrains.Terrain;
 import engine.terrains.TerrainTexture;
 import engine.terrains.TerrainTexturePack;
@@ -14,7 +15,25 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class RenderTest extends World {
 
+    private String[] primaryTextures = {
+            "skybox/day/right",
+            "skybox/day/left",
+            "skybox/day/top",
+            "skybox/day/bottom",
+            "skybox/day/back",
+            "skybox/day/front",
+    };
+    private String[] secondaryTextures = {
+            "skybox/night/right",
+            "skybox/night/left",
+            "skybox/night/top",
+            "skybox/night/bottom",
+            "skybox/night/back",
+            "skybox/night/front",
+    };
+
     public RenderTest() {
+        super.setSkybox(new Skybox(secondaryTextures, primaryTextures));
         //-------------- EnvLights
 //        this.addEnvLight(new EnvLight(new Vector3f(this.getSkyR()+1, this.getSkyG()+1, this.getSkyB()+1), new Vector3f(1, 0.75f, -1)));
         this.addEnvLight(new EnvLight(new Vector3f(0f, 0f, 1f), new Vector3f(-1, 0.0f, 1)));

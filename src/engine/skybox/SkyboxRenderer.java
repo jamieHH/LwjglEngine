@@ -57,58 +57,38 @@ public class SkyboxRenderer {
             SIZE, -SIZE,  SIZE
     };
 
-    private static String[] DAY_TEXTURE_FILES = {
-            "skybox/day/right",
-            "skybox/day/left",
-            "skybox/day/top",
-            "skybox/day/bottom",
-            "skybox/day/back",
-            "skybox/day/front",
-    };
-    private static String[] NIGHT_TEXTURE_FILES = {
-            "skybox/night/right",
-            "skybox/night/left",
-            "skybox/night/top",
-            "skybox/night/bottom",
-            "skybox/night/back",
-            "skybox/night/front",
-    };
-
     private static RawModel cube;
-    private static int dayTexID;
-    private static int nightTexID;
     private static SkyboxShader shader = new SkyboxShader();
 
     public static void init(Matrix4f projectionMatrix) {
         cube = Loader.loadToVAO(VERTICES, 3);
-        dayTexID = Loader.loadCubeMap(DAY_TEXTURE_FILES);
-        nightTexID = Loader.loadCubeMap(NIGHT_TEXTURE_FILES);
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextureUnits();
         shader.stop();
     }
 
-    public static void render(Point camera, Vector3f skyColor) {
-        prepare(camera, skyColor);
+    public static void render(Point camera, Vector3f skyColor, Skybox skybox, float blendAmount) {
+        prepare(camera, skyColor, skybox.getPrimaryCubemapId(), skybox.getSecondaryCubemapId(), blendAmount);
         // draw call
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
         finish();
     }
 
-    private static void prepare(Point camera, Vector3f skyColor) {
+    private static void prepare(Point camera, Vector3f skyColor, int primaryCubemapId,
+                                int secondaryCubemapId, float blendAmount) {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadFogColor(skyColor);
-        shader.loadBlendFactor(0.1f);
+        shader.loadBlendFactor(blendAmount);
         // bind vertexes
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         // bind engine.textures
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, dayTexID);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, primaryCubemapId);
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, nightTexID);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, secondaryCubemapId);
     }
 
     private static void finish() {

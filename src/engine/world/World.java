@@ -3,6 +3,7 @@ package engine.world;
 import engine.entities.Entity;
 import engine.entities.EnvLight;
 import engine.entities.Light;
+import engine.skybox.Skybox;
 import org.lwjgl.util.vector.Vector3f;
 import engine.entities.ParticleEmitter;
 import engine.terrains.Terrain;
@@ -22,6 +23,7 @@ public class World {
     private List<Light> lights = new ArrayList<>();
     private List<ParticleEmitter> particleEmitters = new ArrayList<>();
     private Terrain terrain;
+    private Skybox skybox;
 
     private SortAndPrune sap = new SortAndPrune();
     private int sapWait = 5;
@@ -156,6 +158,18 @@ public class World {
         }
 
         return entities;
+    }
+
+    public void setSkyColor(Vector3f skyColor) {
+        this.skyColor = skyColor;
+    }
+
+    public Skybox getSkybox() {
+        return skybox;
+    }
+
+    public void setSkybox(Skybox skybox) {
+        this.skybox = skybox;
     }
 
     public float getGravity() {

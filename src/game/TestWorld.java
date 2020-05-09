@@ -3,6 +3,7 @@ package game;
 import engine.entities.Entity;
 import engine.entities.EnvLight;
 import engine.entities.Light;
+import engine.skybox.Skybox;
 import org.lwjgl.util.vector.Vector3f;
 import engine.entities.ParticleEmitter;
 import engine.particles.ParticleTexture;
@@ -16,12 +17,30 @@ import java.util.Random;
 
 public class TestWorld extends World {
 
+    private String[] primaryTextures = {
+            "skybox/day/right",
+            "skybox/day/left",
+            "skybox/day/top",
+            "skybox/day/bottom",
+            "skybox/day/back",
+            "skybox/day/front",
+    };
+    private String[] secondaryTextures = {
+            "skybox/night/right",
+            "skybox/night/left",
+            "skybox/night/top",
+            "skybox/night/bottom",
+            "skybox/night/back",
+            "skybox/night/front",
+    };
+
     public TestWorld() {
 
+        super.setSkybox(new Skybox(primaryTextures, secondaryTextures));
+        super.setSkyColor(new Vector3f(0.5f, 0.6f, 0.7f));
+
         //-------------- EnvLights
-//        this.addEnvLight(new EnvLight(new Vector3f(this.getSkyR()+1, this.getSkyG()+1, this.getSkyB()+1), new Vector3f(1, 0.75f, -1)));
-        this.addEnvLight(new EnvLight(new Vector3f(0f, 0f, 1f), new Vector3f(-1, 0.0f, 1)));
-        this.addEnvLight(new EnvLight(new Vector3f(1f, 0f, 0f), new Vector3f(1, 0.0f, -1)));
+        this.addEnvLight(new EnvLight(new Vector3f(this.getSkyR()+1, this.getSkyG()+1, this.getSkyB()+1), new Vector3f(1, 1, -1)));
         //--------------
 
         //-------------- Terrain
@@ -57,20 +76,20 @@ public class TestWorld extends World {
                     0, randRotation(), 0
             );
         }
-        for (int i = 0; i < 50; i++) {
-            float x = random.nextFloat() * 800;
-            float z = random.nextFloat() * 800;
-            float y = terrain.getHeightOfTerrain(x, z);
-            this.addLight(
-                    new Light(new Vector3f(0, 1, 0), 1f),
-                    x, y + 8, z
-            );
-            this.addEntity(
-                    new Entity(Models.lamp, 1),
-                    x, y, z,
-                    0, 0, 0
-            );
-        }
+//        for (int i = 0; i < 50; i++) {
+//            float x = random.nextFloat() * 800;
+//            float z = random.nextFloat() * 800;
+//            float y = terrain.getHeightOfTerrain(x, z);
+//            this.addLight(
+//                    new Light(new Vector3f(0, 1, 0), 1f),
+//                    x, y + 8, z
+//            );
+//            this.addEntity(
+//                    new Entity(Models.lamp, 1),
+//                    x, y, z,
+//                    0, 0, 0
+//            );
+//        }
         for (int i = 0; i < 200; i++) {
             float x = random.nextFloat() * 100;
             float z = random.nextFloat() * 100;

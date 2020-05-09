@@ -96,7 +96,7 @@ public class EngineTester implements IGameLogic {
         fbo.bindFrameBuffer();
         WorldMasterRenderer.render();
         fbo.unbindFrameBuffer();
-        PostProcessing.doPostProcessing(fbo.getColourTexture());
+        PostProcessing.doPostProcessing(fbo.getColorTexture());
 
         GuiMasterRenderer.render();
     }
