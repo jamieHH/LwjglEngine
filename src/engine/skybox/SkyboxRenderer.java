@@ -100,7 +100,7 @@ public class SkyboxRenderer {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadFogColor(skyColor);
-        shader.loadBlendFactor(0.7f);
+        shader.loadBlendFactor(0.1f);
         // bind vertexes
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);

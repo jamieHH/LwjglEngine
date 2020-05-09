@@ -3,9 +3,9 @@ package game;
 import engine.IGameLogic;
 import engine.entities.*;
 import engine.guis.GuiTexture;
-import engine.guis.fontLoader.FontType;
-import engine.guis.fontLoader.GuiText;
 import engine.loaders.Loader;
+import engine.postProcessing.Fbo;
+import engine.postProcessing.PostProcessing;
 import engine.renderEngine.GuiMasterRenderer;
 import engine.renderEngine.WorldMasterRenderer;
 import engine.utils.MousePicker;
@@ -15,14 +15,14 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.io.File;
-
 public class EngineTester implements IGameLogic {
 
     private static World world;
     private static Camera camera;
     private static MousePicker picker;
     private int lampWait = 0;
+
+    private static Fbo fbo;
 
     public EngineTester() {
 
@@ -45,6 +45,9 @@ public class EngineTester implements IGameLogic {
         GuiMasterRenderer.init();
         GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
         GuiMasterRenderer.loadTexture(guiTexture);
+
+        fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+        PostProcessing.init();
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
@@ -90,11 +93,17 @@ public class EngineTester implements IGameLogic {
     }
 
 	public void render() {
+        fbo.bindFrameBuffer();
         WorldMasterRenderer.render();
+        fbo.unbindFrameBuffer();
+        PostProcessing.doPostProcessing(fbo.getColourTexture());
+
         GuiMasterRenderer.render();
     }
 
     public void cleanUp() {
+        PostProcessing.cleanUp();
+        fbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();
         Loader.cleanUp();
