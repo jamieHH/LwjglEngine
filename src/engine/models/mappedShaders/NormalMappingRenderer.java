@@ -48,7 +48,7 @@ public class NormalMappingRenderer {
 	private static void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		// bind vertexes
-		GL30.glBindVertexArray(rawModel.getVaoID());
+		GL30.glBindVertexArray(rawModel.getVaoId());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
@@ -60,9 +60,9 @@ public class NormalMappingRenderer {
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		// bind engine.textures
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getId());
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMapID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMapId());
 	}
 
 	private static void unbindTexturedModel() {

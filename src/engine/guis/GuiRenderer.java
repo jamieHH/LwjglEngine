@@ -25,7 +25,7 @@ public class GuiRenderer {
         for (GuiTexture gui : guis) {
             // bind engine.textures
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTextureID());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTextureId());
             Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
             shader.loadTransformation(matrix);
             // draw call
@@ -37,7 +37,7 @@ public class GuiRenderer {
     private static void prepare() {
         shader.start();
         // bind vertexes
-        GL30.glBindVertexArray(quad.getVaoID());
+        GL30.glBindVertexArray(quad.getVaoId());
         GL20.glEnableVertexAttribArray(0);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

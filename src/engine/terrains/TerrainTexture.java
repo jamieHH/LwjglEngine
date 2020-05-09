@@ -2,13 +2,13 @@ package engine.terrains;
 
 public class TerrainTexture {
 
-    private int textureID;
+    private int textureId;
 
-    public TerrainTexture(int textureID) {
-        this.textureID = textureID;
+    public TerrainTexture(int textureId) {
+        this.textureId = textureId;
     }
 
-    public int getTextureID() {
-        return textureID;
+    public int getTextureId() {
+        return textureId;
     }
 }

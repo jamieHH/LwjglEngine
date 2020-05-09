@@ -30,10 +30,10 @@ public class ParticleRenderer {
 	
 	public static void init(Matrix4f projectionMatrix){
 		vbo = Loader.createFloatVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
-		Loader.addInstancedAttribute(quad.getVaoID(), vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
-		Loader.addInstancedAttribute(quad.getVaoID(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
-		Loader.addInstancedAttribute(quad.getVaoID(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 8);
-		Loader.addInstancedAttribute(quad.getVaoID(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
+		Loader.addInstancedAttribute(quad.getVaoId(), vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
+		Loader.addInstancedAttribute(quad.getVaoId(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
+		Loader.addInstancedAttribute(quad.getVaoId(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 8);
+		Loader.addInstancedAttribute(quad.getVaoId(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
 
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -60,7 +60,7 @@ public class ParticleRenderer {
 
 	private static void bindTextures(ParticleTexture texture) {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
 	}
 
 	private static void prepareInstance(Particle particle, Matrix4f viewMatrix, float[] vboData) {
@@ -102,7 +102,7 @@ public class ParticleRenderer {
 	
 	private static void prepare() {
 		shader.start();
-		GL30.glBindVertexArray(quad.getVaoID());
+		GL30.glBindVertexArray(quad.getVaoId());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);

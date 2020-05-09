@@ -2,15 +2,15 @@ package engine.particles;
 
 public class ParticleTexture {
 
-    private int textureID;
+    private int textureId;
     private int numberOfRows = 1;
 
-    public ParticleTexture(int textureID) {
-        this.textureID = textureID;
+    public ParticleTexture(int textureId) {
+        this.textureId = textureId;
     }
 
-    public int getTextureID() {
-        return textureID;
+    public int getTextureId() {
+        return textureId;
     }
 
     public int getNumberOfRows() {

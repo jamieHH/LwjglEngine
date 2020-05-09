@@ -19,7 +19,7 @@ public class FontType {
 	 * font file.
 	 * 
 	 * @param textureAtlas
-	 *            - the ID of the font atlas texture.
+	 *            - the Id of the font atlas texture.
 	 * @param fontFile
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.

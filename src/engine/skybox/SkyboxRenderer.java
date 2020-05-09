@@ -82,7 +82,7 @@ public class SkyboxRenderer {
         shader.loadFogColor(skyColor);
         shader.loadBlendFactor(blendAmount);
         // bind vertexes
-        GL30.glBindVertexArray(cube.getVaoID());
+        GL30.glBindVertexArray(cube.getVaoId());
         GL20.glEnableVertexAttribArray(0);
         // bind engine.textures
         GL13.glActiveTexture(GL13.GL_TEXTURE0);

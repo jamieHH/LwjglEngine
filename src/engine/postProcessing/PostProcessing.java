@@ -29,7 +29,7 @@ public class PostProcessing {
 	}
 
 	private static void start() {
-		GL30.glBindVertexArray(quad.getVaoID());
+		GL30.glBindVertexArray(quad.getVaoId());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}

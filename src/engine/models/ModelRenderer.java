@@ -54,14 +54,14 @@ public class ModelRenderer {
 	private static void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 0);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 4);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 8);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 12);
-		Loader.addInstancedAttribute(rawModel.getVaoID(), vbo, 7, 4, INSTANCE_DATA_LENGTH, 16);
+		Loader.addInstancedAttribute(rawModel.getVaoId(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 0);
+		Loader.addInstancedAttribute(rawModel.getVaoId(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 4);
+		Loader.addInstancedAttribute(rawModel.getVaoId(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 8);
+		Loader.addInstancedAttribute(rawModel.getVaoId(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 12);
+		Loader.addInstancedAttribute(rawModel.getVaoId(), vbo, 7, 4, INSTANCE_DATA_LENGTH, 16);
 
 		// bind vertexes
-		GL30.glBindVertexArray(rawModel.getVaoID());
+		GL30.glBindVertexArray(rawModel.getVaoId());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
@@ -77,7 +77,7 @@ public class ModelRenderer {
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		// bind engine.textures
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getId());
 	}
 
 	private static void prepareInstance(Entity entity, float[] vboData) {

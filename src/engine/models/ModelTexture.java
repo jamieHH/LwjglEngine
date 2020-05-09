@@ -2,8 +2,8 @@ package engine.models;
 
 public class ModelTexture {
 	
-	private int textureID;
-	private int normalMapID;
+	private int textureId;
+	private int normalMapId;
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 	private boolean hasTransparency = false;
@@ -12,18 +12,18 @@ public class ModelTexture {
 
 
 	public ModelTexture(int texture) {
-		this.textureID = texture;
+		this.textureId = texture;
 		this.hasNormalMap = false;
 	}
 
 	public ModelTexture(int texture, int normalMap) {
-		this.textureID = texture;
-		this.normalMapID = normalMap;
+		this.textureId = texture;
+		this.normalMapId = normalMap;
 		this.hasNormalMap = true;
 	}
 	
-	public int getID() {
-		return textureID;
+	public int getId() {
+		return textureId;
 	}
 
 	public float getShineDamper() {
@@ -62,7 +62,7 @@ public class ModelTexture {
 		return this.hasNormalMap;
 	}
 
-	public int getNormalMapID() {
-		return this.normalMapID;
+	public int getNormalMapId() {
+		return this.normalMapId;
 	}
 }

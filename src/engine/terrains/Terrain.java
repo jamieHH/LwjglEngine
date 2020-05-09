@@ -118,13 +118,13 @@ public class Terrain {
         }
 
 
-//        this.model = Loader.loadToVAO(getModel().getVaoID(), vertices, textureCoords, normals, indices);
+//        this.model = Loader.loadToVAO(getModel().getVaoId(), vertices, textureCoords, normals, indices);
         // decompiled loader
         //return Loader.loadToVAO(vertices, textureCoords, normals, indices);
-        int vaoID = this.model.getVaoID();
+        int vaoId = this.model.getVaoId();
         //bindIndicesBuffer(indices);
-        /////////vaos.add(vaoID);
-        GL30.glBindVertexArray(vaoID);
+        /////////vaos.add(vaoId);
+        GL30.glBindVertexArray(vaoId);
 
 //        int indicesVboId = GL15.glGenBuffers();
         /////////vbos.add(indicesVboId);
@@ -182,7 +182,7 @@ public class Terrain {
         //unbindVAO();
         GL30.glBindVertexArray(0);
 
-        this.model = new RawModel(vaoID, indices.length);
+        this.model = new RawModel(vaoId, indices.length);
         //
     }
 
@@ -235,10 +235,10 @@ public class Terrain {
 
         // decompiled loader
         //return Loader.loadToVAO(vertices, textureCoords, normals, indices);
-        int vaoID = GL30.glGenVertexArrays();
+        int vaoId = GL30.glGenVertexArrays();
         //bindIndicesBuffer(indices);
-        /////////vaos.add(vaoID);
-        GL30.glBindVertexArray(vaoID);
+        /////////vaos.add(vaoId);
+        GL30.glBindVertexArray(vaoId);
 
         indicesVboId = GL15.glGenBuffers();
         /////////vbos.add(indicesVboId);
@@ -296,7 +296,7 @@ public class Terrain {
         //unbindVAO();
         GL30.glBindVertexArray(0);
 
-        return new RawModel(vaoID, indices.length);
+        return new RawModel(vaoId, indices.length);
         //
     }
 
