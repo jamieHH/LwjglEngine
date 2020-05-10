@@ -5,19 +5,15 @@ import org.lwjgl.opengl.*;
 
 public class DisplayManager {
 
-	public static void createDisplay(int width, int height, int samples, String title) {
+	public static void createDisplay(int width, int height, String title) {
 		ContextAttribs attribs = new ContextAttribs(3,3)
 		.withForwardCompatible(true)
 		.withProfileCore(true);
 		
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
-			if (samples > 1) {
-				Display.create(new PixelFormat().withSamples(samples), attribs);
-				GL11.glEnable(GL13.GL_MULTISAMPLE);
-			} else {
-				Display.create(new PixelFormat(), attribs);
-			}
+			Display.create(new PixelFormat().withDepthBits(24), attribs);
+			GL11.glEnable(GL13.GL_MULTISAMPLE);
 			Display.setTitle(title);
 		} catch (LWJGLException e) {
 			System.out.println("Could not create the display!");

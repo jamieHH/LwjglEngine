@@ -22,7 +22,8 @@ public class EngineTester implements IGameLogic {
     private static MousePicker picker;
     private int lampWait = 0;
 
-    private static Fbo fbo;
+    private static Fbo multisampledFbo;
+    private static Fbo outputFbo;
 
     public EngineTester() {
 
@@ -46,7 +47,8 @@ public class EngineTester implements IGameLogic {
         GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
         GuiMasterRenderer.loadTexture(guiTexture);
 
-        fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+        multisampledFbo = new Fbo(Display.getWidth(), Display.getHeight());
+        outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init();
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
@@ -93,17 +95,20 @@ public class EngineTester implements IGameLogic {
     }
 
 	public void render() {
-        fbo.bindFrameBuffer();
+        multisampledFbo.bindFrameBuffer();
         WorldMasterRenderer.render();
-        fbo.unbindFrameBuffer();
-        PostProcessing.doPostProcessing(fbo.getColorTexture());
+        multisampledFbo.unbindFrameBuffer();
+//        multisampledFbo.resolveToScreen();
+        multisampledFbo.resolveToFbo(outputFbo);
+        PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
         GuiMasterRenderer.render();
     }
 
     public void cleanUp() {
         PostProcessing.cleanUp();
-        fbo.cleanUp();
+        multisampledFbo.cleanUp();
+        outputFbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();
         Loader.cleanUp();
