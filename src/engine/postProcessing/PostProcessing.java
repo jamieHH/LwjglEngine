@@ -1,5 +1,7 @@
 package engine.postProcessing;
 
+import engine.bloom.BrightFilter;
+import engine.bloom.CombineFilter;
 import engine.gaussianBlur.HorizontalBlur;
 import engine.gaussianBlur.VerticalBlur;
 import engine.loaders.Loader;
@@ -19,23 +21,29 @@ public class PostProcessing {
 	private static VerticalBlur vBlur;
 	private static HorizontalBlur hBlur2;
 	private static VerticalBlur vBlur2;
+	private static BrightFilter brightFilter;
+	private static CombineFilter combineFilter;
 
 	public static void init() {
 		quad = Loader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
 		hBlur = new HorizontalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
 		vBlur = new VerticalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
-		hBlur2 = new HorizontalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
-		vBlur2 = new VerticalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
+		hBlur2 = new HorizontalBlur(Display.getWidth() / 2, Display.getHeight() / 4);
+		vBlur2 = new VerticalBlur(Display.getWidth() / 2, Display.getHeight() / 4);
+		brightFilter = new BrightFilter(Display.getWidth() / 2, Display.getHeight() / 2);
+		combineFilter = new CombineFilter();
 	}
 	
 	public static void doPostProcessing(int colorTexture) {
 		start();
-//		hBlur2.render(colorTexture);
-//		vBlur2.render(hBlur2.getOutputTexture());
-//		hBlur.render(colorTexture);
-//		vBlur.render(hBlur.getOutputTexture());
-		contrastChanger.render(colorTexture);
+		brightFilter.render(colorTexture);
+		hBlur2.render(brightFilter.getOutputTexture());
+		vBlur2.render(hBlur2.getOutputTexture());
+		hBlur.render(vBlur2.getOutputTexture());
+		vBlur.render(hBlur.getOutputTexture());
+//		contrastChanger.render(vBlur.getOutputTexture());
+		combineFilter.render(colorTexture, vBlur.getOutputTexture());
 		end();
 	}
 	
@@ -45,6 +53,8 @@ public class PostProcessing {
 		vBlur.cleanUp();
 		hBlur2.cleanUp();
 		vBlur2.cleanUp();
+		brightFilter.cleanUp();
+		combineFilter.cleanUp();
 	}
 
 	private static void start() {
