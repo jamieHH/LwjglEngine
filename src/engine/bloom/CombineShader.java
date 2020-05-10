@@ -9,7 +9,8 @@ public class CombineShader extends ShaderProgram {
 	
 	private int location_colorTexture;
 	private int location_highlightTexture;
-	
+	private int location_blendFactor;
+
 	protected CombineShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -18,11 +19,16 @@ public class CombineShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		location_colorTexture = super.getUniformLocation("colorTexture");
 		location_highlightTexture = super.getUniformLocation("highlightTexture");
+		location_blendFactor = super.getUniformLocation("blendFactor");
 	}
 	
 	protected void connectTextureUnits(){
 		super.loadInt(location_colorTexture, 0);
 		super.loadInt(location_highlightTexture, 1);
+	}
+
+	public void loadBlendFactor(float blendFactor) {
+		super.loadFloat(location_blendFactor, blendFactor);
 	}
 
 	@Override

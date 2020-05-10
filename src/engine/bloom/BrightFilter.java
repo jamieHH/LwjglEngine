@@ -14,8 +14,9 @@ public class BrightFilter {
 		renderer = new ImageRenderer(width, height);
 	}
 	
-	public void render(int texture){
+	public void render(int texture, float threshold){
 		shader.start();
+		shader.loadThreshold(threshold);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		renderer.renderQuad();

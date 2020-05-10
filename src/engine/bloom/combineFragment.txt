@@ -6,11 +6,10 @@ out vec4 out_Color;
 
 uniform sampler2D colorTexture;
 uniform sampler2D highlightTexture;
-
-const float intensity = 1;
+uniform float blendFactor;
 
 void main(void) {
     vec4 sceneColor = texture(colorTexture, textureCoords);
     vec4 highlightColor = texture(highlightTexture, textureCoords);
-    out_Color = sceneColor + (highlightColor * intensity);
+    out_Color = sceneColor + (highlightColor * blendFactor);
 }
