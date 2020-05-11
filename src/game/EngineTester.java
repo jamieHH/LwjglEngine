@@ -22,7 +22,7 @@ public class EngineTester implements IGameLogic {
     private static MousePicker picker;
     private int lampWait = 0;
 
-    private static Fbo multisampledFbo;
+    private static Fbo baseFbo;
     private static Fbo outputFbo;
 
     public EngineTester() {
@@ -47,7 +47,7 @@ public class EngineTester implements IGameLogic {
         GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
         GuiMasterRenderer.loadTexture(guiTexture);
 
-        multisampledFbo = new Fbo(Display.getWidth(), Display.getHeight());
+        baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
         outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init();
 
@@ -64,7 +64,7 @@ public class EngineTester implements IGameLogic {
             if (lampWait > 0) {
                 lampWait--;
             } else {
-                if (Mouse.isButtonDown(0)) {
+                if (Mouse.isButtonDown(2)) {
                     // modify heights
                     Vector3f tv = world.getTerrain().worldToTerrainVector(tp);
                     float radius = 40;
@@ -77,7 +77,7 @@ public class EngineTester implements IGameLogic {
                     world.getTerrain().updateTerrain();
 
                 }
-                if (Mouse.isButtonDown(2)) {
+                if (Mouse.isButtonDown(0)) {
                     //place lamp
                     lampWait = 15;
                     world.addLight(
@@ -95,11 +95,13 @@ public class EngineTester implements IGameLogic {
     }
 
 	public void render() {
-        multisampledFbo.bindFrameBuffer();
+        baseFbo.bindFrameBuffer();
         WorldMasterRenderer.render();
-        multisampledFbo.unbindFrameBuffer();
-//        multisampledFbo.resolveToScreen();
-        multisampledFbo.resolveToFbo(outputFbo);
+        baseFbo.unbindFrameBuffer();
+//        baseFbo.resolveToScreen();
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo);
+
         PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
         GuiMasterRenderer.render();
@@ -107,7 +109,7 @@ public class EngineTester implements IGameLogic {
 
     public void cleanUp() {
         PostProcessing.cleanUp();
-        multisampledFbo.cleanUp();
+        baseFbo.cleanUp();
         outputFbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();

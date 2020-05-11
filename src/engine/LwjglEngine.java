@@ -17,7 +17,7 @@ public class LwjglEngine implements Runnable {
     private static int width;
     private static int height;
 
-    public LwjglEngine(String title, int width, int height, int samples, IGameLogic gameLogic) {
+    public LwjglEngine(String title, int width, int height, IGameLogic gameLogic) {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
         LwjglEngine.gameLogic = gameLogic;
         LwjglEngine.title = title;
