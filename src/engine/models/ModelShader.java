@@ -70,7 +70,7 @@ public class ModelShader extends ShaderProgram {
 	    super.loadVector(location_skyColor, color);
     }
 
-	public void loadFakeLightingVariariable(boolean useFakeLighting) {
+	public void loadFakeLightingVariable(boolean useFakeLighting) {
 		super.loadBoolean(location_useFakeLighting, useFakeLighting);
 	}
 	

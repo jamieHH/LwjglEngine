@@ -73,7 +73,7 @@ public class ModelRenderer {
 		if (texture.isHasTransparency()) {
 			WorldMasterRenderer.disableCulling();
 		}
-		shader.loadFakeLightingVariariable(texture.isUseFakeLighting());
+		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		// bind engine.textures
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
