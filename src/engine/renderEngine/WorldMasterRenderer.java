@@ -3,6 +3,7 @@ package engine.renderEngine;
 import engine.entities.Entity;
 import engine.entities.Light;
 import engine.entities.Point;
+import engine.models.DeferredModelRenderer;
 import engine.models.ModelRenderer;
 import engine.models.TexturedModel;
 import engine.models.mappedShaders.NormalMappingRenderer;
@@ -40,7 +41,8 @@ public class WorldMasterRenderer {
         WorldMasterRenderer.camera = camera;
         enableCulling();
         createProjectionMatrix();
-        ModelRenderer.init(PROJECTION_MATRIX);
+//        ModelRenderer.init(PROJECTION_MATRIX);
+        DeferredModelRenderer.init(PROJECTION_MATRIX);
         NormalMappingRenderer.init(PROJECTION_MATRIX);
         TerrainRenderer.init(PROJECTION_MATRIX);
         SkyboxRenderer.init(PROJECTION_MATRIX);
@@ -51,9 +53,10 @@ public class WorldMasterRenderer {
         WorldMasterRenderer.clearProcessedWorld();
         WorldMasterRenderer.processWorld(camera);
         prepare();
-        ModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
-        TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        DeferredModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+//        ModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+//        NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+//        TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
         SkyboxRenderer.render(camera, world.getSkyColor(), world.getSkybox(), 0.1f);
         ParticleRenderer.render(particles, camera);
     }

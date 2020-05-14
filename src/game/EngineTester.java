@@ -99,8 +99,8 @@ public class EngineTester implements IGameLogic {
         WorldMasterRenderer.render();
         baseFbo.unbindFrameBuffer();
 //        baseFbo.resolveToScreen();
-//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
-        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo);
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo);
 
         PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
