@@ -24,7 +24,7 @@ public class DeferredModelRenderer {
     private static int vbo;
     private static int pointer = 0;
 
-    private static ModelShader shader = new ModelShader();
+    private static DeferredModelShader shader = new DeferredModelShader();
 
     public static void init(Matrix4f projectionMatrix) {
         vbo = Loader.createFloatVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);

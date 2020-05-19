@@ -23,7 +23,10 @@ public class EngineTester implements IGameLogic {
     private int lampWait = 0;
 
     private static Fbo baseFbo;
+    private static Fbo normalsFbo;
     private static Fbo outputFbo;
+
+    private static GuiTexture fboGuiTexture;
 
     public EngineTester() {
 
@@ -44,12 +47,16 @@ public class EngineTester implements IGameLogic {
 
         WorldMasterRenderer.init(world, camera);
         GuiMasterRenderer.init();
-        GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
-        GuiMasterRenderer.loadTexture(guiTexture);
+//        GuiTexture guiTexture = new GuiTexture(Loader.loadTexture("grass"), new Vector2f(-0.75f, 0.75f), new Vector2f(0.125f, 0.125f));
+//        GuiMasterRenderer.loadTexture(guiTexture);
 
         baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
+        normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init();
+
+        fboGuiTexture = new GuiTexture(normalsFbo.getColorTexture(), new Vector2f(-0.75f, 0.75f), new Vector2f(0.25f, 0.25f));
+        GuiMasterRenderer.loadTexture(fboGuiTexture); // getting texture form normals vbo
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
@@ -98,9 +105,9 @@ public class EngineTester implements IGameLogic {
         baseFbo.bindFrameBuffer();
         WorldMasterRenderer.render();
         baseFbo.unbindFrameBuffer();
-//        baseFbo.resolveToScreen();
+
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
-//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo);
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, normalsFbo); // resolving attachment1 to the normals fbo
 
         PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
@@ -110,6 +117,7 @@ public class EngineTester implements IGameLogic {
     public void cleanUp() {
         PostProcessing.cleanUp();
         baseFbo.cleanUp();
+        normalsFbo.cleanUp();
         outputFbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();
