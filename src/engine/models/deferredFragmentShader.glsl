@@ -2,6 +2,7 @@
 
 layout (location = 0) out vec4 out_Color;
 layout (location = 1) out vec4 out_Color2;
+layout (location = 2) out vec4 out_Color3;
 
 in vec2 pass_textureCoordinates;
 in vec4 pass_position;
@@ -68,7 +69,7 @@ void main(void) {
 
     //out_Color2 = pass_position; //position
     //out_Color2 = vec4(totalDiffuse, 1.0); //diffuse
-    //out_Color2 = vec4(totalSpecular, 1.0); //specular
+    out_Color3 = vec4(reflectivity, reflectivity, reflectivity, 1.0); //specular
     //out_Color2 = texture(modelTexture, pass_textureCoordinates); //texture
     out_Color2 = vec4(normalize(surfaceNormal), 1.0); //normals
 }

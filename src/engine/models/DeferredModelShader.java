@@ -18,8 +18,8 @@ public class DeferredModelShader extends ShaderProgram {
     private static final int MAX_ENV_LIGHTS = 2;
     private static final Vector3f NULL_VECTOR = new Vector3f(0, 0, 0);
 
-    private static final String VERTEX_FILE = "src/engine/models/deferredVertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/engine/models/deferredFragmentShader.txt";
+    private static final String VERTEX_FILE = "src/engine/models/deferredVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src/engine/models/deferredFragmentShader.glsl";
 
     private int location_viewMatrix;
     private int location_projectionMatrix;

@@ -24,9 +24,11 @@ public class EngineTester implements IGameLogic {
 
     private static Fbo baseFbo;
     private static Fbo normalsFbo;
+    private static Fbo specularFbo;
     private static Fbo outputFbo;
 
-    private static GuiTexture fboGuiTexture;
+    private static GuiTexture normalsFboTexture;
+    private static GuiTexture specularFboTexture;
 
     public EngineTester() {
 
@@ -52,11 +54,14 @@ public class EngineTester implements IGameLogic {
 
         baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
         normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+        specularFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init();
 
-        fboGuiTexture = new GuiTexture(normalsFbo.getColorTexture(), new Vector2f(-0.75f, 0.75f), new Vector2f(0.25f, 0.25f));
-        GuiMasterRenderer.loadTexture(fboGuiTexture); // getting texture form normals vbo
+        normalsFboTexture = new GuiTexture(normalsFbo.getColorTexture(), new Vector2f(-0.80f, 0.80f), new Vector2f(0.20f, 0.20f));
+        GuiMasterRenderer.loadTexture(normalsFboTexture); // getting texture form normals vbo
+        specularFboTexture = new GuiTexture(specularFbo.getColorTexture(), new Vector2f(-0.40f, 0.80f), new Vector2f(0.20f, 0.20f));
+        GuiMasterRenderer.loadTexture(specularFboTexture); // getting texture form specular vbo
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
@@ -108,6 +113,7 @@ public class EngineTester implements IGameLogic {
 
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, normalsFbo); // resolving attachment1 to the normals fbo
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT2, specularFbo); // resolving attachment1 to the specular fbo
 
         PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
@@ -118,6 +124,7 @@ public class EngineTester implements IGameLogic {
         PostProcessing.cleanUp();
         baseFbo.cleanUp();
         normalsFbo.cleanUp();
+        specularFbo.cleanUp();
         outputFbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();
