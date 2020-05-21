@@ -26,6 +26,8 @@ public class Fbo {
 	private int colorBuffer;
 	private int colorBuffer2;
 	private int colorBuffer3;
+	private int colorBuffer4;
+	private int colorBuffer5;
 
 	/**
 	 * Creates an FBO of a specified width and height, with the desired type of
@@ -63,6 +65,8 @@ public class Fbo {
 		GL30.glDeleteRenderbuffers(colorBuffer);
 		GL30.glDeleteRenderbuffers(colorBuffer2);
 		GL30.glDeleteRenderbuffers(colorBuffer3);
+		GL30.glDeleteRenderbuffers(colorBuffer4);
+		GL30.glDeleteRenderbuffers(colorBuffer5);
 	}
 
 	/**
@@ -140,6 +144,8 @@ public class Fbo {
 			colorBuffer = createColorBufferAttachment(GL30.GL_COLOR_ATTACHMENT0);
 			colorBuffer2 = createColorBufferAttachment(GL30.GL_COLOR_ATTACHMENT1);
 			colorBuffer3 = createColorBufferAttachment(GL30.GL_COLOR_ATTACHMENT2);
+			colorBuffer4 = createColorBufferAttachment(GL30.GL_COLOR_ATTACHMENT3);
+			colorBuffer5 = createColorBufferAttachment(GL30.GL_COLOR_ATTACHMENT4);
 		} else {
 			createTextureAttachment();
 		}
@@ -164,10 +170,12 @@ public class Fbo {
 	}
 
 	private void determineDrawBuffers() {
-		IntBuffer drawBuffers = BufferUtils.createIntBuffer(3);
+		IntBuffer drawBuffers = BufferUtils.createIntBuffer(5);
 		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT0);
 		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT1);
 		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT2);
+		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT3);
+		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT4);
 		drawBuffers.flip();
 		GL20.glDrawBuffers(drawBuffers);
 	}

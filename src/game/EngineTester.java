@@ -25,10 +25,9 @@ public class EngineTester implements IGameLogic {
     private static Fbo baseFbo;
     private static Fbo normalsFbo;
     private static Fbo specularFbo;
+    private static Fbo albedoFbo;
+    private static Fbo positionFbo;
     private static Fbo outputFbo;
-
-    private static GuiTexture normalsFboTexture;
-    private static GuiTexture specularFboTexture;
 
     public EngineTester() {
 
@@ -55,13 +54,15 @@ public class EngineTester implements IGameLogic {
         baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
         normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         specularFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+        albedoFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+        positionFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init();
 
-        normalsFboTexture = new GuiTexture(normalsFbo.getColorTexture(), new Vector2f(-0.80f, 0.80f), new Vector2f(0.20f, 0.20f));
-        GuiMasterRenderer.loadTexture(normalsFboTexture); // getting texture form normals vbo
-        specularFboTexture = new GuiTexture(specularFbo.getColorTexture(), new Vector2f(-0.40f, 0.80f), new Vector2f(0.20f, 0.20f));
-        GuiMasterRenderer.loadTexture(specularFboTexture); // getting texture form specular vbo
+        GuiMasterRenderer.loadTexture(new GuiTexture(normalsFbo.getColorTexture(), new Vector2f(-0.75f, 0.75f), new Vector2f(0.25f, 0.25f))); // getting texture form normals vbo
+        GuiMasterRenderer.loadTexture(new GuiTexture(specularFbo.getColorTexture(), new Vector2f(-0.25f, 0.75f), new Vector2f(0.25f, 0.25f))); // getting texture form specular vbo
+        GuiMasterRenderer.loadTexture(new GuiTexture(albedoFbo.getColorTexture(), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.25f)));
+        GuiMasterRenderer.loadTexture(new GuiTexture(positionFbo.getColorTexture(), new Vector2f(0.75f, 0.75f), new Vector2f(0.25f, 0.25f)));
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
@@ -113,7 +114,9 @@ public class EngineTester implements IGameLogic {
 
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, normalsFbo); // resolving attachment1 to the normals fbo
-        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT2, specularFbo); // resolving attachment1 to the specular fbo
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT2, specularFbo);
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT3, albedoFbo);
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT4, positionFbo);
 
         PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
@@ -125,7 +128,9 @@ public class EngineTester implements IGameLogic {
         baseFbo.cleanUp();
         normalsFbo.cleanUp();
         specularFbo.cleanUp();
-        outputFbo.cleanUp();
+        albedoFbo.cleanUp();
+        specularFbo.cleanUp();
+        positionFbo.cleanUp();
         WorldMasterRenderer.cleanUp();
         GuiMasterRenderer.cleanUp();
         Loader.cleanUp();
