@@ -71,7 +71,7 @@ void main(void) {
 
     out_Color5 = pass_position; //position
     //out_Color2 = vec4(totalDiffuse, 1.0); //diffuse
-    out_Color3 = vec4(reflectivity, reflectivity, reflectivity, 1.0); //specular
+    out_Color3 = vec4(shineDamper, reflectivity, 0, 1.0); //specular
     out_Color4 = texture(modelTexture, pass_textureCoordinates); //texture
     out_Color2 = vec4(normalize(surfaceNormal), 1.0); //normals
 }
