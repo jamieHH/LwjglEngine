@@ -4,6 +4,7 @@ import engine.IGameLogic;
 import engine.entities.*;
 import engine.guis.GuiTexture;
 import engine.loaders.Loader;
+import engine.models.DeferredModelRenderer;
 import engine.postProcessing.Fbo;
 import engine.postProcessing.PostProcessing;
 import engine.renderEngine.GuiMasterRenderer;
@@ -63,6 +64,8 @@ public class EngineTester implements IGameLogic {
         GuiMasterRenderer.loadTexture(new GuiTexture(specularFbo.getColorTexture(), new Vector2f(-0.25f, 0.75f), new Vector2f(0.25f, 0.25f))); // getting texture form specular vbo
         GuiMasterRenderer.loadTexture(new GuiTexture(albedoFbo.getColorTexture(), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.25f)));
         GuiMasterRenderer.loadTexture(new GuiTexture(positionFbo.getColorTexture(), new Vector2f(0.75f, 0.75f), new Vector2f(0.25f, 0.25f)));
+
+        GuiMasterRenderer.loadTexture(new GuiTexture(DeferredModelRenderer.baseFbo.getColorTexture(), new Vector2f(0f, 0f), new Vector2f(0.25f, 0.25f)));
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }

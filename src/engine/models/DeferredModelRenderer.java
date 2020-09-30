@@ -3,6 +3,8 @@ package engine.models;
 import engine.entities.*;
 
 import engine.loaders.Loader;
+import engine.postProcessing.Fbo;
+import engine.postProcessing.ImageRenderer;
 import engine.renderEngine.WorldMasterRenderer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
@@ -24,17 +26,33 @@ public class DeferredModelRenderer {
     private static int vbo;
     private static int pointer = 0;
 
+    private static ImageRenderer imageRenderer = new ImageRenderer(Display.getWidth(), Display.getHeight());
     private static DeferredModelShader shader = new DeferredModelShader();
+    private static LightPassShader lightPassShader = new LightPassShader();
+
+    public static Fbo baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
+    public static Fbo testFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+    private static Fbo normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+    private static Fbo specularFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+    private static Fbo albedoFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+    private static Fbo positionFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
 
     public static void init(Matrix4f projectionMatrix) {
         vbo = Loader.createFloatVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
+
+        lightPassShader.start();
+        lightPassShader.connectTextureUnits();
+        lightPassShader.stop();
     }
 
     public static void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
-        prepare(lights, envLights, skyColor, camera);
+//        baseFbo.bindFrameBuffer();
+
+        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        prepare(lights, envLights, skyColor, viewMatrix);
         for (TexturedModel model : entities.keySet()) {
             prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
@@ -49,6 +67,50 @@ public class DeferredModelRenderer {
             unbindTexturedModel();
         }
         finish();
+
+//        baseFbo.unbindFrameBuffer(); // TODO: need to get all the color attachments fot the pic above
+
+
+        
+//        // lighting pass
+//        // start
+//        GL30.glBindVertexArray(PostProcessing.getQuad().getVaoId());
+//        GL20.glEnableVertexAttribArray(0);
+//        GL11.glDisable(GL11.GL_DEPTH_TEST);
+//
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, testFbo); // resolving attachment1 to the normals fbo
+//        // prepare
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, normalsFbo); // resolving attachment1 to the normals fbo
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT2, specularFbo);
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT3, albedoFbo);
+//        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT4, positionFbo);
+//
+//        lightPassShader.start();
+//        lightPassShader.connectTextureUnits();
+//        lightPassShader.loadSkyColor(skyColor);
+//        lightPassShader.loadViewPos(camera.getPosition());
+//        lightPassShader.loadEnvLights(envLights);
+//        lightPassShader.loadLights(lights);
+//
+//        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//        GL11.glBindTexture(GL11.GL_TEXTURE_2D, positionFbo.getColorTexture());
+//        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+//        GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalsFbo.getColorTexture());
+//        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+//        GL11.glBindTexture(GL11.GL_TEXTURE_2D, albedoFbo.getColorTexture());
+//        GL13.glActiveTexture(GL13.GL_TEXTURE3);
+//        GL11.glBindTexture(GL11.GL_TEXTURE_2D, specularFbo.getColorTexture());
+//        // or --
+////        lightPassShader.loadGBufferFrames(positionFbo.getColorTexture(), normalsFbo.getColorTexture(), albedoFbo.getColorTexture(), specularFbo.getColorTexture());
+//
+//        imageRenderer.renderQuad();
+//        lightPassShader.stop();
+//
+//
+//        // finish
+//        GL11.glEnable(GL11.GL_DEPTH_TEST);
+//        GL20.glDisableVertexAttribArray(0);
+//        GL30.glBindVertexArray(0);
     }
 
     private static void prepareTexturedModel(TexturedModel model) {
@@ -105,8 +167,7 @@ public class DeferredModelRenderer {
         vboData[pointer++] = matrix.m33;
     }
 
-    private static void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+    private static void prepare(List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Matrix4f viewMatrix) {
         shader.start();
         shader.loadViewMatrix(viewMatrix);
         shader.loadSkyColor(skyColor);
