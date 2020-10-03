@@ -70,4 +70,8 @@ public class PostProcessing {
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 	}
+
+	public static RawModel getQuad() {
+		return quad;
+	} // TODO: move to a generic place one deferred shading is complete
 }
