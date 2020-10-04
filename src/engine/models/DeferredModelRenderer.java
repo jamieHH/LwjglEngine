@@ -26,16 +26,16 @@ public class DeferredModelRenderer {
     private static int vbo;
     private static int pointer = 0;
 
-    private static ImageRenderer imageRenderer = new ImageRenderer(Display.getWidth(), Display.getHeight());
-    private static DeferredModelShader shader = new DeferredModelShader();
-    private static LightPassShader lightPassShader = new LightPassShader();
+//    private static ImageRenderer imageRenderer = new ImageRenderer(Display.getWidth(), Display.getHeight());
+    private static final DeferredModelShader shader = new DeferredModelShader();
+//    private static LightPassShader lightPassShader = new LightPassShader();
 
-    public static Fbo baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
-    public static Fbo testFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
-    private static Fbo normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
-    private static Fbo specularFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
-    private static Fbo albedoFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
-    private static Fbo positionFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+//    public static Fbo baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
+//    public static Fbo testFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+//    private static Fbo normalsFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+//    private static Fbo specularFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+//    private static Fbo albedoFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+//    private static Fbo positionFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
 
     public static void init(Matrix4f projectionMatrix) {
         vbo = Loader.createFloatVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
@@ -43,9 +43,9 @@ public class DeferredModelRenderer {
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
 
-        lightPassShader.start();
-        lightPassShader.connectTextureUnits();
-        lightPassShader.stop();
+//        lightPassShader.start();
+//        lightPassShader.connectTextureUnits();
+//        lightPassShader.stop();
     }
 
     public static void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, List<EnvLight> envLights, Vector3f skyColor, Point camera) {

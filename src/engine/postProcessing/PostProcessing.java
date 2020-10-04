@@ -37,15 +37,13 @@ public class PostProcessing {
 	
 	public static void doPostProcessing(int colorTexture) {
 		start();
-        contrastChanger.render(colorTexture, 0f);
-
-//		brightFilter.render(colorTexture, 0.8f);
-//		hBlur2.render(brightFilter.getOutputTexture());
-//		vBlur2.render(hBlur2.getOutputTexture());
-//		hBlur.render(vBlur2.getOutputTexture());
-//		vBlur.render(hBlur.getOutputTexture());
-//		combineFilter.render(colorTexture, vBlur.getOutputTexture(), 1f);
-//		contrastChanger.render(combineFilter.getOutputTexture(), 0f);
+		brightFilter.render(colorTexture, 0.8f);
+		hBlur2.render(brightFilter.getOutputTexture());
+		vBlur2.render(hBlur2.getOutputTexture());
+		hBlur.render(vBlur2.getOutputTexture());
+		vBlur.render(hBlur.getOutputTexture());
+		combineFilter.render(colorTexture, vBlur.getOutputTexture(), 1f);
+		contrastChanger.render(combineFilter.getOutputTexture(), 0.2f);
 		end();
 	}
 	

@@ -7,9 +7,12 @@ import engine.models.DeferredModelRenderer;
 import engine.models.ModelRenderer;
 import engine.models.TexturedModel;
 import engine.models.mappedShaders.NormalMappingRenderer;
+import engine.postProcessing.Fbo;
+import engine.postProcessing.PostProcessing;
 import engine.terrains.TerrainRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import engine.entities.Particle;
 import engine.entities.ParticleEmitter;
@@ -36,6 +39,9 @@ public class WorldMasterRenderer {
     private static Map<ParticleTexture, List<Particle>> particles = new HashMap<>();
     private static List<Light> lights = new ArrayList<>();
 
+    public static Fbo baseFbo = new Fbo(Display.getWidth(), Display.getHeight());
+    public static Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+
     public static void init(World world, Point camera) {
         WorldMasterRenderer.world = world;
         WorldMasterRenderer.camera = camera;
@@ -47,9 +53,12 @@ public class WorldMasterRenderer {
         TerrainRenderer.init(PROJECTION_MATRIX);
         SkyboxRenderer.init(PROJECTION_MATRIX);
         ParticleRenderer.init(PROJECTION_MATRIX);
+        PostProcessing.init();
     }
 
     public static void render() {
+        baseFbo.bindFrameBuffer();
+
         WorldMasterRenderer.clearProcessedWorld();
         WorldMasterRenderer.processWorld(camera);
         prepare();
@@ -59,6 +68,13 @@ public class WorldMasterRenderer {
         TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
         SkyboxRenderer.render(camera, world.getSkyColor(), world.getSkybox(), 0.1f);
         ParticleRenderer.render(particles, camera);
+
+        baseFbo.unbindFrameBuffer();
+        baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+
+        // TODO: look at combineFilter and contrast changer for fbo uniform texture usage
+        outputFbo.resolveToScreen(); // or
+//        PostProcessing.doPostProcessing(outputFbo.getColorTexture());
     }
 
     public static void enableCulling() {
@@ -183,6 +199,7 @@ public class WorldMasterRenderer {
         TerrainRenderer.cleanUp();
         SkyboxRenderer.cleanUp();
         ParticleRenderer.cleanUp();
+        PostProcessing.cleanUp();
     }
 
     public static Matrix4f getProjectionMatrix() {
