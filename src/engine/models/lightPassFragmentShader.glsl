@@ -28,7 +28,6 @@ uniform vec3 envLightDirection[2];
 
 
 void main(void) {
-
     // retrieve data from G-buffer
     vec3 FragPos = texture(positionsFrame, textureCoords).rgb;
     vec3 Normal = texture(normalsFrame, textureCoords).rgb;
@@ -53,8 +52,8 @@ void main(void) {
 //        lighting += diffuse;
 //    }
 
-    out_Color = vec4(lighting, 1.0);
-    out_Color = vec4(1, 1, 0, 1.0);
+//    out_Color = vec4(lighting, 1.0);
+    out_Color = vec4(1.0, 1.0, 0.0, 1.0); // just show yellow
 
 //	vec3 unitNormal = normalize(surfaceNormal);
 //    vec3 unitVectorToCamera = normalize(toCameraVector);

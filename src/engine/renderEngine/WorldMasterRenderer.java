@@ -4,6 +4,7 @@ import engine.entities.Entity;
 import engine.entities.Light;
 import engine.entities.Point;
 import engine.models.DeferredModelRenderer;
+import engine.models.LightPassRenderer;
 import engine.models.ModelRenderer;
 import engine.models.TexturedModel;
 import engine.models.mappedShaders.NormalMappingRenderer;
@@ -48,6 +49,7 @@ public class WorldMasterRenderer {
         enableCulling();
         createProjectionMatrix();
         DeferredModelRenderer.init(PROJECTION_MATRIX);
+        LightPassRenderer.init();
 //        ModelRenderer.init(PROJECTION_MATRIX);
 //        NormalMappingRenderer.init(PROJECTION_MATRIX);
         TerrainRenderer.init(PROJECTION_MATRIX);
@@ -63,8 +65,12 @@ public class WorldMasterRenderer {
         WorldMasterRenderer.processWorld(camera);
         prepare();
         DeferredModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+        LightPassRenderer.render(lights, world.getEnvLights(), world.getSkyColor(), camera);
 //        ModelRenderer.render(entities, lights, world.getEnvLights(), world.getSkyColor(), camera);
 //        NormalMappingRenderer.render(normalMappedEntities, lights, world.getEnvLights(), world.getSkyColor(), camera);
+
+        // TODO: look at combineFilter and contrast changer for fbo uniform texture usage
+
         TerrainRenderer.render(terrains, lights, world.getEnvLights(), world.getSkyColor(), camera);
         SkyboxRenderer.render(camera, world.getSkyColor(), world.getSkybox(), 0.1f);
         ParticleRenderer.render(particles, camera);
@@ -72,7 +78,6 @@ public class WorldMasterRenderer {
         baseFbo.unbindFrameBuffer();
         baseFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
 
-        // TODO: look at combineFilter and contrast changer for fbo uniform texture usage
         outputFbo.resolveToScreen(); // or
 //        PostProcessing.doPostProcessing(outputFbo.getColorTexture());
     }
@@ -196,6 +201,8 @@ public class WorldMasterRenderer {
     public static void cleanUp() {
         ModelRenderer.cleanUp();
         NormalMappingRenderer.cleanUp();
+        DeferredModelRenderer.cleanUp();
+        LightPassRenderer.cleanUp();
         TerrainRenderer.cleanUp();
         SkyboxRenderer.cleanUp();
         ParticleRenderer.cleanUp();
