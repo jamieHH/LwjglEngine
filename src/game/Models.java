@@ -10,7 +10,7 @@ public class Models {
 
     public static TexturedModel chair = new TexturedModel(makeRawModel("chair0"),
             makeModelTexture("wood"));
-    public static TexturedModel rock = new TexturedModel(makeRawModel("rock0HD"),
+    public static TexturedModel rock = new TexturedModel(makeRawModel("rock0"),
             makeModelTexture("rock", 0.5f, 1.0f));
     public static TexturedModel grass = new TexturedModel(makeRawModel("grass0"),
             makeTransparentModelTexture("grass"));

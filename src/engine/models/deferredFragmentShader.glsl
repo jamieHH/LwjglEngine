@@ -39,6 +39,7 @@ void main(void) {
         vec3 halfDir = normalize(-lightDirection + unitVectorToCamera);
         float specAngle = max(dot(halfDir, unitNormal), 0.0);
         float dampedFactor = pow(specAngle, shineDamper * 4.0);
+//        float dampedFactor = pow(max(dot(halfDir, unitNormal), 0.0), shineDamper * 4.0);
 
         totalDiffuse += (brightness * envLightColor[i]) / attFactor;
         totalSpecular += (dampedFactor * reflectivity * envLightColor[i]) / attFactor;
@@ -73,5 +74,5 @@ void main(void) {
     //out_Color2 = vec4(totalDiffuse, 1.0); //diffuse
     out_Color3 = vec4(shineDamper, reflectivity, 0, 1.0); //specular
     out_Color4 = texture(modelTexture, pass_textureCoordinates); //texture
-    out_Color2 = vec4(normalize(surfaceNormal), 1.0); //normals
+    out_Color2 = vec4(unitNormal, 1.0); //normals
 }

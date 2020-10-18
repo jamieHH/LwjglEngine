@@ -6,8 +6,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera extends Point {
 
-	private static final float WALK_SPEED = 2f;
-	private static final float FRICTION = 0.05f;
+	private static final float WALK_SPEED = 0.1f;
+	private static final float FRICTION = 0.9f;
 
 	private float forwardMove = 0;
 	private float rightwardMove = 0;
