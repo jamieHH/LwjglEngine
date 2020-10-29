@@ -34,13 +34,11 @@ void main(void) {
     vec3 Albedo = texture(albedoFrame, textureCoords).rgb;
     float Specular = texture(specularFrame, textureCoords).g;
 
-    out_Color = vec4(Normal, 1.0);
-
     // try 1
     //retrieve data from G-buffer
     // then calculate lighting as usual
-    vec3 lighting = Albedo * 0.1;// hard-coded ambient component
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 lighting = Albedo * 0.2;// hard-coded ambient component
+    vec3 viewDir = (viewPos - FragPos);
     for (int i = 0; i < 2; ++i)
     {
         // diffuse

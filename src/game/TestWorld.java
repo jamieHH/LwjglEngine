@@ -40,7 +40,8 @@ public class TestWorld extends World {
         super.setSkyColor(new Vector3f(0.5f, 0.6f, 0.7f));
 
         //-------------- EnvLights
-        this.addEnvLight(new EnvLight(new Vector3f(this.getSkyR()+1, this.getSkyG()+1, this.getSkyB()+1), new Vector3f(1, 1, -1)));
+        this.addEnvLight(new EnvLight(new Vector3f(this.getSkyR()+1, this.getSkyG()+1, this.getSkyB()+1),
+                new Vector3f(1, 1, 1)));
         //--------------
 
         //-------------- Terrain
