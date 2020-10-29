@@ -10,6 +10,7 @@ import engine.renderEngine.GuiMasterRenderer;
 import engine.renderEngine.WorldMasterRenderer;
 import engine.utils.MousePicker;
 import engine.world.World;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Vector2f;
@@ -21,6 +22,9 @@ public class EngineTester implements IGameLogic {
     private static Camera camera;
     private static MousePicker picker;
     private int lampWait = 0;
+    private int textureWait = 0;
+    private boolean textureToggle = false;
+    GuiTexture lightPassTexture = null;
 
     private static Fbo normalsFbo;
     private static Fbo specularFbo;
@@ -58,7 +62,10 @@ public class EngineTester implements IGameLogic {
         GuiMasterRenderer.loadTexture(new GuiTexture(specularFbo.getColorTexture(), new Vector2f(-0.25f, 0.75f), new Vector2f(0.25f, 0.25f))); // getting texture form specular vbo
         GuiMasterRenderer.loadTexture(new GuiTexture(albedoFbo.getColorTexture(), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.25f)));
 //        GuiMasterRenderer.loadTexture(new GuiTexture(positionFbo.getColorTexture(), new Vector2f(0.75f, 0.75f), new Vector2f(0.25f, 0.25f)));
-        GuiMasterRenderer.loadTexture(new GuiTexture(LightPassRenderer.getOutputTexture(), new Vector2f(0.75f, 0.75f), new Vector2f(0.25f, 0.25f)));
+
+        lightPassTexture = new GuiTexture(LightPassRenderer.getOutputTexture(), new Vector2f(0.75f, 0.75f), new Vector2f(0.25f, 0.25f));
+
+        GuiMasterRenderer.loadTexture(lightPassTexture);
 
         picker = new MousePicker(camera, WorldMasterRenderer.getProjectionMatrix(), world.getTerrain());
     }
@@ -66,6 +73,21 @@ public class EngineTester implements IGameLogic {
     public void tick() {
         world.tick();
         camera.tick();
+
+        if (textureWait > 0) {
+            textureWait--;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+            textureWait = 15;
+            textureToggle = !textureToggle;
+            if (textureToggle) {
+                lightPassTexture.setScale(new Vector2f(0.25f, 0.25f));
+                lightPassTexture.setPosition(new Vector2f(0.75f, 0.75f));
+            } else {
+                lightPassTexture.setScale(new Vector2f(1, 1));
+                lightPassTexture.setPosition(new Vector2f(0, 0));
+            }
+        }
+
 
         picker.update();
         Vector3f tp = picker.getCurrentTerrainPoint();

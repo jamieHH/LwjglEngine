@@ -25,4 +25,14 @@ public class GuiTexture {
     public Vector2f getScale() {
         return scale;
     }
+
+    public GuiTexture setPosition(Vector2f position) {
+        this.position = position;
+        return this;
+    }
+
+    public GuiTexture setScale(Vector2f scale) {
+        this.scale = scale;
+        return this;
+    }
 }

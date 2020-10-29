@@ -56,7 +56,7 @@ public class TestWorld extends World {
 
         //---- Random Scene objects
         Random random = new Random();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
             float y = terrain.getHeightOfTerrain(x, z);
@@ -66,7 +66,7 @@ public class TestWorld extends World {
                     0, randRotation(), 0
             );
         }
-        for (int i = 0; i < 2000; i++) {
+        for (int i = 0; i < 200; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
             float y = terrain.getHeightOfTerrain(x, z);
@@ -90,17 +90,24 @@ public class TestWorld extends World {
 //                    0, 0, 0
 //            );
 //        }
-        for (int i = 0; i < 200; i++) {
-            float x = random.nextFloat() * 100;
-            float z = random.nextFloat() * 100;
-            float y = terrain.getHeightOfTerrain(x, z);
-            Entity e = new Entity(Models.chair, 1);
-            e.setSolid(true);
-            this.addEntity(e, x, y, z, 0, randRotation(), 0);
-        }
-        this.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
+//        for (int i = 0; i < 200; i++) {
+//            float x = random.nextFloat() * 100;
+//            float z = random.nextFloat() * 100;
+//            float y = terrain.getHeightOfTerrain(x, z);
+//            Entity e = new Entity(Models.chair, 1);
+//            e.setSolid(true);
+//            this.addEntity(e, x, y, z, 0, randRotation(), 0);
+//        }
+//        this.addEntity(new Entity(Models.lightTest, 1), -20, 0, -20);
         //------
 
+        for (int x = -2; x < 3; x++) {
+            for (int y = -2; y < 3; y++) {
+                for (int z = -2; z < 3; z++) {
+                    this.addEntity(new Entity(Models.sphere, 1), x*20, y*20, z*20);
+                }
+            }
+        }
 
     }
 

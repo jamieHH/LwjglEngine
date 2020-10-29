@@ -6,8 +6,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera extends Point {
 
-	private static final float WALK_SPEED = 0.1f;
-	private static final float FRICTION = 0.9f;
+	private static final float WALK_SPEED = 0.2f;
+	private static final float FRICTION = 0.8f;
 
 	private float forwardMove = 0;
 	private float rightwardMove = 0;
@@ -21,6 +21,7 @@ public class Camera extends Point {
 		calcYaw();
 
 		float moveSpeed = WALK_SPEED * FRICTION;
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) moveSpeed *= 3;
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) forwardMove += moveSpeed;
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) forwardMove -= moveSpeed;
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) rightwardMove -= moveSpeed;
