@@ -1,0 +1,2 @@
+# LWJGL ENGINE
+This is my first experiment using Open GL and LWJGL. When I started this project I was beginning my transition into C++ programming during spare time in lockdown. Since I was also interested in learning Open GL, I thought it would help to first get started aquatinted using a language that I was already familiar with. I was then able to get a head start with Open GL whilst also learning C++ on a similar project
